@@ -1,0 +1,5 @@
+.antlr
+.vscode
+.local
+.idea
+__pycache__
