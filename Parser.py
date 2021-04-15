@@ -28,6 +28,32 @@ class Node:
         child.index = len(self.rules[child.nodeType])
         self.rules[child.nodeType].append(child)
 
+    def getChildByType(self, nodeType:str, index:int=0):
+        if nodeType not in self.rules.keys():
+            return None
+        return self.rules[nodeType][index]
+
+    def getChildrenByType(self, nodeType:str):
+        if nodeType not in self.rules.keys():
+            return None
+        return self.rules[nodeType]
+
+    def getChild(self, index:int=0):
+        if len(self.children) <= index:
+            return None
+        return self.children[index]
+
+    def getDescendantsByType(self, nodeType):
+        descendants = []
+        for child in self.children:
+            if child.nodeType == nodeType:
+                descendants.append(child)
+            descendants += child.getDescendantsByType(nodeType)
+        return descendants
+
+    def __str__(self):
+        return self.nodeType if self.nodeType is not None else 'TOKEN'
+
     # TODO: implement other useful methods to work with the tree
 
 
@@ -73,7 +99,7 @@ class ExtractorListener(qasm3subListener):
     def exitEveryRule(self, ctx:ParserRuleContext):
         self.current = self.current.parent
 
-    def visitTerminal(self, node:TerminalNode):
+    def visitTerminal(self, node):
         tokenName = self.tokenNames[node.symbol.type]
         child = Node(tokenName, node.symbol.text)
         self.current.appendChild(child)

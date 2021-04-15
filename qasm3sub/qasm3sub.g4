@@ -161,11 +161,11 @@ classicalDeclaration
     | noDesignatorDeclaration
     | bitDeclaration
     ;
-
+/*
 classicalTypeList
     : (classicalType COMMA)* classicalType
     ;
-
+*/
 classicalArgument
     : classicalType association
     ;
@@ -440,7 +440,7 @@ controlDirective
 
 /*** Subroutines ***/
 subroutineDefinition
-    : 'def' Identifier (LPAREN classicalArgumentList? RPAREN)?
+    : 'def' Identifier (LPAREN classicalArgumentList? RPAREN)? quantumArgumentList?
     returnSignature? subroutineBlock
     ;
 
@@ -452,7 +452,7 @@ subroutineBlock
 
 // if have subroutine w/ out args, is ambiguous; may get matched as identifier
 subroutineCall
-    : Identifier (LPAREN expressionList? RPAREN)? expressionList
+    : Identifier (LPAREN expressionList? RPAREN)? indexIdentifierList
     ;
 
 /** Directives **/

@@ -12,7 +12,7 @@ else:
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3e")
-        buf.write("\u031b\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\u031e\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31")
@@ -74,84 +74,84 @@ def serializedATN():
         buf.write("N\3N\5N\u02ce\nN\3O\3O\3O\3O\3O\3O\3O\5O\u02d7\nO\3P\3")
         buf.write("P\3P\3P\3P\3P\3P\5P\u02e0\nP\3Q\3Q\3Q\3R\3R\3R\3S\3S\3")
         buf.write("T\3T\3T\3T\5T\u02ee\nT\3T\5T\u02f1\nT\3T\5T\u02f4\nT\3")
-        buf.write("T\3T\3U\3U\3U\3V\3V\7V\u02fd\nV\fV\16V\u0300\13V\3V\5")
-        buf.write("V\u0303\nV\3V\3V\3W\3W\3W\5W\u030a\nW\3W\5W\u030d\nW\3")
-        buf.write("W\3W\3X\3X\3X\7X\u0314\nX\fX\16X\u0317\13X\3X\3X\3X\2")
-        buf.write("\13Frtvxz|\u0080\u008cY\2\4\6\b\n\f\16\20\22\24\26\30")
-        buf.write("\32\34\36 \"$&(*,.\60\62\64\668:<>@BDFHJLNPRTVXZ\\^`b")
-        buf.write("dfhjlnprtvxz|~\u0080\u0082\u0084\u0086\u0088\u008a\u008c")
-        buf.write("\u008e\u0090\u0092\u0094\u0096\u0098\u009a\u009c\u009e")
-        buf.write("\u00a0\u00a2\u00a4\u00a6\u00a8\u00aa\u00ac\u00ae\2\21")
-        buf.write("\4\2``bb\3\2\5\6\3\2\7\b\3\2\t\f\4\2\23\24aa\3\2\35\36")
-        buf.write("\3\2\37$\4\2\21\21%%\3\2)*\3\2XY\3\2Z\\\3\2+,\3\2-\66")
-        buf.write("\4\2\67@VV\3\2FH\2\u0327\2\u00b0\3\2\2\2\4\u00b9\3\2\2")
-        buf.write("\2\6\u00c1\3\2\2\2\b\u00c5\3\2\2\2\n\u00cd\3\2\2\2\f\u00d7")
-        buf.write("\3\2\2\2\16\u00d9\3\2\2\2\20\u00de\3\2\2\2\22\u00e2\3")
-        buf.write("\2\2\2\24\u00ea\3\2\2\2\26\u00ee\3\2\2\2\30\u00f1\3\2")
-        buf.write("\2\2\32\u00f5\3\2\2\2\34\u00ff\3\2\2\2\36\u0104\3\2\2")
-        buf.write("\2 \u0107\3\2\2\2\"\u0109\3\2\2\2$\u010c\3\2\2\2&\u0117")
-        buf.write("\3\2\2\2(\u011c\3\2\2\2*\u011e\3\2\2\2,\u0120\3\2\2\2")
-        buf.write(".\u0122\3\2\2\2\60\u012f\3\2\2\2\62\u0131\3\2\2\2\64\u0134")
-        buf.write("\3\2\2\2\66\u013a\3\2\2\28\u0140\3\2\2\2:\u0145\3\2\2")
-        buf.write("\2<\u014e\3\2\2\2>\u0155\3\2\2\2@\u015a\3\2\2\2B\u0162")
-        buf.write("\3\2\2\2D\u0167\3\2\2\2F\u0177\3\2\2\2H\u0186\3\2\2\2")
-        buf.write("J\u0191\3\2\2\2L\u0197\3\2\2\2N\u01a5\3\2\2\2P\u01a9\3")
-        buf.write("\2\2\2R\u01b3\3\2\2\2T\u01bd\3\2\2\2V\u01c9\3\2\2\2X\u01cb")
-        buf.write("\3\2\2\2Z\u01d2\3\2\2\2\\\u01d4\3\2\2\2^\u01d9\3\2\2\2")
-        buf.write("`\u01e5\3\2\2\2b\u01e7\3\2\2\2d\u01f1\3\2\2\2f\u01f5\3")
-        buf.write("\2\2\2h\u0206\3\2\2\2j\u0208\3\2\2\2l\u020a\3\2\2\2n\u020c")
-        buf.write("\3\2\2\2p\u020e\3\2\2\2r\u0215\3\2\2\2t\u021f\3\2\2\2")
-        buf.write("v\u022a\3\2\2\2x\u0235\3\2\2\2z\u0240\3\2\2\2|\u024e\3")
-        buf.write("\2\2\2~\u025b\3\2\2\2\u0080\u026c\3\2\2\2\u0082\u027a")
-        buf.write("\3\2\2\2\u0084\u027e\3\2\2\2\u0086\u0284\3\2\2\2\u0088")
-        buf.write("\u0286\3\2\2\2\u008a\u028d\3\2\2\2\u008c\u0295\3\2\2\2")
-        buf.write("\u008e\u02a5\3\2\2\2\u0090\u02a7\3\2\2\2\u0092\u02aa\3")
-        buf.write("\2\2\2\u0094\u02b2\3\2\2\2\u0096\u02b8\3\2\2\2\u0098\u02c2")
-        buf.write("\3\2\2\2\u009a\u02cd\3\2\2\2\u009c\u02cf\3\2\2\2\u009e")
-        buf.write("\u02df\3\2\2\2\u00a0\u02e1\3\2\2\2\u00a2\u02e4\3\2\2\2")
-        buf.write("\u00a4\u02e7\3\2\2\2\u00a6\u02e9\3\2\2\2\u00a8\u02f7\3")
-        buf.write("\2\2\2\u00aa\u02fa\3\2\2\2\u00ac\u0306\3\2\2\2\u00ae\u0310")
-        buf.write("\3\2\2\2\u00b0\u00b5\5\4\3\2\u00b1\u00b4\5\n\6\2\u00b2")
-        buf.write("\u00b4\5\f\7\2\u00b3\u00b1\3\2\2\2\u00b3\u00b2\3\2\2\2")
-        buf.write("\u00b4\u00b7\3\2\2\2\u00b5\u00b3\3\2\2\2\u00b5\u00b6\3")
-        buf.write("\2\2\2\u00b6\3\3\2\2\2\u00b7\u00b5\3\2\2\2\u00b8\u00ba")
-        buf.write("\5\6\4\2\u00b9\u00b8\3\2\2\2\u00b9\u00ba\3\2\2\2\u00ba")
-        buf.write("\u00be\3\2\2\2\u00bb\u00bd\5\b\5\2\u00bc\u00bb\3\2\2\2")
-        buf.write("\u00bd\u00c0\3\2\2\2\u00be\u00bc\3\2\2\2\u00be\u00bf\3")
-        buf.write("\2\2\2\u00bf\5\3\2\2\2\u00c0\u00be\3\2\2\2\u00c1\u00c2")
-        buf.write("\7\3\2\2\u00c2\u00c3\t\2\2\2\u00c3\u00c4\7S\2\2\u00c4")
-        buf.write("\7\3\2\2\2\u00c5\u00c6\7\4\2\2\u00c6\u00c7\7c\2\2\u00c7")
-        buf.write("\u00c8\7S\2\2\u00c8\t\3\2\2\2\u00c9\u00ce\5\u00a6T\2\u00ca")
-        buf.write("\u00ce\5N(\2\u00cb\u00ce\5\16\b\2\u00cc\u00ce\5\u00ae")
-        buf.write("X\2\u00cd\u00c9\3\2\2\2\u00cd\u00ca\3\2\2\2\u00cd\u00cb")
-        buf.write("\3\2\2\2\u00cd\u00cc\3\2\2\2\u00ce\13\3\2\2\2\u00cf\u00d8")
-        buf.write("\5p9\2\u00d0\u00d8\5\24\13\2\u00d1\u00d8\5\20\t\2\u00d2")
-        buf.write("\u00d8\5\u009cO\2\u00d3\u00d8\5\u00a0Q\2\u00d4\u00d8\5")
-        buf.write("\u00a2R\2\u00d5\u00d8\5D#\2\u00d6\u00d8\5X-\2\u00d7\u00cf")
-        buf.write("\3\2\2\2\u00d7\u00d0\3\2\2\2\u00d7\u00d1\3\2\2\2\u00d7")
-        buf.write("\u00d2\3\2\2\2\u00d7\u00d3\3\2\2\2\u00d7\u00d4\3\2\2\2")
-        buf.write("\u00d7\u00d5\3\2\2\2\u00d7\u00d6\3\2\2\2\u00d8\r\3\2\2")
-        buf.write("\2\u00d9\u00da\5\"\22\2\u00da\u00db\7S\2\2\u00db\17\3")
-        buf.write("\2\2\2\u00dc\u00df\5<\37\2\u00dd\u00df\5\62\32\2\u00de")
-        buf.write("\u00dc\3\2\2\2\u00de\u00dd\3\2\2\2\u00df\u00e0\3\2\2\2")
-        buf.write("\u00e0\u00e1\7S\2\2\u00e1\21\3\2\2\2\u00e2\u00e3\5F$\2")
-        buf.write("\u00e3\u00e6\5\u0092J\2\u00e4\u00e7\5r:\2\u00e5\u00e7")
-        buf.write("\5F$\2\u00e6\u00e4\3\2\2\2\u00e6\u00e5\3\2\2\2\u00e7\23")
-        buf.write("\3\2\2\2\u00e8\u00eb\5\22\n\2\u00e9\u00eb\5`\61\2\u00ea")
-        buf.write("\u00e8\3\2\2\2\u00ea\u00e9\3\2\2\2\u00eb\u00ec\3\2\2\2")
-        buf.write("\u00ec\u00ed\7S\2\2\u00ed\25\3\2\2\2\u00ee\u00ef\7W\2")
-        buf.write("\2\u00ef\u00f0\5\60\31\2\u00f0\27\3\2\2\2\u00f1\u00f2")
-        buf.write("\7L\2\2\u00f2\u00f3\5r:\2\u00f3\u00f4\7M\2\2\u00f4\31")
-        buf.write("\3\2\2\2\u00f5\u00f6\7L\2\2\u00f6\u00f7\5r:\2\u00f7\u00f8")
-        buf.write("\7U\2\2\u00f8\u00f9\5r:\2\u00f9\u00fa\7M\2\2\u00fa\33")
-        buf.write("\3\2\2\2\u00fb\u00fc\7a\2\2\u00fc\u00fe\7U\2\2\u00fd\u00fb")
-        buf.write("\3\2\2\2\u00fe\u0101\3\2\2\2\u00ff\u00fd\3\2\2\2\u00ff")
-        buf.write("\u0100\3\2\2\2\u0100\u0102\3\2\2\2\u0101\u00ff\3\2\2\2")
-        buf.write("\u0102\u0103\7a\2\2\u0103\35\3\2\2\2\u0104\u0105\7R\2")
-        buf.write("\2\u0105\u0106\7a\2\2\u0106\37\3\2\2\2\u0107\u0108\t\3")
-        buf.write("\2\2\u0108!\3\2\2\2\u0109\u010a\5 \21\2\u010a\u010b\5")
-        buf.write("H%\2\u010b#\3\2\2\2\u010c\u010e\5 \21\2\u010d\u010f\5")
-        buf.write("\30\r\2\u010e\u010d\3\2\2\2\u010e\u010f\3\2\2\2\u010f")
+        buf.write("T\5T\u02f7\nT\3T\3T\3U\3U\3U\3V\3V\7V\u0300\nV\fV\16V")
+        buf.write("\u0303\13V\3V\5V\u0306\nV\3V\3V\3W\3W\3W\5W\u030d\nW\3")
+        buf.write("W\5W\u0310\nW\3W\3W\3X\3X\3X\7X\u0317\nX\fX\16X\u031a")
+        buf.write("\13X\3X\3X\3X\2\13Frtvxz|\u0080\u008cY\2\4\6\b\n\f\16")
+        buf.write("\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@BDF")
+        buf.write("HJLNPRTVXZ\\^`bdfhjlnprtvxz|~\u0080\u0082\u0084\u0086")
+        buf.write("\u0088\u008a\u008c\u008e\u0090\u0092\u0094\u0096\u0098")
+        buf.write("\u009a\u009c\u009e\u00a0\u00a2\u00a4\u00a6\u00a8\u00aa")
+        buf.write("\u00ac\u00ae\2\21\4\2``bb\3\2\5\6\3\2\7\b\3\2\t\f\4\2")
+        buf.write("\23\24aa\3\2\35\36\3\2\37$\4\2\21\21%%\3\2)*\3\2XY\3\2")
+        buf.write("Z\\\3\2+,\3\2-\66\4\2\67@VV\3\2FH\2\u032b\2\u00b0\3\2")
+        buf.write("\2\2\4\u00b9\3\2\2\2\6\u00c1\3\2\2\2\b\u00c5\3\2\2\2\n")
+        buf.write("\u00cd\3\2\2\2\f\u00d7\3\2\2\2\16\u00d9\3\2\2\2\20\u00de")
+        buf.write("\3\2\2\2\22\u00e2\3\2\2\2\24\u00ea\3\2\2\2\26\u00ee\3")
+        buf.write("\2\2\2\30\u00f1\3\2\2\2\32\u00f5\3\2\2\2\34\u00ff\3\2")
+        buf.write("\2\2\36\u0104\3\2\2\2 \u0107\3\2\2\2\"\u0109\3\2\2\2$")
+        buf.write("\u010c\3\2\2\2&\u0117\3\2\2\2(\u011c\3\2\2\2*\u011e\3")
+        buf.write("\2\2\2,\u0120\3\2\2\2.\u0122\3\2\2\2\60\u012f\3\2\2\2")
+        buf.write("\62\u0131\3\2\2\2\64\u0134\3\2\2\2\66\u013a\3\2\2\28\u0140")
+        buf.write("\3\2\2\2:\u0145\3\2\2\2<\u014e\3\2\2\2>\u0155\3\2\2\2")
+        buf.write("@\u015a\3\2\2\2B\u0162\3\2\2\2D\u0167\3\2\2\2F\u0177\3")
+        buf.write("\2\2\2H\u0186\3\2\2\2J\u0191\3\2\2\2L\u0197\3\2\2\2N\u01a5")
+        buf.write("\3\2\2\2P\u01a9\3\2\2\2R\u01b3\3\2\2\2T\u01bd\3\2\2\2")
+        buf.write("V\u01c9\3\2\2\2X\u01cb\3\2\2\2Z\u01d2\3\2\2\2\\\u01d4")
+        buf.write("\3\2\2\2^\u01d9\3\2\2\2`\u01e5\3\2\2\2b\u01e7\3\2\2\2")
+        buf.write("d\u01f1\3\2\2\2f\u01f5\3\2\2\2h\u0206\3\2\2\2j\u0208\3")
+        buf.write("\2\2\2l\u020a\3\2\2\2n\u020c\3\2\2\2p\u020e\3\2\2\2r\u0215")
+        buf.write("\3\2\2\2t\u021f\3\2\2\2v\u022a\3\2\2\2x\u0235\3\2\2\2")
+        buf.write("z\u0240\3\2\2\2|\u024e\3\2\2\2~\u025b\3\2\2\2\u0080\u026c")
+        buf.write("\3\2\2\2\u0082\u027a\3\2\2\2\u0084\u027e\3\2\2\2\u0086")
+        buf.write("\u0284\3\2\2\2\u0088\u0286\3\2\2\2\u008a\u028d\3\2\2\2")
+        buf.write("\u008c\u0295\3\2\2\2\u008e\u02a5\3\2\2\2\u0090\u02a7\3")
+        buf.write("\2\2\2\u0092\u02aa\3\2\2\2\u0094\u02b2\3\2\2\2\u0096\u02b8")
+        buf.write("\3\2\2\2\u0098\u02c2\3\2\2\2\u009a\u02cd\3\2\2\2\u009c")
+        buf.write("\u02cf\3\2\2\2\u009e\u02df\3\2\2\2\u00a0\u02e1\3\2\2\2")
+        buf.write("\u00a2\u02e4\3\2\2\2\u00a4\u02e7\3\2\2\2\u00a6\u02e9\3")
+        buf.write("\2\2\2\u00a8\u02fa\3\2\2\2\u00aa\u02fd\3\2\2\2\u00ac\u0309")
+        buf.write("\3\2\2\2\u00ae\u0313\3\2\2\2\u00b0\u00b5\5\4\3\2\u00b1")
+        buf.write("\u00b4\5\n\6\2\u00b2\u00b4\5\f\7\2\u00b3\u00b1\3\2\2\2")
+        buf.write("\u00b3\u00b2\3\2\2\2\u00b4\u00b7\3\2\2\2\u00b5\u00b3\3")
+        buf.write("\2\2\2\u00b5\u00b6\3\2\2\2\u00b6\3\3\2\2\2\u00b7\u00b5")
+        buf.write("\3\2\2\2\u00b8\u00ba\5\6\4\2\u00b9\u00b8\3\2\2\2\u00b9")
+        buf.write("\u00ba\3\2\2\2\u00ba\u00be\3\2\2\2\u00bb\u00bd\5\b\5\2")
+        buf.write("\u00bc\u00bb\3\2\2\2\u00bd\u00c0\3\2\2\2\u00be\u00bc\3")
+        buf.write("\2\2\2\u00be\u00bf\3\2\2\2\u00bf\5\3\2\2\2\u00c0\u00be")
+        buf.write("\3\2\2\2\u00c1\u00c2\7\3\2\2\u00c2\u00c3\t\2\2\2\u00c3")
+        buf.write("\u00c4\7S\2\2\u00c4\7\3\2\2\2\u00c5\u00c6\7\4\2\2\u00c6")
+        buf.write("\u00c7\7c\2\2\u00c7\u00c8\7S\2\2\u00c8\t\3\2\2\2\u00c9")
+        buf.write("\u00ce\5\u00a6T\2\u00ca\u00ce\5N(\2\u00cb\u00ce\5\16\b")
+        buf.write("\2\u00cc\u00ce\5\u00aeX\2\u00cd\u00c9\3\2\2\2\u00cd\u00ca")
+        buf.write("\3\2\2\2\u00cd\u00cb\3\2\2\2\u00cd\u00cc\3\2\2\2\u00ce")
+        buf.write("\13\3\2\2\2\u00cf\u00d8\5p9\2\u00d0\u00d8\5\24\13\2\u00d1")
+        buf.write("\u00d8\5\20\t\2\u00d2\u00d8\5\u009cO\2\u00d3\u00d8\5\u00a0")
+        buf.write("Q\2\u00d4\u00d8\5\u00a2R\2\u00d5\u00d8\5D#\2\u00d6\u00d8")
+        buf.write("\5X-\2\u00d7\u00cf\3\2\2\2\u00d7\u00d0\3\2\2\2\u00d7\u00d1")
+        buf.write("\3\2\2\2\u00d7\u00d2\3\2\2\2\u00d7\u00d3\3\2\2\2\u00d7")
+        buf.write("\u00d4\3\2\2\2\u00d7\u00d5\3\2\2\2\u00d7\u00d6\3\2\2\2")
+        buf.write("\u00d8\r\3\2\2\2\u00d9\u00da\5\"\22\2\u00da\u00db\7S\2")
+        buf.write("\2\u00db\17\3\2\2\2\u00dc\u00df\5<\37\2\u00dd\u00df\5")
+        buf.write("\62\32\2\u00de\u00dc\3\2\2\2\u00de\u00dd\3\2\2\2\u00df")
+        buf.write("\u00e0\3\2\2\2\u00e0\u00e1\7S\2\2\u00e1\21\3\2\2\2\u00e2")
+        buf.write("\u00e3\5F$\2\u00e3\u00e6\5\u0092J\2\u00e4\u00e7\5r:\2")
+        buf.write("\u00e5\u00e7\5F$\2\u00e6\u00e4\3\2\2\2\u00e6\u00e5\3\2")
+        buf.write("\2\2\u00e7\23\3\2\2\2\u00e8\u00eb\5\22\n\2\u00e9\u00eb")
+        buf.write("\5`\61\2\u00ea\u00e8\3\2\2\2\u00ea\u00e9\3\2\2\2\u00eb")
+        buf.write("\u00ec\3\2\2\2\u00ec\u00ed\7S\2\2\u00ed\25\3\2\2\2\u00ee")
+        buf.write("\u00ef\7W\2\2\u00ef\u00f0\5\60\31\2\u00f0\27\3\2\2\2\u00f1")
+        buf.write("\u00f2\7L\2\2\u00f2\u00f3\5r:\2\u00f3\u00f4\7M\2\2\u00f4")
+        buf.write("\31\3\2\2\2\u00f5\u00f6\7L\2\2\u00f6\u00f7\5r:\2\u00f7")
+        buf.write("\u00f8\7U\2\2\u00f8\u00f9\5r:\2\u00f9\u00fa\7M\2\2\u00fa")
+        buf.write("\33\3\2\2\2\u00fb\u00fc\7a\2\2\u00fc\u00fe\7U\2\2\u00fd")
+        buf.write("\u00fb\3\2\2\2\u00fe\u0101\3\2\2\2\u00ff\u00fd\3\2\2\2")
+        buf.write("\u00ff\u0100\3\2\2\2\u0100\u0102\3\2\2\2\u0101\u00ff\3")
+        buf.write("\2\2\2\u0102\u0103\7a\2\2\u0103\35\3\2\2\2\u0104\u0105")
+        buf.write("\7R\2\2\u0105\u0106\7a\2\2\u0106\37\3\2\2\2\u0107\u0108")
+        buf.write("\t\3\2\2\u0108!\3\2\2\2\u0109\u010a\5 \21\2\u010a\u010b")
+        buf.write("\5H%\2\u010b#\3\2\2\2\u010c\u010e\5 \21\2\u010d\u010f")
+        buf.write("\5\30\r\2\u010e\u010d\3\2\2\2\u010e\u010f\3\2\2\2\u010f")
         buf.write("\u0110\3\2\2\2\u0110\u0111\5\36\20\2\u0111%\3\2\2\2\u0112")
         buf.write("\u0113\5$\23\2\u0113\u0114\7U\2\2\u0114\u0116\3\2\2\2")
         buf.write("\u0115\u0112\3\2\2\2\u0116\u0119\3\2\2\2\u0117\u0115\3")
@@ -351,32 +351,33 @@ def serializedATN():
         buf.write("\7a\2\2\u02eb\u02ed\7P\2\2\u02ec\u02ee\5B\"\2\u02ed\u02ec")
         buf.write("\3\2\2\2\u02ed\u02ee\3\2\2\2\u02ee\u02ef\3\2\2\2\u02ef")
         buf.write("\u02f1\7Q\2\2\u02f0\u02eb\3\2\2\2\u02f0\u02f1\3\2\2\2")
-        buf.write("\u02f1\u02f3\3\2\2\2\u02f2\u02f4\5\26\f\2\u02f3\u02f2")
-        buf.write("\3\2\2\2\u02f3\u02f4\3\2\2\2\u02f4\u02f5\3\2\2\2\u02f5")
-        buf.write("\u02f6\5\u00aaV\2\u02f6\u00a7\3\2\2\2\u02f7\u02f8\7J\2")
-        buf.write("\2\u02f8\u02f9\5\f\7\2\u02f9\u00a9\3\2\2\2\u02fa\u02fe")
-        buf.write("\7N\2\2\u02fb\u02fd\5\f\7\2\u02fc\u02fb\3\2\2\2\u02fd")
-        buf.write("\u0300\3\2\2\2\u02fe\u02fc\3\2\2\2\u02fe\u02ff\3\2\2\2")
-        buf.write("\u02ff\u0302\3\2\2\2\u0300\u02fe\3\2\2\2\u0301\u0303\5")
-        buf.write("\u00a8U\2\u0302\u0301\3\2\2\2\u0302\u0303\3\2\2\2\u0303")
-        buf.write("\u0304\3\2\2\2\u0304\u0305\7O\2\2\u0305\u00ab\3\2\2\2")
-        buf.write("\u0306\u030c\7a\2\2\u0307\u0309\7P\2\2\u0308\u030a\5\u008a")
-        buf.write("F\2\u0309\u0308\3\2\2\2\u0309\u030a\3\2\2\2\u030a\u030b")
-        buf.write("\3\2\2\2\u030b\u030d\7Q\2\2\u030c\u0307\3\2\2\2\u030c")
-        buf.write("\u030d\3\2\2\2\u030d\u030e\3\2\2\2\u030e\u030f\5\u008a")
-        buf.write("F\2\u030f\u00ad\3\2\2\2\u0310\u0311\7K\2\2\u0311\u0315")
-        buf.write("\7N\2\2\u0312\u0314\5\f\7\2\u0313\u0312\3\2\2\2\u0314")
-        buf.write("\u0317\3\2\2\2\u0315\u0313\3\2\2\2\u0315\u0316\3\2\2\2")
-        buf.write("\u0316\u0318\3\2\2\2\u0317\u0315\3\2\2\2\u0318\u0319\7")
-        buf.write("O\2\2\u0319\u00af\3\2\2\2K\u00b3\u00b5\u00b9\u00be\u00cd")
-        buf.write("\u00d7\u00de\u00e6\u00ea\u00ff\u010e\u0117\u012d\u012f")
-        buf.write("\u0138\u013e\u0143\u0148\u014e\u0155\u0162\u0175\u0177")
-        buf.write("\u017e\u0186\u0191\u0199\u019d\u01a1\u01ac\u01af\u01b6")
-        buf.write("\u01b8\u01c5\u01c9\u01d2\u01df\u01e5\u01f1\u01f8\u01fb")
-        buf.write("\u0206\u0215\u021c\u0227\u0232\u023d\u0248\u024e\u0254")
-        buf.write("\u0258\u026c\u0275\u0277\u027e\u028d\u0295\u029d\u02a5")
-        buf.write("\u02b2\u02c2\u02c9\u02cd\u02d6\u02df\u02ed\u02f0\u02f3")
-        buf.write("\u02fe\u0302\u0309\u030c\u0315")
+        buf.write("\u02f1\u02f3\3\2\2\2\u02f2\u02f4\5&\24\2\u02f3\u02f2\3")
+        buf.write("\2\2\2\u02f3\u02f4\3\2\2\2\u02f4\u02f6\3\2\2\2\u02f5\u02f7")
+        buf.write("\5\26\f\2\u02f6\u02f5\3\2\2\2\u02f6\u02f7\3\2\2\2\u02f7")
+        buf.write("\u02f8\3\2\2\2\u02f8\u02f9\5\u00aaV\2\u02f9\u00a7\3\2")
+        buf.write("\2\2\u02fa\u02fb\7J\2\2\u02fb\u02fc\5\f\7\2\u02fc\u00a9")
+        buf.write("\3\2\2\2\u02fd\u0301\7N\2\2\u02fe\u0300\5\f\7\2\u02ff")
+        buf.write("\u02fe\3\2\2\2\u0300\u0303\3\2\2\2\u0301\u02ff\3\2\2\2")
+        buf.write("\u0301\u0302\3\2\2\2\u0302\u0305\3\2\2\2\u0303\u0301\3")
+        buf.write("\2\2\2\u0304\u0306\5\u00a8U\2\u0305\u0304\3\2\2\2\u0305")
+        buf.write("\u0306\3\2\2\2\u0306\u0307\3\2\2\2\u0307\u0308\7O\2\2")
+        buf.write("\u0308\u00ab\3\2\2\2\u0309\u030f\7a\2\2\u030a\u030c\7")
+        buf.write("P\2\2\u030b\u030d\5\u008aF\2\u030c\u030b\3\2\2\2\u030c")
+        buf.write("\u030d\3\2\2\2\u030d\u030e\3\2\2\2\u030e\u0310\7Q\2\2")
+        buf.write("\u030f\u030a\3\2\2\2\u030f\u0310\3\2\2\2\u0310\u0311\3")
+        buf.write("\2\2\2\u0311\u0312\5H%\2\u0312\u00ad\3\2\2\2\u0313\u0314")
+        buf.write("\7K\2\2\u0314\u0318\7N\2\2\u0315\u0317\5\f\7\2\u0316\u0315")
+        buf.write("\3\2\2\2\u0317\u031a\3\2\2\2\u0318\u0316\3\2\2\2\u0318")
+        buf.write("\u0319\3\2\2\2\u0319\u031b\3\2\2\2\u031a\u0318\3\2\2\2")
+        buf.write("\u031b\u031c\7O\2\2\u031c\u00af\3\2\2\2L\u00b3\u00b5\u00b9")
+        buf.write("\u00be\u00cd\u00d7\u00de\u00e6\u00ea\u00ff\u010e\u0117")
+        buf.write("\u012d\u012f\u0138\u013e\u0143\u0148\u014e\u0155\u0162")
+        buf.write("\u0175\u0177\u017e\u0186\u0191\u0199\u019d\u01a1\u01ac")
+        buf.write("\u01af\u01b6\u01b8\u01c5\u01c9\u01d2\u01df\u01e5\u01f1")
+        buf.write("\u01f8\u01fb\u0206\u0215\u021c\u0227\u0232\u023d\u0248")
+        buf.write("\u024e\u0254\u0258\u026c\u0275\u0277\u027e\u028d\u0295")
+        buf.write("\u029d\u02a5\u02b2\u02c2\u02c9\u02cd\u02d6\u02df\u02ed")
+        buf.write("\u02f0\u02f3\u02f6\u0301\u0305\u030c\u030f\u0318")
         return buf.getvalue()
 
 
@@ -694,12 +695,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitProgram" ):
                 listener.exitProgram(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitProgram" ):
-                return visitor.visitProgram(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -772,12 +767,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitHeader" ):
                 listener.exitHeader(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitHeader" ):
-                return visitor.visitHeader(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -842,12 +831,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitVersion" ):
                 listener.exitVersion(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitVersion" ):
-                return visitor.visitVersion(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -901,12 +884,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitInclude" ):
                 listener.exitInclude(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitInclude" ):
-                return visitor.visitInclude(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -965,12 +942,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitGlobalStatement" ):
                 listener.exitGlobalStatement(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitGlobalStatement" ):
-                return visitor.visitGlobalStatement(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1064,12 +1035,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitStatement" ):
                 listener.exitStatement(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitStatement" ):
-                return visitor.visitStatement(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1165,12 +1130,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumDeclarationStatement" ):
                 listener.exitQuantumDeclarationStatement(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumDeclarationStatement" ):
-                return visitor.visitQuantumDeclarationStatement(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1221,12 +1180,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitClassicalDeclarationStatement" ):
                 listener.exitClassicalDeclarationStatement(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitClassicalDeclarationStatement" ):
-                return visitor.visitClassicalDeclarationStatement(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1295,12 +1248,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitClassicalAssignment" ):
                 listener.exitClassicalAssignment(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitClassicalAssignment" ):
-                return visitor.visitClassicalAssignment(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1366,12 +1313,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitAssignmentStatement" ):
                 listener.exitAssignmentStatement(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitAssignmentStatement" ):
-                return visitor.visitAssignmentStatement(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1431,12 +1372,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitReturnSignature" ):
                 listener.exitReturnSignature(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitReturnSignature" ):
-                return visitor.visitReturnSignature(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1486,12 +1421,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitDesignator" ):
                 listener.exitDesignator(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitDesignator" ):
-                return visitor.visitDesignator(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1551,12 +1480,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitDoubleDesignator" ):
                 listener.exitDoubleDesignator(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitDoubleDesignator" ):
-                return visitor.visitDoubleDesignator(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1615,12 +1538,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitIdentifierList" ):
                 listener.exitIdentifierList(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitIdentifierList" ):
-                return visitor.visitIdentifierList(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1678,12 +1595,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitAssociation" ):
                 listener.exitAssociation(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitAssociation" ):
-                return visitor.visitAssociation(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1724,12 +1635,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitQuantumType" ):
                 listener.exitQuantumType(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumType" ):
-                return visitor.visitQuantumType(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1783,12 +1688,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumDeclaration" ):
                 listener.exitQuantumDeclaration(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumDeclaration" ):
-                return visitor.visitQuantumDeclaration(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1840,12 +1739,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitQuantumArgument" ):
                 listener.exitQuantumArgument(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumArgument" ):
-                return visitor.visitQuantumArgument(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1909,12 +1802,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumArgumentList" ):
                 listener.exitQuantumArgumentList(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumArgumentList" ):
-                return visitor.visitQuantumArgumentList(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1967,12 +1854,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitBitType" ):
                 listener.exitBitType(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitBitType" ):
-                return visitor.visitBitType(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -2017,12 +1898,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitSingleDesignatorType" ):
                 listener.exitSingleDesignatorType(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSingleDesignatorType" ):
-                return visitor.visitSingleDesignatorType(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -2069,12 +1944,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitDoubleDesignatorType" ):
                 listener.exitDoubleDesignatorType(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitDoubleDesignatorType" ):
-                return visitor.visitDoubleDesignatorType(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -2113,12 +1982,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitNoDesignatorType" ):
                 listener.exitNoDesignatorType(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitNoDesignatorType" ):
-                return visitor.visitNoDesignatorType(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -2181,12 +2044,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitClassicalType" ):
                 listener.exitClassicalType(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitClassicalType" ):
-                return visitor.visitClassicalType(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -2266,12 +2123,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitConstantDeclaration" ):
                 listener.exitConstantDeclaration(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitConstantDeclaration" ):
-                return visitor.visitConstantDeclaration(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -2327,12 +2178,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitSingleDesignatorDeclaration" ):
                 listener.exitSingleDesignatorDeclaration(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSingleDesignatorDeclaration" ):
-                return visitor.visitSingleDesignatorDeclaration(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -2404,12 +2249,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitDoubleDesignatorDeclaration" ):
                 listener.exitDoubleDesignatorDeclaration(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitDoubleDesignatorDeclaration" ):
-                return visitor.visitDoubleDesignatorDeclaration(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -2476,12 +2315,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitNoDesignatorDeclaration" ):
                 listener.exitNoDesignatorDeclaration(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitNoDesignatorDeclaration" ):
-                return visitor.visitNoDesignatorDeclaration(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -2545,12 +2378,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBitDeclaration" ):
                 listener.exitBitDeclaration(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitBitDeclaration" ):
-                return visitor.visitBitDeclaration(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -2619,12 +2446,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitClassicalDeclaration" ):
                 listener.exitClassicalDeclaration(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitClassicalDeclaration" ):
-                return visitor.visitClassicalDeclaration(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -2700,12 +2521,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitClassicalTypeList" ):
                 listener.exitClassicalTypeList(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitClassicalTypeList" ):
-                return visitor.visitClassicalTypeList(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -2765,12 +2580,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitClassicalArgument" ):
                 listener.exitClassicalArgument(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitClassicalArgument" ):
-                return visitor.visitClassicalArgument(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -2823,12 +2632,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitClassicalArgumentList" ):
                 listener.exitClassicalArgumentList(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitClassicalArgumentList" ):
-                return visitor.visitClassicalArgumentList(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -2893,12 +2696,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitAliasStatement" ):
                 listener.exitAliasStatement(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitAliasStatement" ):
-                return visitor.visitAliasStatement(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -2969,12 +2766,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitIndexIdentifier" ):
                 listener.exitIndexIdentifier(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitIndexIdentifier" ):
-                return visitor.visitIndexIdentifier(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -3078,12 +2869,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitIndexIdentifierList" ):
                 listener.exitIndexIdentifierList(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitIndexIdentifierList" ):
-                return visitor.visitIndexIdentifierList(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -3154,12 +2939,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitIndexEqualsAssignmentList" ):
                 listener.exitIndexEqualsAssignmentList(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitIndexEqualsAssignmentList" ):
-                return visitor.visitIndexEqualsAssignmentList(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -3234,12 +3013,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitRangeDefinition" ):
                 listener.exitRangeDefinition(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitRangeDefinition" ):
-                return visitor.visitRangeDefinition(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -3318,12 +3091,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumGateDefinition" ):
                 listener.exitQuantumGateDefinition(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumGateDefinition" ):
-                return visitor.visitQuantumGateDefinition(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -3381,12 +3148,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitQuantumGateSignature" ):
                 listener.exitQuantumGateSignature(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumGateSignature" ):
-                return visitor.visitQuantumGateSignature(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -3472,12 +3233,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumBlock" ):
                 listener.exitQuantumBlock(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumBlock" ):
-                return visitor.visitQuantumBlock(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -3549,12 +3304,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumLoop" ):
                 listener.exitQuantumLoop(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumLoop" ):
-                return visitor.visitQuantumLoop(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -3607,12 +3356,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitQuantumLoopBlock" ):
                 listener.exitQuantumLoopBlock(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumLoopBlock" ):
-                return visitor.visitQuantumLoopBlock(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -3685,12 +3428,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumStatement" ):
                 listener.exitQuantumStatement(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumStatement" ):
-                return visitor.visitQuantumStatement(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -3746,12 +3483,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitQuantumInstruction" ):
                 listener.exitQuantumInstruction(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumInstruction" ):
-                return visitor.visitQuantumInstruction(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -3823,12 +3554,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumPhase" ):
                 listener.exitQuantumPhase(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumPhase" ):
-                return visitor.visitQuantumPhase(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -3876,12 +3601,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitQuantumMeasurement" ):
                 listener.exitQuantumMeasurement(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumMeasurement" ):
-                return visitor.visitQuantumMeasurement(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -3936,12 +3655,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitQuantumMeasurementAssignment" ):
                 listener.exitQuantumMeasurementAssignment(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumMeasurementAssignment" ):
-                return visitor.visitQuantumMeasurementAssignment(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -4013,12 +3726,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumBarrier" ):
                 listener.exitQuantumBarrier(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumBarrier" ):
-                return visitor.visitQuantumBarrier(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -4068,12 +3775,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitQuantumGateModifier" ):
                 listener.exitQuantumGateModifier(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumGateModifier" ):
-                return visitor.visitQuantumGateModifier(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -4155,12 +3856,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumGateCall" ):
                 listener.exitQuantumGateCall(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumGateCall" ):
-                return visitor.visitQuantumGateCall(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -4231,12 +3926,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitQuantumGateName" ):
                 listener.exitQuantumGateName(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitQuantumGateName" ):
-                return visitor.visitQuantumGateName(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -4306,12 +3995,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitUnaryOperator" ):
                 listener.exitUnaryOperator(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitUnaryOperator" ):
-                return visitor.visitUnaryOperator(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -4357,12 +4040,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitRelationalOperator" ):
                 listener.exitRelationalOperator(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitRelationalOperator" ):
-                return visitor.visitRelationalOperator(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -4407,12 +4084,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitLogicalOperator" ):
                 listener.exitLogicalOperator(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitLogicalOperator" ):
-                return visitor.visitLogicalOperator(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -4464,12 +4135,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpressionStatement" ):
                 listener.exitExpressionStatement(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitExpressionStatement" ):
-                return visitor.visitExpressionStatement(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -4526,12 +4191,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpression" ):
                 listener.exitExpression(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitExpression" ):
-                return visitor.visitExpression(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -4621,12 +4280,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitXOrExpression" ):
                 listener.exitXOrExpression(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitXOrExpression" ):
-                return visitor.visitXOrExpression(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
     def xOrExpression(self, _p:int=0):
@@ -4698,12 +4351,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitBitAndExpression" ):
                 listener.exitBitAndExpression(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitBitAndExpression" ):
-                return visitor.visitBitAndExpression(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
     def bitAndExpression(self, _p:int=0):
@@ -4774,12 +4421,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBitShiftExpression" ):
                 listener.exitBitShiftExpression(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitBitShiftExpression" ):
-                return visitor.visitBitShiftExpression(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -4863,12 +4504,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitAdditiveExpression" ):
                 listener.exitAdditiveExpression(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitAdditiveExpression" ):
-                return visitor.visitAdditiveExpression(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -4959,12 +4594,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitMultiplicativeExpression" ):
                 listener.exitMultiplicativeExpression(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitMultiplicativeExpression" ):
-                return visitor.visitMultiplicativeExpression(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -5067,12 +4696,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitUnaryExpression" ):
                 listener.exitUnaryExpression(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitUnaryExpression" ):
-                return visitor.visitUnaryExpression(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -5162,12 +4785,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpressionTerminator" ):
                 listener.exitExpressionTerminator(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitExpressionTerminator" ):
-                return visitor.visitExpressionTerminator(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -5306,12 +4923,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitIncrementor" ):
                 listener.exitIncrementor(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitIncrementor" ):
-                return visitor.visitIncrementor(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -5374,12 +4985,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitBuiltInCall" ):
                 listener.exitBuiltInCall(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitBuiltInCall" ):
-                return visitor.visitBuiltInCall(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -5437,12 +5042,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitBuiltInMath" ):
                 listener.exitBuiltInMath(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitBuiltInMath" ):
-                return visitor.visitBuiltInMath(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -5490,12 +5089,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitCastOperator" ):
                 listener.exitCastOperator(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitCastOperator" ):
-                return visitor.visitCastOperator(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -5547,12 +5140,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpressionList" ):
                 listener.exitExpressionList(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitExpressionList" ):
-                return visitor.visitExpressionList(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -5620,12 +5207,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBooleanExpression" ):
                 listener.exitBooleanExpression(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitBooleanExpression" ):
-                return visitor.visitBooleanExpression(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -5713,12 +5294,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitComparisonExpression" ):
                 listener.exitComparisonExpression(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitComparisonExpression" ):
-                return visitor.visitComparisonExpression(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -5781,12 +5356,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitEqualsExpression" ):
                 listener.exitEqualsExpression(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitEqualsExpression" ):
-                return visitor.visitEqualsExpression(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -5829,12 +5398,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitAssignmentOperator" ):
                 listener.exitAssignmentOperator(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitAssignmentOperator" ):
-                return visitor.visitAssignmentOperator(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -5899,12 +5462,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitEqualsAssignmentList" ):
                 listener.exitEqualsAssignmentList(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitEqualsAssignmentList" ):
-                return visitor.visitEqualsAssignmentList(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -5967,12 +5524,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitMembershipTest" ):
                 listener.exitMembershipTest(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitMembershipTest" ):
-                return visitor.visitMembershipTest(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -6031,12 +5582,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitSetDeclaration" ):
                 listener.exitSetDeclaration(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSetDeclaration" ):
-                return visitor.visitSetDeclaration(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -6110,12 +5655,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitProgramBlock" ):
                 listener.exitProgramBlock(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitProgramBlock" ):
-                return visitor.visitProgramBlock(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -6198,12 +5737,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitBranchingStatement" ):
                 listener.exitBranchingStatement(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitBranchingStatement" ):
-                return visitor.visitBranchingStatement(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -6274,12 +5807,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitLoopSignature" ):
                 listener.exitLoopSignature(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitLoopSignature" ):
-                return visitor.visitLoopSignature(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -6347,12 +5874,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitLoopStatement" ):
                 listener.exitLoopStatement(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitLoopStatement" ):
-                return visitor.visitLoopStatement(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -6400,12 +5921,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitControlDirectiveStatement" ):
                 listener.exitControlDirectiveStatement(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitControlDirectiveStatement" ):
-                return visitor.visitControlDirectiveStatement(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -6446,12 +5961,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitControlDirective" ):
                 listener.exitControlDirective(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitControlDirective" ):
-                return visitor.visitControlDirective(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -6499,6 +6008,10 @@ class qasm3subParser ( Parser ):
         def RPAREN(self):
             return self.getToken(qasm3subParser.RPAREN, 0)
 
+        def quantumArgumentList(self):
+            return self.getTypedRuleContext(qasm3subParser.QuantumArgumentListContext,0)
+
+
         def returnSignature(self):
             return self.getTypedRuleContext(qasm3subParser.ReturnSignatureContext,0)
 
@@ -6517,12 +6030,6 @@ class qasm3subParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitSubroutineDefinition" ):
                 listener.exitSubroutineDefinition(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSubroutineDefinition" ):
-                return visitor.visitSubroutineDefinition(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -6559,12 +6066,20 @@ class qasm3subParser ( Parser ):
             self.state = 753
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==qasm3subParser.ARROW:
+            if _la==qasm3subParser.T__2 or _la==qasm3subParser.T__3:
                 self.state = 752
+                self.quantumArgumentList()
+
+
+            self.state = 756
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==qasm3subParser.ARROW:
+                self.state = 755
                 self.returnSignature()
 
 
-            self.state = 755
+            self.state = 758
             self.subroutineBlock()
         except RecognitionException as re:
             localctx.exception = re
@@ -6597,12 +6112,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitReturnStatement" ):
                 listener.exitReturnStatement(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitReturnStatement" ):
-                return visitor.visitReturnStatement(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -6612,9 +6121,9 @@ class qasm3subParser ( Parser ):
         self.enterRule(localctx, 166, self.RULE_returnStatement)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 757
+            self.state = 760
             self.match(qasm3subParser.T__71)
-            self.state = 758
+            self.state = 761
             self.statement()
         except RecognitionException as re:
             localctx.exception = re
@@ -6660,12 +6169,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitSubroutineBlock" ):
                 listener.exitSubroutineBlock(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSubroutineBlock" ):
-                return visitor.visitSubroutineBlock(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -6676,27 +6179,27 @@ class qasm3subParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 760
+            self.state = 763
             self.match(qasm3subParser.LBRACE)
-            self.state = 764
+            self.state = 767
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << qasm3subParser.T__4) | (1 << qasm3subParser.T__5) | (1 << qasm3subParser.T__6) | (1 << qasm3subParser.T__7) | (1 << qasm3subParser.T__8) | (1 << qasm3subParser.T__9) | (1 << qasm3subParser.T__10) | (1 << qasm3subParser.T__11) | (1 << qasm3subParser.T__12) | (1 << qasm3subParser.T__13) | (1 << qasm3subParser.T__16) | (1 << qasm3subParser.T__17) | (1 << qasm3subParser.T__18) | (1 << qasm3subParser.T__19) | (1 << qasm3subParser.T__20) | (1 << qasm3subParser.T__21) | (1 << qasm3subParser.T__22) | (1 << qasm3subParser.T__23) | (1 << qasm3subParser.T__25) | (1 << qasm3subParser.T__26) | (1 << qasm3subParser.T__27) | (1 << qasm3subParser.T__42) | (1 << qasm3subParser.T__43) | (1 << qasm3subParser.T__44) | (1 << qasm3subParser.T__45) | (1 << qasm3subParser.T__46) | (1 << qasm3subParser.T__47) | (1 << qasm3subParser.T__48) | (1 << qasm3subParser.T__49) | (1 << qasm3subParser.T__50) | (1 << qasm3subParser.T__51))) != 0) or ((((_la - 64)) & ~0x3f) == 0 and ((1 << (_la - 64)) & ((1 << (qasm3subParser.T__63 - 64)) | (1 << (qasm3subParser.T__65 - 64)) | (1 << (qasm3subParser.T__66 - 64)) | (1 << (qasm3subParser.T__67 - 64)) | (1 << (qasm3subParser.T__68 - 64)) | (1 << (qasm3subParser.T__69 - 64)) | (1 << (qasm3subParser.LPAREN - 64)) | (1 << (qasm3subParser.MINUS - 64)) | (1 << (qasm3subParser.Constant - 64)) | (1 << (qasm3subParser.Integer - 64)) | (1 << (qasm3subParser.Identifier - 64)) | (1 << (qasm3subParser.RealNumber - 64)) | (1 << (qasm3subParser.StringLiteral - 64)))) != 0):
-                self.state = 761
+                self.state = 764
                 self.statement()
-                self.state = 766
+                self.state = 769
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 768
+            self.state = 771
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==qasm3subParser.T__71:
-                self.state = 767
+                self.state = 770
                 self.returnStatement()
 
 
-            self.state = 770
+            self.state = 773
             self.match(qasm3subParser.RBRACE)
         except RecognitionException as re:
             localctx.exception = re
@@ -6717,11 +6220,8 @@ class qasm3subParser ( Parser ):
         def Identifier(self):
             return self.getToken(qasm3subParser.Identifier, 0)
 
-        def expressionList(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(qasm3subParser.ExpressionListContext)
-            else:
-                return self.getTypedRuleContext(qasm3subParser.ExpressionListContext,i)
+        def indexIdentifierList(self):
+            return self.getTypedRuleContext(qasm3subParser.IndexIdentifierListContext,0)
 
 
         def LPAREN(self):
@@ -6729,6 +6229,10 @@ class qasm3subParser ( Parser ):
 
         def RPAREN(self):
             return self.getToken(qasm3subParser.RPAREN, 0)
+
+        def expressionList(self):
+            return self.getTypedRuleContext(qasm3subParser.ExpressionListContext,0)
+
 
         def getRuleIndex(self):
             return qasm3subParser.RULE_subroutineCall
@@ -6741,12 +6245,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitSubroutineCall" ):
                 listener.exitSubroutineCall(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSubroutineCall" ):
-                return visitor.visitSubroutineCall(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -6757,28 +6255,28 @@ class qasm3subParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 772
+            self.state = 775
             self.match(qasm3subParser.Identifier)
-            self.state = 778
+            self.state = 781
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,71,self._ctx)
-            if la_ == 1:
-                self.state = 773
+            _la = self._input.LA(1)
+            if _la==qasm3subParser.LPAREN:
+                self.state = 776
                 self.match(qasm3subParser.LPAREN)
-                self.state = 775
+                self.state = 778
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << qasm3subParser.T__4) | (1 << qasm3subParser.T__5) | (1 << qasm3subParser.T__6) | (1 << qasm3subParser.T__7) | (1 << qasm3subParser.T__8) | (1 << qasm3subParser.T__9) | (1 << qasm3subParser.T__10) | (1 << qasm3subParser.T__11) | (1 << qasm3subParser.T__26) | (1 << qasm3subParser.T__27) | (1 << qasm3subParser.T__42) | (1 << qasm3subParser.T__43) | (1 << qasm3subParser.T__44) | (1 << qasm3subParser.T__45) | (1 << qasm3subParser.T__46) | (1 << qasm3subParser.T__47) | (1 << qasm3subParser.T__48) | (1 << qasm3subParser.T__49) | (1 << qasm3subParser.T__50) | (1 << qasm3subParser.T__51))) != 0) or ((((_la - 78)) & ~0x3f) == 0 and ((1 << (_la - 78)) & ((1 << (qasm3subParser.LPAREN - 78)) | (1 << (qasm3subParser.MINUS - 78)) | (1 << (qasm3subParser.Constant - 78)) | (1 << (qasm3subParser.Integer - 78)) | (1 << (qasm3subParser.Identifier - 78)) | (1 << (qasm3subParser.RealNumber - 78)) | (1 << (qasm3subParser.StringLiteral - 78)))) != 0):
-                    self.state = 774
+                    self.state = 777
                     self.expressionList()
 
 
-                self.state = 777
+                self.state = 780
                 self.match(qasm3subParser.RPAREN)
 
 
-            self.state = 780
-            self.expressionList()
+            self.state = 783
+            self.indexIdentifierList()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -6819,12 +6317,6 @@ class qasm3subParser ( Parser ):
             if hasattr( listener, "exitPragma" ):
                 listener.exitPragma(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitPragma" ):
-                return visitor.visitPragma(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -6835,21 +6327,21 @@ class qasm3subParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 782
+            self.state = 785
             self.match(qasm3subParser.T__72)
-            self.state = 783
+            self.state = 786
             self.match(qasm3subParser.LBRACE)
-            self.state = 787
+            self.state = 790
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << qasm3subParser.T__4) | (1 << qasm3subParser.T__5) | (1 << qasm3subParser.T__6) | (1 << qasm3subParser.T__7) | (1 << qasm3subParser.T__8) | (1 << qasm3subParser.T__9) | (1 << qasm3subParser.T__10) | (1 << qasm3subParser.T__11) | (1 << qasm3subParser.T__12) | (1 << qasm3subParser.T__13) | (1 << qasm3subParser.T__16) | (1 << qasm3subParser.T__17) | (1 << qasm3subParser.T__18) | (1 << qasm3subParser.T__19) | (1 << qasm3subParser.T__20) | (1 << qasm3subParser.T__21) | (1 << qasm3subParser.T__22) | (1 << qasm3subParser.T__23) | (1 << qasm3subParser.T__25) | (1 << qasm3subParser.T__26) | (1 << qasm3subParser.T__27) | (1 << qasm3subParser.T__42) | (1 << qasm3subParser.T__43) | (1 << qasm3subParser.T__44) | (1 << qasm3subParser.T__45) | (1 << qasm3subParser.T__46) | (1 << qasm3subParser.T__47) | (1 << qasm3subParser.T__48) | (1 << qasm3subParser.T__49) | (1 << qasm3subParser.T__50) | (1 << qasm3subParser.T__51))) != 0) or ((((_la - 64)) & ~0x3f) == 0 and ((1 << (_la - 64)) & ((1 << (qasm3subParser.T__63 - 64)) | (1 << (qasm3subParser.T__65 - 64)) | (1 << (qasm3subParser.T__66 - 64)) | (1 << (qasm3subParser.T__67 - 64)) | (1 << (qasm3subParser.T__68 - 64)) | (1 << (qasm3subParser.T__69 - 64)) | (1 << (qasm3subParser.LPAREN - 64)) | (1 << (qasm3subParser.MINUS - 64)) | (1 << (qasm3subParser.Constant - 64)) | (1 << (qasm3subParser.Integer - 64)) | (1 << (qasm3subParser.Identifier - 64)) | (1 << (qasm3subParser.RealNumber - 64)) | (1 << (qasm3subParser.StringLiteral - 64)))) != 0):
-                self.state = 784
+                self.state = 787
                 self.statement()
-                self.state = 789
+                self.state = 792
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 790
+            self.state = 793
             self.match(qasm3subParser.RBRACE)
         except RecognitionException as re:
             localctx.exception = re

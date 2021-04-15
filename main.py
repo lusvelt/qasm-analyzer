@@ -1,9 +1,5 @@
-import sys
-from TreeBuilder import buildParseTree
+from Parser import buildParseTree
+from Subroutine import SubroutineClassifier
 
-def main(argv):
-    tree = buildParseTree('test.qasm')
-    pass
-
-if __name__ == '__main__':
-    main(sys.argv)
+tree = buildParseTree('test.qasm')
+classifier = SubroutineClassifier(tree)
