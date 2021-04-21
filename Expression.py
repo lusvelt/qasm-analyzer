@@ -7,7 +7,6 @@ from Parser import Node
 #   * BinaryOperator
 #   * Variable
 #   * Value
-#   * Symbol
 
 # Represents a unitary operator node in the Expression AST
 class UnaryOperator:
@@ -51,10 +50,13 @@ class SetDeclaration:
             self.identifier = child.text
 
 class Expression:
-    def __init__(self, node:Node):
-        assert node.type == 'expression'
-        self.node = node
-        self.tree = Expression.buildExpressionAST(node)
+    def __init__(self, node:Node=None, tree=None):
+        assert node is None or node.type == 'expression'
+        if node is not None:
+            self.node = node
+            self.tree = Expression.buildExpressionAST(node)
+        else:
+            self.tree = tree
 
     @staticmethod
     def buildExpressionAST(node:Node):
@@ -144,13 +146,16 @@ class Expression:
 
 
 class BooleanExpression:
-    def __init__(self, node:Node):
-        assert node.type == 'booleanExpression'
-        self.node = node
-        self.tree = BooleanExpression.__buildBooleanExpressionAST(node)
+    def __init__(self, node:Node=None, tree=None):
+        assert node is None or node.type == 'booleanExpression'
+        if node is not None:
+            self.node = node
+            self.tree = BooleanExpression.__buildBooleanExpressionAST(node)
+        else:
+            self.tree = tree
 
     @staticmethod
-    def __buildBooleanExpressionAST(node: Node):
+    def __buildBooleanExpressionAST(node:Node):
         assert node.type == 'booleanExpression'
         child = node.getChild()
         if child.type == 'booleanExpression':
@@ -191,3 +196,10 @@ class BooleanExpression:
         setDeclarationNode = node.getChildByType('setDeclaration')
         setDeclaration = SetDeclaration(setDeclarationNode)
         return BinaryOperator(literal, identifier, setDeclaration)
+
+    def evaluate(self):
+        pass
+
+    def negate(self):
+        negation = BooleanExpression(tree=UnaryOperator('!', self.tree))
+        return negation.evaluate()

@@ -31,6 +31,8 @@ class Node:
     def getChildByType(self, type:str, index:int=0):
         if type not in self.rules.keys():
             return None
+        if index >= len(self.rules[type]):
+            return None
         return self.rules[type][index]
 
     def getChildrenByType(self, type:str):
@@ -53,8 +55,6 @@ class Node:
 
     def __str__(self):
         return self.type if self.type is not None else 'TOKEN'
-
-    # TODO: implement other useful methods to work with the tree
 
 
 # This class works as an interface between the ANTLR generated parse tree

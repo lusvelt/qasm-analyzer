@@ -40,18 +40,36 @@ class ClassicalType:
 # Symbols are distinguished by their index, which are automatically incremented when new Symbols are instantiated
 class Symbol:
     nextIndex = 0
-    def __init__(self):
+    def __init__(self, type):
         self.index = Symbol.nextIndex
         Symbol.nextIndex += 1
+        self.type = type
 
     def __str__(self):
-        return '$' + self.index
+        return '$' + str(self.index)
+
 
 # This class represents an evaluated value resulting from an expression, or from a literal
 class Value:
-    def __init__(self, value, type):
-        self.value = value
-        self.type = type
+    def __init__(self, value, type=None):
+        if type == 'Integer':
+            self.value = int(value)
+        elif type == 'RealNumber':
+            self.value = float(value)
+        else:
+            self.value = value
+
+        if type is None:
+            if isinstance(value, int):
+                self.type = 'Integer'
+            elif isinstance(value, float):
+                self.type = 'RealNumber'
+            elif value in ['pi', 'π', 'tau', '𝜏', 'euler', 'ℇ']:
+                self.type = 'Constant'
+            else:
+                self.type = 'StringLiteral'
+        else:
+            self.type = type
 
     def __str__(self):
         return self.value

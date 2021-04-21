@@ -4,6 +4,9 @@ from Variable import ClassicalVariable, QuantumVariable, ClassicalType
 # Represents the 'classicalArgument' rule
 class ClassicalArgument(ClassicalVariable):
     def __init__(self, node:Node):
+        assert node.type == 'classicalArgument'
+        identifier = node.getChildByType('association').getChildByType('Identifier').text
+        super().__init__(identifier)
         classicalTypeNode = node.getChildByType('classicalType')
         self.classicalType = ClassicalType(classicalTypeNode)
         associationNode = node.getChildByType('association')
@@ -15,6 +18,9 @@ class ClassicalArgument(ClassicalVariable):
 # Represents the 'quantumArgument' rule
 class QuantumArgument(QuantumVariable):
     def __init__(self, node:Node):
+        assert node.type == 'quantumArgument'
+        identifier = node.getChildByType('association').getChildByType('Identifier').text
+        super().__init__(identifier)
         self.quantumType = node.getChildByType('quantumType').text
         designatorNode = node.getChildByType('designator')
         if designatorNode is not None:
@@ -34,6 +40,7 @@ class QuantumArgument(QuantumVariable):
 #   isRecursive
 class Subroutine:
     def __init__(self, node:Node):
+        assert node.type == 'subroutineDefinition'
         self.node = node
         self.identifier = node.getChildByType('Identifier').text
         self.classicalArguments = []
