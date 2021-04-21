@@ -1,41 +1,26 @@
 from Parser import Node
-
-# In this file we declare some classes which map the grammar rules that appear in the parse tree
-# Each class is initialized by passing the Node of the parse tree as parameter in the constructor
-# The variables having 'Node' as suffix in their name represent nodes in the parse tree
-
-# Represents the 'classicalType' rule
-class ClassicalType:
-    def __init__(self, node:Node):
-        self.node = node
-        subTypeNode = node.getChild()
-        self.subType = subTypeNode.nodeType
-        literalTypeNode = subTypeNode.getChild()
-        self.literalType = literalTypeNode.text
-        self.designatorExpr1 = None
-        self.designatorExpr2 = None
-        designatorNode = node.getChild(1)
-        if designatorNode is not None:
-            if designatorNode.nodeType == 'designator':
-                self.designatorExpr1 = designatorNode.getChildByType('expression')
-            else:
-                self.designatorExpr1 = designatorNode.getChildByType('expression', 0)
-                self.designatorExpr2 = designatorNode.getChildByType('expression', 1)
-
-    # Checks if the type has a limited domain (bit and creg have {0, 1}, bool has {true, false})
-    def hasLimitedDomain(self):
-        return self.literalType in ['bit', 'creg', 'bool']  # Maybe also 'fixed'
+from Variable import ClassicalVariable, QuantumVariable, ClassicalType
 
 # Represents the 'classicalArgument' rule
-class ClassicalArgument:
+class ClassicalArgument(ClassicalVariable):
     def __init__(self, node:Node):
         classicalTypeNode = node.getChildByType('classicalType')
         self.classicalType = ClassicalType(classicalTypeNode)
         associationNode = node.getChildByType('association')
-        self.identifier = associationNode.getChildByType('Identifier')
+        self.identifier = associationNode.getChildByType('Identifier').text
 
     def hasLimitedDomain(self):
         return self.classicalType.hasLimitedDomain()
+
+# Represents the 'quantumArgument' rule
+class QuantumArgument(QuantumVariable):
+    def __init__(self, node:Node):
+        self.quantumType = node.getChildByType('quantumType').text
+        designatorNode = node.getChildByType('designator')
+        if designatorNode is not None:
+            self.designatorExpr = designatorNode.getChildByType('expression')
+        associationNode = node.getChildByType('association')
+        self.identifier = associationNode.getChildByType('Identifier').text
 
 # This is the class which operates the analysis on the subroutine, after creating the instance, the following
 # attributes are available:
@@ -55,6 +40,7 @@ class Subroutine:
         self.quantumArguments = []
 
         self.__analyzeClassicalArguments()
+        self.__analyzeQuantumArguments()
         self.__analyzeReturnType()
         self.__analyzeBody()
 
@@ -67,6 +53,13 @@ class Subroutine:
         for classicalArgumentNode in classicalArgumentNodes:
             classicalArgument = ClassicalArgument(classicalArgumentNode)
             self.classicalArguments.append(classicalArgument)
+
+    def __analyzeQuantumArguments(self):
+        quantumArgumentListNode = self.node.getChildByType('quantumArgumentList')
+        quantumArgumentNodes = quantumArgumentListNode.getChildrenByType('quantumArgument')
+        for quantumArgumentNode in quantumArgumentNodes:
+            quantumArgument = ClassicalArgument(quantumArgumentNode)
+            self.quantumArguments.append(quantumArgument)
 
     def __analyzeReturnType(self):
         returnSignatureNode = self.node.getChildByType('returnSignature')
@@ -106,6 +99,8 @@ class SubroutineClassifier:
 
     def __buildClassification(self):
         globalStatements = self.parseTree.getChildrenByType('globalStatement')
+        if globalStatements is None:
+            return
         for node in globalStatements:
             child = node.getChildByType('subroutineDefinition')
             if child is not None:

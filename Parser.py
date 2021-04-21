@@ -7,14 +7,14 @@ from qasm3sub.qasm3subListener import qasm3subListener
 # This class is the core of our custom parse tree, it defines
 # which syntax data about the QASM program are stored in the tree
 class Node:
-    def __init__(self, nodeType:str, text: str = None):
-        self.nodeType = nodeType if 'T__' not in nodeType else None # if it's an unnamed token set the type to None
+    def __init__(self, type:str, text: str = None):
+        self.type = type if 'T__' not in type else None # if it's an unnamed token set the type to None
         self.text = text # only set for leaves, None otherwise
         self.parent = None
         self.children = [] # list of children rules (order does matter)
         self.position = None # index of the current Node in parent.children list
         self.rules = {} # dict which maps a rule type with the (ordered) list of all child rules matching that type
-        self.index = None # index of the current node in parent.rules[self.nodeType]
+        self.index = None # index of the current node in parent.rules[self.type]
         self.nextSibling = None # reference to the next sibling Node, i.e. parent.children[self.position+1] if exists
 
     def appendChild(self, child:'Node'):
@@ -23,36 +23,36 @@ class Node:
             self.children[-1].nextSibling = child
         child.position = len(self.children)
         self.children.append(child)
-        if child.nodeType not in self.rules.keys():
-            self.rules[child.nodeType] = []
-        child.index = len(self.rules[child.nodeType])
-        self.rules[child.nodeType].append(child)
+        if child.type not in self.rules.keys():
+            self.rules[child.type] = []
+        child.index = len(self.rules[child.type])
+        self.rules[child.type].append(child)
 
-    def getChildByType(self, nodeType:str, index:int=0):
-        if nodeType not in self.rules.keys():
+    def getChildByType(self, type:str, index:int=0):
+        if type not in self.rules.keys():
             return None
-        return self.rules[nodeType][index]
+        return self.rules[type][index]
 
-    def getChildrenByType(self, nodeType:str):
-        if nodeType not in self.rules.keys():
+    def getChildrenByType(self, type:str):
+        if type not in self.rules.keys():
             return None
-        return self.rules[nodeType]
+        return self.rules[type]
 
     def getChild(self, index:int=0):
         if len(self.children) <= index:
             return None
         return self.children[index]
 
-    def getDescendantsByType(self, nodeType):
+    def getDescendantsByType(self, type):
         descendants = []
         for child in self.children:
-            if child.nodeType == nodeType:
+            if child.type == type:
                 descendants.append(child)
-            descendants += child.getDescendantsByType(nodeType)
+            descendants += child.getDescendantsByType(type)
         return descendants
 
     def __str__(self):
-        return self.nodeType if self.nodeType is not None else 'TOKEN'
+        return self.type if self.type is not None else 'TOKEN'
 
     # TODO: implement other useful methods to work with the tree
 
