@@ -2,7 +2,7 @@ import copy
 from Subroutine import Subroutine
 from Parser import Node
 from Expression import BooleanExpression, Expression
-from Variable import Value, Symbol
+from Variable import Value, Symbol, ClassicalType
 
 
 # This class represents the store for the symbolic execution engine
@@ -16,19 +16,26 @@ class Store:
     def clone(self):
         return Store(dict(self.store))
 
-    def add(self, key:str, value):
+    def set(self, key: str, value=None, type=None):
         assert isinstance(value, Expression) or isinstance(value, str)
-        self.store[key] = value
+        if self.store[key].type is not None and type is None:
+            type = self.store[key].type
+        self.store[key] = {'value': value, 'type': type}
 
-    def get(self, key:str):
-        return self.store[key]
+    def get(self, key: str):
+        prev = None
+        cur = key
+        while isinstance(cur, str):
+            prev = cur
+            cur = self.store[key].value
+        return self.store[prev]
 
 
 # This class is used to manage the sequence of instructions
 # The main feature is to clone the execution stack and push the if-then-else program block
 # when the symbolic execution engine finds a branching instruction
 class ExecutionStack:
-    def __init__(self, block:Node):
+    def __init__(self, block: Node):
         assert block.type == 'subroutineBlock'
         self.sequence = [statement.getChild() for statement in block.getChildrenByType('statement')]
         self.sequence.reverse()
@@ -36,7 +43,7 @@ class ExecutionStack:
     def pop(self):
         return self.sequence.pop()
 
-    def append(self, block:Node):
+    def append(self, block: Node):
         assert block.type == 'programBlock'
         sequence = [statement.getChild() for statement in block.getChildrenByType('statement')]
         sequence.reverse()
@@ -56,25 +63,25 @@ class ExecutionStack:
 # store is a dictionary which maps each program variable name into its concrete or symbolic value
 # constraints is a BooleanExpression
 class SymbolicState:
-    def __init__(self, node:Node, store:Store, constraints:BooleanExpression):
+    def __init__(self, node: Node, store: Store, constraints: BooleanExpression):
         self.node = node
         self.store = store
         self.constraints = constraints
         self.children = []
 
-    def addChild(self, childState:'SymbolicState'):
+    def addChild(self, childState: 'SymbolicState'):
         self.children.append(childState)
 
     def clone(self):
         return copy.deepcopy(self)
 
-    def addConstraint(self, booleanExpression:BooleanExpression):
+    def addConstraint(self, booleanExpression: BooleanExpression):
         pass
 
 
 class SymbolicExecutionEngine:
     @staticmethod
-    def getSubroutineSymbolicExecutionTree(subroutine:Subroutine):
+    def getSubroutineSymbolicExecutionTree(subroutine: Subroutine):
         # Initialize parameters for the first SymbolicState
         node = subroutine.node
         store = Store()
@@ -82,7 +89,7 @@ class SymbolicExecutionEngine:
         for classicalArgument in subroutine.classicalArguments:
             symbol = Symbol(classicalArgument.classicalType)
             expression = Expression(tree=symbol)
-            store.add(classicalArgument.identifier, expression)
+            store.set(classicalArgument.identifier, expression)
 
         # Instantiate the root state of the symbolic execution tree
         initialState = SymbolicState(node, store, constraints)
@@ -95,7 +102,7 @@ class SymbolicExecutionEngine:
         return initialState
 
     @staticmethod
-    def __simulateExecution(currentState:SymbolicState, executionStack:ExecutionStack):
+    def __simulateExecution(currentState: SymbolicState, executionStack: ExecutionStack):
         if not executionStack.isEmpty():
             statementNode = executionStack.pop()
             if statementNode.type == 'expressionStatement':
@@ -141,20 +148,98 @@ class SymbolicExecutionEngine:
                 pass
 
     @staticmethod
-    def __simulateExpressionStatement(statementNode, newState):
-        pass
+    def __simulateExpressionStatement(expressionNode: Node, state):
+        assert expressionNode.type == 'expressionStatement'
+        Expression(expressionNode).evaluate(state.store)
 
     @staticmethod
-    def __simulateAssignmentStatement(statementNode, newState):
-        pass
+    def __simulateAssignmentStatement(statementNode, state):
+        assert statementNode.type == 'assignmentStatement'
+        assignmentNode = statementNode.getChild()
+        if assignmentNode.type == 'classicalAssignment':
+            indexIdentifierNode = assignmentNode.getChild()
+            identifier = indexIdentifierNode.getChildByType('Identifier')
+            assignmentOperatorNode = assignmentNode.getChildByType('assignmentOperator')
+            if assignmentOperatorNode.hasChildren():
+                assignmentOperator = assignmentOperatorNode.getChild().text
+            else:
+                assignmentOperator = assignmentOperatorNode.text
+            rightHandSideNode = assignmentNode.getChild(2)
+            if rightHandSideNode.type == 'expression':
+                expression = Expression(rightHandSideNode)
+                if len(assignmentOperator) > 1:
+                    currentExpression = state.store.get(identifier).value
+                    operator = assignmentOperator[0]
+                    if operator == '<' or operator == '>':
+                        operator *= 2
+                    currentExpression.applyBinaryOperator(operator, expression)
+                    expression = currentExpression.evaluate()
+                state.store.set(identifier, expression)
+            else:
+                pass
+        else:
+            pass
 
-    @classmethod
-    def __simulateClassicalDeclarationStatement(cls, statementNode, newState):
-        pass
-
-
-
-
-
-
-
+    @staticmethod
+    def __simulateClassicalDeclarationStatement(statementNode, state):
+        assert statementNode.type == 'classicalDeclarationStatement'
+        declarationNode = statementNode.getChild()
+        if declarationNode.type == 'classicalDeclaration':
+            classicalDeclarationNode = declarationNode.getChild()
+            typeLiteral = classicalDeclarationNode.getChild().text
+            if classicalDeclarationNode.type == 'bitDeclaration':
+                identifierOrEqualsListNode = classicalDeclarationNode.getChild(1)
+                indexIdentifierNodes = identifierOrEqualsListNode.getChildrenByType('indexIdentifier')
+                if identifierOrEqualsListNode.type == 'indexIdentifierList':
+                    for indexIdentifierNode in indexIdentifierNodes:
+                        identifier = indexIdentifierNode.getChildByType('Identifier').text
+                        expressionListNode = indexIdentifierNode.getChildByType('expressionList')
+                        designatorExpr = None
+                        if expressionListNode is not None:
+                            designatorExpr = Expression(expressionListNode.getChildByType('expression')).evaluate(state.store)
+                        type = ClassicalType(typeLiteral, designatorExpr)
+                        state.store.set(identifier, type=type)
+                else:
+                    equalsExpressionNodes = identifierOrEqualsListNode.getChildrenByType('equalsExpression')
+                    for i in range(len(indexIdentifierNodes)):
+                        identifier = indexIdentifierNodes[i].getChildByType('Identifier').text
+                        equalsExpressionNode = equalsExpressionNodes[i]
+                        expression = Expression(equalsExpressionNode.getChildByType('expression')).evaluate(state.store)
+                        expressionListNode = indexIdentifierNodes[i].getChildByType('expressionList')
+                        designatorExpr = None
+                        if expressionListNode is not None:
+                            designatorExpr = Expression(expressionListNode.getChildByType('expression')).evaluate(state.store)
+                        type = ClassicalType(typeLiteral, designatorExpr)
+                        state.store.set(identifier, expression, type)
+            else:
+                designatorExpr1 = None
+                designatorExpr2 = None
+                if classicalDeclarationNode.type == 'singleDesignatorDeclaration':
+                    designatorNode = classicalDeclarationNode.getChildByType('designator')
+                    designatorExpr1 = Expression(designatorNode.getChildByType('expression')).evaluate(state.store)
+                elif classicalDeclarationNode.type == 'doubleDesignatorDeclaration':
+                    designatorNode = classicalDeclarationNode.getChildByType('doubleDesignator')
+                    designatorExpr1 = Expression(designatorNode.getChildByType('expression', 0)).evaluate(state.store)
+                    designatorExpr2 = Expression(designatorNode.getChildByType('expression', 1)).evaluate(state.store)
+                type = ClassicalType(typeLiteral, designatorExpr1, designatorExpr2)
+                identifierOrEqualsListNode = classicalDeclarationNode.getLastChild()
+                identifierNodes = identifierOrEqualsListNode.getChildrenByType('Identifier')
+                if identifierOrEqualsListNode.type == 'identifierList':
+                    for identifierNode in identifierNodes:
+                        identifier = identifierNode.text
+                        state.store.set(identifier, type=type)
+                else:
+                    equalsExpressionNodes = identifierOrEqualsListNode.getChildrenByType('equalsExpression')
+                    for i in range(len(identifierNodes)):
+                        identifier = identifierNodes[i].text
+                        expression = Expression(equalsExpressionNodes[i].getChild('expression')).evaluate(state.store)
+                        state.store.set(identifier, expression, type)
+        else:
+            equalsAssignmentListNode = declarationNode.getChildByType('equalsAssignmentList')
+            identifierNodes = equalsAssignmentListNode.getChildrenByType('Identifier')
+            equalsExpressionNodes = equalsAssignmentListNode.getChildrenByType('equalsExpression')
+            for i in range(len(identifierNodes)):
+                identifier = identifierNodes[i].text
+                expressionNode = equalsExpressionNodes[i].getChildByType('expression')
+                expression = Expression(expressionNode)
+                state.store(identifier, expression)

@@ -1,23 +1,23 @@
 from Parser import Node
 from Variable import ClassicalVariable, QuantumVariable, ClassicalType
 
+
 # Represents the 'classicalArgument' rule
 class ClassicalArgument(ClassicalVariable):
-    def __init__(self, node:Node):
+    def __init__(self, node: Node):
         assert node.type == 'classicalArgument'
-        identifier = node.getChildByType('association').getChildByType('Identifier').text
-        super().__init__(identifier)
         classicalTypeNode = node.getChildByType('classicalType')
-        self.classicalType = ClassicalType(classicalTypeNode)
         associationNode = node.getChildByType('association')
-        self.identifier = associationNode.getChildByType('Identifier').text
+        identifier = associationNode.getChildByType('Identifier').text
+        super().__init__(identifier, typeNode=classicalTypeNode)
 
     def hasLimitedDomain(self):
-        return self.classicalType.hasLimitedDomain()
+        return self.type.hasLimitedDomain()
+
 
 # Represents the 'quantumArgument' rule
 class QuantumArgument(QuantumVariable):
-    def __init__(self, node:Node):
+    def __init__(self, node: Node):
         assert node.type == 'quantumArgument'
         identifier = node.getChildByType('association').getChildByType('Identifier').text
         super().__init__(identifier)
@@ -27,6 +27,7 @@ class QuantumArgument(QuantumVariable):
             self.designatorExpr = designatorNode.getChildByType('expression')
         associationNode = node.getChildByType('association')
         self.identifier = associationNode.getChildByType('Identifier').text
+
 
 # This is the class which operates the analysis on the subroutine, after creating the instance, the following
 # attributes are available:
@@ -39,7 +40,7 @@ class QuantumArgument(QuantumVariable):
 #   hasOnlyBranchingStatements
 #   isRecursive
 class Subroutine:
-    def __init__(self, node:Node):
+    def __init__(self, node: Node):
         assert node.type == 'subroutineDefinition'
         self.node = node
         self.identifier = node.getChildByType('Identifier').text
@@ -73,7 +74,7 @@ class Subroutine:
         if returnSignatureNode is None:
             return
         returnTypeNode = returnSignatureNode.getChildByType('classicalType')
-        self.returnType = ClassicalType(returnTypeNode)
+        self.returnType = ClassicalType(node=returnTypeNode)
 
     def __analyzeBody(self):
         self.hasBranchingStatements = len(self.node.getDescendantsByType('branchingStatement')) > 0
@@ -96,10 +97,11 @@ class Subroutine:
             limitedArguments = limitedArguments and argument.hasLimitedDomain()
         return limitedArguments
 
+
 # This is a helper class which takes the parse tree as an input and builds
 # a dictionary of all subroutines, setting the correct flags for each of them
 class SubroutineClassifier:
-    def __init__(self, parseTree:Node):
+    def __init__(self, parseTree: Node):
         self.parseTree = parseTree
         self.subroutines = {}
         self.__buildClassification()

@@ -1,5 +1,7 @@
 from Variable import Symbol, Value, Variable
 from Parser import Node
+from SymbolicExecutionEngine import Store
+
 
 # The following two classes are operator nodes in the Expression AST
 # The operator's arguments can be one of the following types:
@@ -7,19 +9,21 @@ from Parser import Node
 #   * BinaryOperator
 #   * Variable
 #   * Value
+#   * Symbol
 
 # Represents a unitary operator node in the Expression AST
 class UnaryOperator:
-    def __init__(self, literal:str, arg):
+    def __init__(self, literal: str, arg):
         self.literal = literal
         self.arg = arg
 
     def __str__(self):
         return self.literal
 
+
 # Represents a binary operator in the Expression AST
 class BinaryOperator:
-    def __init__(self, literal:str, arg1, arg2):
+    def __init__(self, literal: str, arg1, arg2):
         self.literal = literal
         self.arg1 = arg1
         self.arg2 = arg2
@@ -27,8 +31,9 @@ class BinaryOperator:
     def __str__(self):
         return self.literal
 
+
 class SetDeclaration:
-    def __init__(self, node:Node):
+    def __init__(self, node: Node):
         assert node.type == 'setDeclaration'
         self.node = node
         child = node.getChild()
@@ -43,14 +48,15 @@ class SetDeclaration:
             expressionNodes = child.getChildrenByType('expression')
             self.start = Expression.buildExpressionAST(expressionNodes[0])
             self.end = Expression.buildExpressionAST(expressionNodes[1])
-            self.step = Value('1', 'Integer')
+            self.step = Value(1)
             if expressionNodes[2]:
                 self.step = Expression.buildExpressionAST(expressionNodes[2])
         else:
             self.identifier = child.text
 
+
 class Expression:
-    def __init__(self, node:Node=None, tree=None):
+    def __init__(self, node: Node = None, tree=None):
         assert node is None or node.type == 'expression'
         if node is not None:
             self.node = node
@@ -59,7 +65,7 @@ class Expression:
             self.tree = tree
 
     @staticmethod
-    def buildExpressionAST(node:Node):
+    def buildExpressionAST(node: Node):
         assert node.type == 'expression'
         child = node.getChild()
         if child.type == 'expression':
@@ -78,7 +84,8 @@ class Expression:
 
     @staticmethod
     def __buildSubExpressionAST(node):
-        assert node.type in ['xOrExpression', 'bitAndExpression', 'bitShiftExpression', 'additiveExpression', 'multiplicativeExpression']
+        assert node.type in ['xOrExpression', 'bitAndExpression', 'bitShiftExpression', 'additiveExpression',
+                             'multiplicativeExpression']
         child = node.getChild()
         if node.type != 'multiplicativeExpression':
             if len(node.children) == 1:
@@ -106,7 +113,7 @@ class Expression:
                 return Expression.__buildExpressionTerminatorAST(child)
 
     @staticmethod
-    def __buildUnaryExpressionAST(node:Node):
+    def __buildUnaryExpressionAST(node: Node):
         assert node.type == 'unaryExpression'
         unaryOperatorNode = node.getChildByType('unaryOperator')
         literal = unaryOperatorNode.getChild().text
@@ -121,7 +128,7 @@ class Expression:
         if child.type == 'Identifier':
             return Variable(child.text)
         elif child.type in ['Constant', 'Integer', 'RealNumber', 'StringLiteral']:
-            return Value(child.text, child.type)
+            return Value(child.text, typeLiteral=child.type)
         elif child.type in ['buildInCall', 'subroutineCall']:
             pass
         elif child.type == 'MINUS':
@@ -144,9 +151,15 @@ class Expression:
             expressionTerminator = Expression.__buildExpressionTerminatorAST(expressionTerminatorNode)
             return UnaryOperator(literal, expressionTerminator)
 
+    def applyBinaryOperator(self, literal: str, secondOperand: 'Expression'):
+        self.tree = BinaryOperator(literal, self.tree, secondOperand.tree)
+
+    def evaluate(self, context: Store):
+        pass
+
 
 class BooleanExpression:
-    def __init__(self, node:Node=None, tree=None):
+    def __init__(self, node: Node = None, tree=None):
         assert node is None or node.type == 'booleanExpression'
         if node is not None:
             self.node = node
@@ -155,7 +168,7 @@ class BooleanExpression:
             self.tree = tree
 
     @staticmethod
-    def __buildBooleanExpressionAST(node:Node):
+    def __buildBooleanExpressionAST(node: Node):
         assert node.type == 'booleanExpression'
         child = node.getChild()
         if child.type == 'booleanExpression':
@@ -171,11 +184,11 @@ class BooleanExpression:
             return BooleanExpression.__buildMembershipTestAST(child)
 
     @staticmethod
-    def __buildComparisonExpressionAST(node:Node):
+    def __buildComparisonExpressionAST(node: Node):
         assert node.type == 'comparisonExpression'
         child = node.getChild()
         if len(node.children) == 1:
-            literal = '!!' # JavaScript-equivalent for truthy value (non-zero for integers, non-empty for strings, true for booleans and so on)
+            literal = '!!'  # JavaScript-equivalent for truthy value
             expressionNode = child
             expression = Expression.buildExpressionAST(expressionNode)
             return UnaryOperator(literal, expression)
@@ -188,7 +201,7 @@ class BooleanExpression:
             return BinaryOperator(literal, leftExpression, rightExpression)
 
     @staticmethod
-    def __buildMembershipTestAST(node:Node):
+    def __buildMembershipTestAST(node: Node):
         assert node.type == 'membershipTest'
         identifierLiteral = node.getChildByType('Identifier').text
         identifier = Variable(identifierLiteral)
