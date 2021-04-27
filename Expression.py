@@ -1,6 +1,7 @@
-from Variable import Symbol, Value, Variable
+import copy
+
+from Variable import Value, Variable
 from Parser import Node
-from SymbolicExecutionEngine import Store
 
 
 # The following two classes are operator nodes in the Expression AST
@@ -17,16 +18,71 @@ class UnaryOperator:
         self.literal = literal
         self.arg = arg
 
+    def hasLeafArgument(self):
+        return not isinstance(self.arg, UnaryOperator) and not isinstance(self.arg, BinaryOperator)
+
+    def applyTo(self, operand):
+        if self.literal == '-':
+            return -operand
+        elif self.literal == '!':
+            return not operand
+        elif self.literal == '~':
+            return ~operand
+        else:
+            return operand
+
     def __str__(self):
         return self.literal
 
 
 # Represents a binary operator in the Expression AST
 class BinaryOperator:
-    def __init__(self, literal: str, arg1, arg2):
+    def __init__(self, literal: str, arg1=None, arg2=None):
         self.literal = literal
         self.arg1 = arg1
         self.arg2 = arg2
+
+    def hasLeafAsFirstArgument(self):
+        return not isinstance(self.arg1, UnaryOperator) and not isinstance(self.arg1, BinaryOperator)
+
+    def hasLeafAsSecondArgument(self):
+        return not isinstance(self.arg2, UnaryOperator) and not isinstance(self.arg2, BinaryOperator)
+
+    def applyTo(self, operand1, operand2):
+        if self.literal == '<':
+            return operand1 < operand2
+        elif self.literal == '>':
+            return operand1 > operand2
+        elif self.literal == '>=':
+            return operand1 >= operand2
+        elif self.literal == '<=':
+            return operand1 <= operand2
+        elif self.literal == '==':
+            return operand1 == operand2
+        elif self.literal == '!=':
+            return operand1 != operand2
+        elif self.literal == '&&':
+            return operand1 & operand2
+        elif self.literal == '||':
+            return operand1 | operand2
+        elif self.literal == '^':
+            return operand1 ^ operand2
+        elif self.literal == '&':
+            return operand1 & operand2
+        elif self.literal == '<<':
+            return operand1 << operand2
+        elif self.literal == '>>':
+            return operand1 >> operand2
+        elif self.literal == '+':
+            return operand1 + operand2
+        elif self.literal == '-':
+            return operand1 - operand2
+        elif self.literal == '*':
+            return operand1 * operand2
+        elif self.literal == '/':
+            return operand1 / operand2
+        elif self.literal == '%':
+            return operand1 % operand2
 
     def __str__(self):
         return self.literal
@@ -57,7 +113,7 @@ class SetDeclaration:
 
 class Expression:
     def __init__(self, node: Node = None, tree=None):
-        assert node is None or node.type == 'expression'
+        assert node is None or node.type == 'expression' or node.type == 'booleanExpression'
         if node is not None:
             self.node = node
             self.tree = Expression.buildExpressionAST(node)
@@ -66,7 +122,7 @@ class Expression:
 
     @staticmethod
     def buildExpressionAST(node: Node):
-        assert node.type == 'expression'
+        assert node.type == 'expression' or node.type == 'booleanExpression'
         child = node.getChild()
         if child.type == 'expression':
             expressionNode = child
@@ -79,8 +135,19 @@ class Expression:
             return Expression.__buildSubExpressionAST(child)
         elif child.type == 'unaryExpression':
             return Expression.__buildUnaryExpressionAST(child)
-        else:
+        elif child.type == 'expressionTerminator':
             return Expression.__buildExpressionTerminatorAST(child)
+        elif child.type == 'booleanExpression':
+            booleanExpressionNode = child
+            literal = node.children[1].text
+            comparisonExpressionNode = node.getChildByType('comparisonExpression')
+            booleanExpression = Expression.__buildBooleanExpressionAST(booleanExpressionNode)
+            comparisonExpression = Expression.__buildComparisonExpressionAST(comparisonExpressionNode)
+            return BinaryOperator(literal, booleanExpression, comparisonExpression)
+        elif child.type == 'comparisonExpression':
+            return Expression.__buildComparisonExpressionAST(child)
+        elif child.type == 'membershipTest':
+            return Expression.__buildMembershipTestAST(child)
 
     @staticmethod
     def __buildSubExpressionAST(node):
@@ -151,38 +218,6 @@ class Expression:
             expressionTerminator = Expression.__buildExpressionTerminatorAST(expressionTerminatorNode)
             return UnaryOperator(literal, expressionTerminator)
 
-    def applyBinaryOperator(self, literal: str, secondOperand: 'Expression'):
-        self.tree = BinaryOperator(literal, self.tree, secondOperand.tree)
-
-    def evaluate(self, context: Store):
-        pass
-
-
-class BooleanExpression:
-    def __init__(self, node: Node = None, tree=None):
-        assert node is None or node.type == 'booleanExpression'
-        if node is not None:
-            self.node = node
-            self.tree = BooleanExpression.__buildBooleanExpressionAST(node)
-        else:
-            self.tree = tree
-
-    @staticmethod
-    def __buildBooleanExpressionAST(node: Node):
-        assert node.type == 'booleanExpression'
-        child = node.getChild()
-        if child.type == 'booleanExpression':
-            booleanExpressionNode = child
-            literal = node.children[1].text
-            comparisonExpressionNode = node.getChildByType('comparisonExpression')
-            booleanExpression = BooleanExpression.__buildBooleanExpressionAST(booleanExpressionNode)
-            comparisonExpression = BooleanExpression.__buildComparisonExpressionAST(comparisonExpressionNode)
-            return BinaryOperator(literal, booleanExpression, comparisonExpression)
-        elif child.type == 'comparisonExpression':
-            return BooleanExpression.__buildComparisonExpressionAST(child)
-        else:
-            return BooleanExpression.__buildMembershipTestAST(child)
-
     @staticmethod
     def __buildComparisonExpressionAST(node: Node):
         assert node.type == 'comparisonExpression'
@@ -194,7 +229,7 @@ class BooleanExpression:
             return UnaryOperator(literal, expression)
         else:
             leftExpressionNode = child
-            literal = node.children[1].text
+            literal = node.children[1].getChild().text
             rightExpressionNode = node.children[2]
             leftExpression = Expression.buildExpressionAST(leftExpressionNode)
             rightExpression = Expression.buildExpressionAST(rightExpressionNode)
@@ -210,9 +245,36 @@ class BooleanExpression:
         setDeclaration = SetDeclaration(setDeclarationNode)
         return BinaryOperator(literal, identifier, setDeclaration)
 
-    def evaluate(self):
-        pass
+    def applyBinaryOperator(self, literal: str, secondOperand: 'Expression'):
+        self.tree = BinaryOperator(literal, self.tree, secondOperand.tree)
 
-    def negate(self):
-        negation = BooleanExpression(tree=UnaryOperator('!', self.tree))
-        return negation.evaluate()
+    def clone(self):
+        return copy.deepcopy(self)
+
+    def evaluate(self, context):
+        expression = self.clone()
+        expression.tree = Expression.__evaluate(expression.tree, context)
+        return expression.tree
+
+    @staticmethod
+    def __evaluate(operator, context):
+        if isinstance(operator, UnaryOperator):
+            operand = operator.arg
+            identifier = operand.identifier
+            operand = Expression.__evaluate(operand, context)
+            if operator.literal in ['++', '--']:
+                operand += 1 if operator.literal == '++' else -1
+                context.setValue(identifier, operand)
+            return operator.applyTo(operand)
+        elif isinstance(operator, BinaryOperator):
+            operand1 = Expression.__evaluate(operator.arg1, context)
+            operand2 = Expression.__evaluate(operator.arg2, context)
+            return operator.applyTo(operand1, operand2)
+        elif isinstance(operator, Variable):
+            identifier = operator.identifier
+            value = context.getValue(identifier)
+            return value
+        elif isinstance(operator, Value):
+            return operator.value
+        else:
+            return operator

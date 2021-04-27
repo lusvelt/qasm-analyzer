@@ -1,12 +1,9 @@
 from Parser import buildParseTree
 from Subroutine import SubroutineClassifier
-from Expression import Expression
-
-def getExpression(statementNode):
-    expressionNode = statementNode.getChild().getChild().getChild(1).getChild(1).getChild(1)
-    assert expressionNode.type == 'expression'
-    return Expression(expressionNode)
+from SymbolicExecutionEngine import SymbolicExecutionEngine
 
 tree = buildParseTree('test.qasm')
-statements = tree.getChildrenByType('statement')
-expressions = [ getExpression(statement) for statement in statements]
+subroutineClassifier = SubroutineClassifier(tree)
+subroutine = subroutineClassifier.subroutines['func1']
+symbolicExecutionTree = SymbolicExecutionEngine.getSubroutineSymbolicExecutionTree(subroutine)
+print('End')

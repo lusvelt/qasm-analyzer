@@ -1,14 +1,12 @@
-from Parser import Node
-from Expression import Expression
-
+from sympy import symbols
 
 # Represents a classical type
 class ClassicalType:
     def __init__(self,
                  typeLiteral: str = None,
-                 designatorExpr1: Expression = None,
-                 designatorExpr2: Expression = None,
-                 node: Node = None):
+                 designatorExpr1 = None,
+                 designatorExpr2 = None,
+                 node = None):
         assert typeLiteral is None and node is not None or typeLiteral is not None and node is None
         if node is not None:
             self.node = node
@@ -21,10 +19,10 @@ class ClassicalType:
             designatorNode = node.getChild(1)
             if designatorNode is not None:
                 if designatorNode.type == 'designator':
-                    self.designatorExpr1 = Expression(designatorNode.getChildByType('expression')).evaluate()
+                    self.designatorExpr1 = designatorNode.getChildByType('expression')
                 else:
-                    self.designatorExpr1 = Expression(designatorNode.getChildByType('expression', 0)).evaluate()
-                    self.designatorExpr2 = Expression(designatorNode.getChildByType('expression', 1)).evaluate()
+                    self.designatorExpr1 = designatorNode.getChildByType('expression', 0)
+                    self.designatorExpr2 = designatorNode.getChildByType('expression', 1)
         else:
             self.typeLiteral = typeLiteral
             self.designatorExpr1 = designatorExpr1
@@ -45,7 +43,7 @@ class Variable:
 
 
 class ClassicalVariable(Variable):
-    def __init__(self, identifier: str, type: ClassicalType = None, typeNode: Node = None):
+    def __init__(self, identifier: str, type: ClassicalType = None, typeNode = None):
         assert typeNode is not None or type is None
         if typeNode is not None:
             type = ClassicalType(node=typeNode)
@@ -61,14 +59,16 @@ class QuantumVariable(Variable):
 # Symbols are distinguished by their index, which are automatically incremented when new Symbols are instantiated
 class Symbol:
     nextIndex = 0
+    types = {}
 
-    def __init__(self, type: ClassicalType):
-        self.index = Symbol.nextIndex
+    @staticmethod
+    def getNewSymbol(type: ClassicalType):
+        index = Symbol.nextIndex
+        label = '$' + str(index)
+        symbol = symbols(label)
+        Symbol.types[label] = type
         Symbol.nextIndex += 1
-        self.type = type
-
-    def __str__(self):
-        return '$' + str(self.index)
+        return symbol
 
 
 # This class represents an evaluated value resulting from an expression, or from a literal
@@ -78,8 +78,10 @@ class Value:
         if type is not None or typeLiteral is not None:
             if typeLiteral == 'Integer' or type.typeLiteral == 'Integer':
                 self.value = int(value)
-            elif typeLiteral == 'RealNumber' or type.typeLiteral == 'Integer':
+            elif typeLiteral == 'RealNumber' or type.typeLiteral == 'RealNumber':
                 self.value = float(value)
+            elif typeLiteral == 'StringLiteral' or type.typeLiteral == 'StringLiteral':
+                self.value = Value.__stringToNumber(value)
             else:
                 self.value = value
 
@@ -95,6 +97,14 @@ class Value:
         else:
             self.typeLiteral = typeLiteral
         self.type = type
+
+    @staticmethod
+    def __stringToNumber(stringLiteral):
+        num = 0
+        for i in range(len(stringLiteral)-1, -1, -1):
+            num += pow(2, i)
+        return num
+
 
     def __str__(self):
         return self.value

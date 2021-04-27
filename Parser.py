@@ -52,7 +52,7 @@ class Node:
             if child.type == type:
                 descendants.append(child)
             descendants += child.getDescendantsByType(type)
-        return
+        return descendants
 
     def getSiblingByType(self, type):
         for sibling in self.parent.children:
@@ -66,7 +66,7 @@ class Node:
         return len(self.children) > 0
 
     def __str__(self):
-        return self.type if self.type is not None else 'TOKEN'
+        return (self.type if self.type is not None else 'TOKEN') + ': ' + self.text
 
 
 # This class works as an interface between the ANTLR generated parse tree
@@ -101,7 +101,7 @@ class ExtractorListener(qasm3subListener):
 
     def enterEveryRule(self, ctx: ParserRuleContext):
         ruleName = self.ruleNames[ctx.getRuleIndex()]
-        child = Node(ruleName)
+        child = Node(ruleName, ctx.getText())
         if self.current is None:
             self.current = self.output.tree = child
         else:
@@ -111,6 +111,10 @@ class ExtractorListener(qasm3subListener):
     def exitEveryRule(self, ctx: ParserRuleContext):
         self.current = self.current.parent
 
+    def visitTerminal(self, node):
+        tokenName = self.tokenNames[node.symbol.type]
+        child = Node(tokenName, node.symbol.text)
+        self.current.appendChild(child)
 
 # This is the actual function which shall be called from outside
 # It accepts a file path as an argument (the QASM source file)

@@ -1,8 +1,8 @@
 import copy
 from Subroutine import Subroutine
 from Parser import Node
-from Expression import BooleanExpression, Expression
-from Variable import Value, Symbol, ClassicalType
+from Expression import Expression, BinaryOperator
+from Variable import Symbol, ClassicalType
 
 
 # This class represents the store for the symbolic execution engine
@@ -17,18 +17,22 @@ class Store:
         return Store(dict(self.store))
 
     def set(self, key: str, value=None, type=None):
-        assert isinstance(value, Expression) or isinstance(value, str)
-        if self.store[key].type is not None and type is None:
-            type = self.store[key].type
+        if key in self.store.keys():
+            if self.store[key]['type'] is not None and type is None:
+                type = self.store[key]['type']
         self.store[key] = {'value': value, 'type': type}
 
     def get(self, key: str):
-        prev = None
-        cur = key
-        while isinstance(cur, str):
-            prev = cur
-            cur = self.store[key].value
-        return self.store[prev]
+        return self.store[key]
+
+    def getValue(self, key: str):
+        return self.get(key)['value']
+
+    def setValue(self, key: str, value):
+        if self.store[key] is None:
+            self.store[key] = {'value': value, 'type': None}
+        else:
+            self.store[key]['value'] = value
 
 
 # This class is used to manage the sequence of instructions
@@ -63,7 +67,7 @@ class ExecutionStack:
 # store is a dictionary which maps each program variable name into its concrete or symbolic value
 # constraints is a BooleanExpression
 class SymbolicState:
-    def __init__(self, node: Node, store: Store, constraints: BooleanExpression):
+    def __init__(self, node: Node, store: Store, constraints):
         self.node = node
         self.store = store
         self.constraints = constraints
@@ -72,11 +76,14 @@ class SymbolicState:
     def addChild(self, childState: 'SymbolicState'):
         self.children.append(childState)
 
-    def clone(self):
-        return copy.deepcopy(self)
+    def clone(self, newNode: Node):
+        return SymbolicState(newNode, self.store.clone(), self.constraints)
 
-    def addConstraint(self, booleanExpression: BooleanExpression):
-        pass
+    def addConstraint(self, booleanExpression):
+        self.constraints = self.constraints & booleanExpression
+
+    def __str__(self):
+        return self.store.__str__() +  ' | ' + self.constraints.__str__()
 
 
 class SymbolicExecutionEngine:
@@ -85,11 +92,10 @@ class SymbolicExecutionEngine:
         # Initialize parameters for the first SymbolicState
         node = subroutine.node
         store = Store()
-        constraints = BooleanExpression(tree=Value(1))
+        constraints = True
         for classicalArgument in subroutine.classicalArguments:
-            symbol = Symbol(classicalArgument.classicalType)
-            expression = Expression(tree=symbol)
-            store.set(classicalArgument.identifier, expression)
+            symbol = Symbol.getNewSymbol(classicalArgument.type)
+            store.set(classicalArgument.identifier, symbol)
 
         # Instantiate the root state of the symbolic execution tree
         initialState = SymbolicState(node, store, constraints)
@@ -106,38 +112,44 @@ class SymbolicExecutionEngine:
         if not executionStack.isEmpty():
             statementNode = executionStack.pop()
             if statementNode.type == 'expressionStatement':
-                newState = currentState.clone()
+                newState = currentState.clone(statementNode)
                 SymbolicExecutionEngine.__simulateExpressionStatement(statementNode, newState)
                 currentState.addChild(newState)
                 SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
             elif statementNode.type == 'assignmentStatement':
-                newState = currentState.clone()
+                newState = currentState.clone(statementNode)
                 SymbolicExecutionEngine.__simulateAssignmentStatement(statementNode, newState)
                 currentState.addChild(newState)
                 SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
             elif statementNode.type == 'classicalDeclarationStatement':
-                newState = currentState.clone()
+                newState = currentState.clone(statementNode)
                 SymbolicExecutionEngine.__simulateClassicalDeclarationStatement(statementNode, newState)
                 currentState.addChild(newState)
                 SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
             elif statementNode.type == 'branchingStatement':
                 booleanExpressionNode = statementNode.getChildByType('booleanExpression')
-                booleanExpression = BooleanExpression(booleanExpressionNode).evaluate()
+                booleanExpression = Expression(booleanExpressionNode).evaluate(currentState.store)
 
                 blockIfTrue = statementNode.getChildByType('programBlock', 0)
                 stackIfTrue = executionStack.clone()
                 stackIfTrue.append(blockIfTrue)
-                newStateIfTrue = currentState.clone()
+                newStateIfTrue = currentState.clone(statementNode)
                 newStateIfTrue.addConstraint(booleanExpression)
                 SymbolicExecutionEngine.__simulateExecution(newStateIfTrue, stackIfTrue)
 
                 blockIfFalse = statementNode.getChildByType('programBlock', 1)
+                newStateIfFalse = None
                 if blockIfFalse is not None:
                     stackIfFalse = executionStack.clone()
                     stackIfFalse.append(blockIfFalse)
-                    newStateIfFalse = currentState.clone()
-                    newStateIfFalse.addConstraint(booleanExpression.negate())
+                    newStateIfFalse = currentState.clone(statementNode)
+                    newStateIfFalse.addConstraint(~booleanExpression)
                     SymbolicExecutionEngine.__simulateExecution(newStateIfFalse, stackIfFalse)
+
+                currentState.addChild(newStateIfTrue)
+                if newStateIfFalse is not None:
+                    currentState.addChild(newStateIfFalse)
+
             elif statementNode.type == 'aliasStatement':
                 pass
             elif statementNode.type == 'quantumStatement':
@@ -158,7 +170,7 @@ class SymbolicExecutionEngine:
         assignmentNode = statementNode.getChild()
         if assignmentNode.type == 'classicalAssignment':
             indexIdentifierNode = assignmentNode.getChild()
-            identifier = indexIdentifierNode.getChildByType('Identifier')
+            identifier = indexIdentifierNode.getChildByType('Identifier').text
             assignmentOperatorNode = assignmentNode.getChildByType('assignmentOperator')
             if assignmentOperatorNode.hasChildren():
                 assignmentOperator = assignmentOperatorNode.getChild().text
@@ -166,14 +178,14 @@ class SymbolicExecutionEngine:
                 assignmentOperator = assignmentOperatorNode.text
             rightHandSideNode = assignmentNode.getChild(2)
             if rightHandSideNode.type == 'expression':
-                expression = Expression(rightHandSideNode)
+                expression = Expression(rightHandSideNode).evaluate(state.store)
                 if len(assignmentOperator) > 1:
-                    currentExpression = state.store.get(identifier).value
+                    currentExpression = state.store.getValue(identifier)
                     operator = assignmentOperator[0]
                     if operator == '<' or operator == '>':
                         operator *= 2
-                    currentExpression.applyBinaryOperator(operator, expression)
-                    expression = currentExpression.evaluate()
+                    binaryOperator = BinaryOperator(operator)
+                    expression = binaryOperator.applyTo(currentExpression, expression)
                 state.store.set(identifier, expression)
             else:
                 pass
@@ -186,7 +198,7 @@ class SymbolicExecutionEngine:
         declarationNode = statementNode.getChild()
         if declarationNode.type == 'classicalDeclaration':
             classicalDeclarationNode = declarationNode.getChild()
-            typeLiteral = classicalDeclarationNode.getChild().text
+            typeLiteral = classicalDeclarationNode.getChild().getChild().text
             if classicalDeclarationNode.type == 'bitDeclaration':
                 identifierOrEqualsListNode = classicalDeclarationNode.getChild(1)
                 indexIdentifierNodes = identifierOrEqualsListNode.getChildrenByType('indexIdentifier')
@@ -232,7 +244,7 @@ class SymbolicExecutionEngine:
                     equalsExpressionNodes = identifierOrEqualsListNode.getChildrenByType('equalsExpression')
                     for i in range(len(identifierNodes)):
                         identifier = identifierNodes[i].text
-                        expression = Expression(equalsExpressionNodes[i].getChild('expression')).evaluate(state.store)
+                        expression = Expression(equalsExpressionNodes[i].getChildByType('expression')).evaluate(state.store)
                         state.store.set(identifier, expression, type)
         else:
             equalsAssignmentListNode = declarationNode.getChildByType('equalsAssignmentList')
@@ -241,5 +253,5 @@ class SymbolicExecutionEngine:
             for i in range(len(identifierNodes)):
                 identifier = identifierNodes[i].text
                 expressionNode = equalsExpressionNodes[i].getChildByType('expression')
-                expression = Expression(expressionNode)
+                expression = Expression(expressionNode).evaluate(state.store)
                 state.store(identifier, expression)

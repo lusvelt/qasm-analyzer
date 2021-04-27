@@ -57,17 +57,19 @@ class Subroutine:
 
     def __analyzeClassicalArguments(self):
         classicalArgumentListNode = self.node.getChildByType('classicalArgumentList')
-        classicalArgumentNodes = classicalArgumentListNode.getChildrenByType('classicalArgument')
-        for classicalArgumentNode in classicalArgumentNodes:
-            classicalArgument = ClassicalArgument(classicalArgumentNode)
-            self.classicalArguments.append(classicalArgument)
+        if classicalArgumentListNode is not None:
+            classicalArgumentNodes = classicalArgumentListNode.getChildrenByType('classicalArgument')
+            for classicalArgumentNode in classicalArgumentNodes:
+                classicalArgument = ClassicalArgument(classicalArgumentNode)
+                self.classicalArguments.append(classicalArgument)
 
     def __analyzeQuantumArguments(self):
         quantumArgumentListNode = self.node.getChildByType('quantumArgumentList')
-        quantumArgumentNodes = quantumArgumentListNode.getChildrenByType('quantumArgument')
-        for quantumArgumentNode in quantumArgumentNodes:
-            quantumArgument = ClassicalArgument(quantumArgumentNode)
-            self.quantumArguments.append(quantumArgument)
+        if quantumArgumentListNode is not None:
+            quantumArgumentNodes = quantumArgumentListNode.getChildrenByType('quantumArgument')
+            for quantumArgumentNode in quantumArgumentNodes:
+                quantumArgument = ClassicalArgument(quantumArgumentNode)
+                self.quantumArguments.append(quantumArgument)
 
     def __analyzeReturnType(self):
         returnSignatureNode = self.node.getChildByType('returnSignature')
