@@ -2,8 +2,11 @@ from Parser import buildParseTree
 from Subroutine import SubroutineClassifier
 from SymbolicExecutionEngine import SymbolicExecutionEngine
 
+n = 5
+
 tree = buildParseTree('test.qasm')
 subroutineClassifier = SubroutineClassifier(tree)
-subroutine = subroutineClassifier.subroutines['func1']
-symbolicExecutionTree = SymbolicExecutionEngine.getSubroutineSymbolicExecutionTree(subroutine)
+keys = subroutineClassifier.subroutines.keys()
+subroutines = [subroutineClassifier.subroutines[key] for key in keys]
+symbolicExecutionTrees = [SymbolicExecutionEngine.getSubroutineSymbolicExecutionTree(subroutine) for subroutine in subroutines]
 print('End')

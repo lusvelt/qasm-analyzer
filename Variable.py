@@ -32,11 +32,31 @@ class ClassicalType:
     def hasLimitedDomain(self):
         return self.typeLiteral in ['bit', 'creg', 'bool']  # Maybe also 'fixed'
 
+    def __str__(self):
+        s = self.typeLiteral
+        if self.designatorExpr1 is not None:
+            s += '[' + self.designatorExpr1
+            if self.designatorExpr2 is not None:
+                s += ', ' + self.designatorExpr2
+            s += ']'
+        return s
+
+
 
 class Variable:
+    nextIndex = 0
+    symbolTypes = {}
     def __init__(self, identifier: str, type: ClassicalType = None):
         self.identifier = identifier
         self.type = type
+
+    @staticmethod
+    def getNewSymbol(type: ClassicalType):
+        index = Variable.nextIndex
+        Variable.nextIndex += 1
+        label = '$' + str(index)
+        Variable.symbolTypes[label] = type
+        return symbols(label)
 
     def __str__(self):
         return self.identifier
@@ -54,38 +74,20 @@ class QuantumVariable(Variable):
     pass
 
 
-# This class represents a symbol in the symbolic execution state tree
-# Instances of Symbol can appear both in SymbolicStore and in SymbolicConstraints
-# Symbols are distinguished by their index, which are automatically incremented when new Symbols are instantiated
-class Symbol:
-    nextIndex = 0
-    types = {}
-
-    @staticmethod
-    def getNewSymbol(type: ClassicalType):
-        index = Symbol.nextIndex
-        label = '$' + str(index)
-        symbol = symbols(label)
-        Symbol.types[label] = type
-        Symbol.nextIndex += 1
-        return symbol
-
-
-# This class represents an evaluated value resulting from an expression, or from a literal
+# This class represents a value hardcoded in an expression
 class Value:
-    def __init__(self, value, type: ClassicalType = None, typeLiteral=None):
-        assert type is None or typeLiteral is None
-        if type is not None or typeLiteral is not None:
-            if typeLiteral == 'Integer' or type.typeLiteral == 'Integer':
+    def __init__(self, value, typeLiteral=None):
+        if typeLiteral is not None:
+            if typeLiteral == 'Integer':
                 self.value = int(value)
-            elif typeLiteral == 'RealNumber' or type.typeLiteral == 'RealNumber':
+            elif typeLiteral == 'RealNumber':
                 self.value = float(value)
-            elif typeLiteral == 'StringLiteral' or type.typeLiteral == 'StringLiteral':
-                self.value = Value.__stringToNumber(value)
+            elif typeLiteral == 'StringLiteral':
+                self.value = value
             else:
                 self.value = value
 
-        if typeLiteral is None and type is None:
+        if typeLiteral is None:
             if isinstance(value, int):
                 self.typeLiteral = 'Integer'
             elif isinstance(value, float):
@@ -96,10 +98,9 @@ class Value:
                 self.typeLiteral = 'StringLiteral'
         else:
             self.typeLiteral = typeLiteral
-        self.type = type
 
     @staticmethod
-    def __stringToNumber(stringLiteral):
+    def stringToNumber(stringLiteral):
         num = 0
         for i in range(len(stringLiteral)-1, -1, -1):
             num += pow(2, i)

@@ -68,7 +68,7 @@ class Subroutine:
         if quantumArgumentListNode is not None:
             quantumArgumentNodes = quantumArgumentListNode.getChildrenByType('quantumArgument')
             for quantumArgumentNode in quantumArgumentNodes:
-                quantumArgument = ClassicalArgument(quantumArgumentNode)
+                quantumArgument = QuantumArgument(quantumArgumentNode)
                 self.quantumArguments.append(quantumArgument)
 
     def __analyzeReturnType(self):

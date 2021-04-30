@@ -1,92 +1,8 @@
 import copy
-
+from sympy import *
 from Variable import Value, Variable
 from Parser import Node
-
-
-# The following two classes are operator nodes in the Expression AST
-# The operator's arguments can be one of the following types:
-#   * UnaryOperator
-#   * BinaryOperator
-#   * Variable
-#   * Value
-#   * Symbol
-
-# Represents a unitary operator node in the Expression AST
-class UnaryOperator:
-    def __init__(self, literal: str, arg):
-        self.literal = literal
-        self.arg = arg
-
-    def hasLeafArgument(self):
-        return not isinstance(self.arg, UnaryOperator) and not isinstance(self.arg, BinaryOperator)
-
-    def applyTo(self, operand):
-        if self.literal == '-':
-            return -operand
-        elif self.literal == '!':
-            return not operand
-        elif self.literal == '~':
-            return ~operand
-        else:
-            return operand
-
-    def __str__(self):
-        return self.literal
-
-
-# Represents a binary operator in the Expression AST
-class BinaryOperator:
-    def __init__(self, literal: str, arg1=None, arg2=None):
-        self.literal = literal
-        self.arg1 = arg1
-        self.arg2 = arg2
-
-    def hasLeafAsFirstArgument(self):
-        return not isinstance(self.arg1, UnaryOperator) and not isinstance(self.arg1, BinaryOperator)
-
-    def hasLeafAsSecondArgument(self):
-        return not isinstance(self.arg2, UnaryOperator) and not isinstance(self.arg2, BinaryOperator)
-
-    def applyTo(self, operand1, operand2):
-        if self.literal == '<':
-            return operand1 < operand2
-        elif self.literal == '>':
-            return operand1 > operand2
-        elif self.literal == '>=':
-            return operand1 >= operand2
-        elif self.literal == '<=':
-            return operand1 <= operand2
-        elif self.literal == '==':
-            return operand1 == operand2
-        elif self.literal == '!=':
-            return operand1 != operand2
-        elif self.literal == '&&':
-            return operand1 & operand2
-        elif self.literal == '||':
-            return operand1 | operand2
-        elif self.literal == '^':
-            return operand1 ^ operand2
-        elif self.literal == '&':
-            return operand1 & operand2
-        elif self.literal == '<<':
-            return operand1 << operand2
-        elif self.literal == '>>':
-            return operand1 >> operand2
-        elif self.literal == '+':
-            return operand1 + operand2
-        elif self.literal == '-':
-            return operand1 - operand2
-        elif self.literal == '*':
-            return operand1 * operand2
-        elif self.literal == '/':
-            return operand1 / operand2
-        elif self.literal == '%':
-            return operand1 % operand2
-
-    def __str__(self):
-        return self.literal
-
+from Operator import UnaryOperator, BinaryOperator
 
 class SetDeclaration:
     def __init__(self, node: Node):
@@ -112,13 +28,14 @@ class SetDeclaration:
 
 
 class Expression:
-    def __init__(self, node: Node = None, tree=None):
+    def __init__(self, node: Node = None, tree=None, isBoolean=False):
         assert node is None or node.type == 'expression' or node.type == 'booleanExpression'
         if node is not None:
             self.node = node
             self.tree = Expression.buildExpressionAST(node)
         else:
             self.tree = tree
+        self.isBoolean = isBoolean
 
     @staticmethod
     def buildExpressionAST(node: Node):
@@ -141,7 +58,7 @@ class Expression:
             booleanExpressionNode = child
             literal = node.children[1].text
             comparisonExpressionNode = node.getChildByType('comparisonExpression')
-            booleanExpression = Expression.__buildBooleanExpressionAST(booleanExpressionNode)
+            booleanExpression = Expression.buildExpressionAST(booleanExpressionNode)
             comparisonExpression = Expression.__buildComparisonExpressionAST(comparisonExpressionNode)
             return BinaryOperator(literal, booleanExpression, comparisonExpression)
         elif child.type == 'comparisonExpression':
@@ -195,8 +112,9 @@ class Expression:
         if child.type == 'Identifier':
             return Variable(child.text)
         elif child.type in ['Constant', 'Integer', 'RealNumber', 'StringLiteral']:
-            return Value(child.text, typeLiteral=child.type)
-        elif child.type in ['buildInCall', 'subroutineCall']:
+            return Value(child.text, child.type)
+        elif child.type in ['builtInCall', 'subroutineCall']:
+            # TODO
             pass
         elif child.type == 'MINUS':
             expressionTerminatorNode = node.getChildByType('expressionTerminator')
@@ -253,28 +171,50 @@ class Expression:
 
     def evaluate(self, context):
         expression = self.clone()
-        expression.tree = Expression.__evaluate(expression.tree, context)
+        expression.tree = Expression.__evaluate(expression.tree, context, isBoolean=self.isBoolean)
         return expression.tree
 
     @staticmethod
-    def __evaluate(operator, context):
-        if isinstance(operator, UnaryOperator):
-            operand = operator.arg
+    def __evaluate(exprNode, context, isBoolean):
+        if isinstance(exprNode, UnaryOperator):
+            operand = exprNode.arg
             identifier = operand.identifier
-            operand = Expression.__evaluate(operand, context)
-            if operator.literal in ['++', '--']:
-                operand += 1 if operator.literal == '++' else -1
+            operand = Expression.__evaluate(operand, context, isBoolean)
+            if exprNode.literal in ['++', '--']:
+                if exprNode.literal == '++':
+                    operand += 1
+                elif exprNode.literal == '--':
+                    operand -= 1
                 context.setValue(identifier, operand)
-            return operator.applyTo(operand)
-        elif isinstance(operator, BinaryOperator):
-            operand1 = Expression.__evaluate(operator.arg1, context)
-            operand2 = Expression.__evaluate(operator.arg2, context)
-            return operator.applyTo(operand1, operand2)
-        elif isinstance(operator, Variable):
-            identifier = operator.identifier
+            return exprNode.applyTo(operand)
+        elif isinstance(exprNode, BinaryOperator):
+            operand1 = Expression.__evaluate(exprNode.arg1, context, isBoolean)
+            operand2 = Expression.__evaluate(exprNode.arg2, context, isBoolean)
+            return exprNode.applyTo(operand1, operand2)
+        elif isinstance(exprNode, Variable):
+            identifier = exprNode.identifier
             value = context.getValue(identifier)
             return value
-        elif isinstance(operator, Value):
-            return operator.value
+        elif isinstance(exprNode, Value):
+            return Expression.__getValueForSymbolicExpression(exprNode, isBoolean)
         else:
-            return operator
+            return exprNode
+
+    @staticmethod
+    def __getValueForSymbolicExpression(value: Value, isBoolean):
+        if value.typeLiteral == 'Integer':
+            if isBoolean:
+                return bool(value.value)
+            else:
+                return value.value
+        elif value.typeLiteral == 'RealNumber':
+            return value.value
+        elif value.typeLiteral == 'Constant':
+            if value.value in ['pi', 'π']:
+                return 3.14159
+            elif value.value in ['tau', '𝜏']:
+                return 6.28318
+            elif value.value in ['euler', 'ℇ']:
+                return 2.71828
+        elif value.typeLiteral == 'StringLiteral':
+            return Value.stringToNumber(value.value)
