@@ -50,30 +50,19 @@ class Store:
         return self.get(key)['type']
 
     def evaluate(self, indexIdentifierNode):
-        # TODO: extend for complex cases
+        # TODO LATER: extend for indexed identifiers
         identifier = indexIdentifierNode.getChildByType('Identifier').text
         return self.getValue(identifier)
 
     def assign(self, indexIdentifierNode, value):
-        # TODO: extend for complex cases
+        # TODO LATER: extend for indexed identifiers
         identifier = indexIdentifierNode.getChildByType('Identifier').text
         self.setValue(identifier, value)
 
     def evaluateType(self, indexIdentifierNode):
-        # TODO: extend for complex cases
+        # TODO LATER: extend for indexed identifiers
         identifier = indexIdentifierNode.getChildByType('Identifier').text
         return self.getType(identifier)
-
-    def __str__(self):
-        s = '{'
-        keys = [*self.store]
-        for i in range(len(keys)):
-            s += keys[i] + ': ' + self.store[keys[i]]
-            if i < len(keys) - 1:
-                s += ', '
-        s += '}'
-        return s
-
 
 
 
@@ -192,16 +181,18 @@ class SymbolicExecutionEngine:
                 if newStateIfFalse is not None:
                     currentState.addChild(newStateIfFalse)
             elif statementNode.type == 'aliasStatement':
-                # TODO
+                # TODO LATER: implement alias statement execution
                 pass
             elif statementNode.type == 'quantumStatement':
-                # TODO
-                pass
+                # TODO LATER: implement quantum statement execution
+                newState = currentState.clone(statementNode)
+                currentState.addChild(newState)
+                SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
             elif statementNode.type == 'loopStatement':
-                # TODO
+                # TODO LATER: implement loop statement execution
                 pass
             elif statementNode.type == 'controlDirectiveStatement':
-                # TODO
+                # TODO LATER: implement control directive statement execution
                 pass
 
     @staticmethod

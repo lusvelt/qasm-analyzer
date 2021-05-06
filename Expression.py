@@ -1,5 +1,4 @@
 import copy
-from sympy import *
 from Variable import Value, Variable
 from Parser import Node
 from Operator import UnaryOperator, BinaryOperator
@@ -114,7 +113,7 @@ class Expression:
         elif child.type in ['Constant', 'Integer', 'RealNumber', 'StringLiteral']:
             return Value(child.text, child.type)
         elif child.type in ['builtInCall', 'subroutineCall']:
-            # TODO
+            # TODO LATER: implement function calls in expressions
             pass
         elif child.type == 'MINUS':
             expressionTerminatorNode = node.getChildByType('expressionTerminator')
@@ -144,7 +143,8 @@ class Expression:
             literal = '!!'  # JavaScript-equivalent for truthy value
             expressionNode = child
             expression = Expression.buildExpressionAST(expressionNode)
-            return UnaryOperator(literal, expression)
+            # return UnaryOperator(literal, expression)
+            pass # TODO LATER: implement type-checking for truthy evaluation
         else:
             leftExpressionNode = child
             literal = node.children[1].getChild().text

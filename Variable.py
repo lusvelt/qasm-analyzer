@@ -32,6 +32,16 @@ class ClassicalType:
     def hasLimitedDomain(self):
         return self.typeLiteral in ['bit', 'creg', 'bool']  # Maybe also 'fixed'
 
+    def getTypeForSolver(self):
+        if self.typeLiteral == 'bool':
+            return 'Bool'
+        elif self.typeLiteral in ['int', 'uint']:
+            return 'Integer'
+        elif self.typeLiteral in ['float', 'angle', 'fixed']:
+            return 'Real'
+        else: # self.typeLiteral in ['bin', 'creg']
+            return 'BitVector'
+
     def __str__(self):
         s = self.typeLiteral
         if self.designatorExpr1 is not None:
@@ -57,6 +67,10 @@ class Variable:
         label = '$' + str(index)
         Variable.symbolTypes[label] = type
         return symbols(label)
+
+    @staticmethod
+    def getSymbolType(label):
+        return Variable.symbolTypes[label]
 
     def __str__(self):
         return self.identifier

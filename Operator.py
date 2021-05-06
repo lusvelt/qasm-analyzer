@@ -23,10 +23,7 @@ class UnaryOperator:
         elif self.literal == '!':
             return Not(operand)
         elif self.literal == '~':
-            return Not(operand)
-        elif self.literal == '!!':
-            # TODO: based on the operand type, evaluate True for truthy and False otherwise
-            return operand
+            return (operand)
         else:
             return operand
 
@@ -68,7 +65,7 @@ class BinaryOperator:
             return Xor(operand1, operand2)
         elif self.literal == '&':
             return And(operand1, operand2)
-        elif self.literal == '<<':
+        elif self.literal == '<<': # TODO LATER: find a good way to encode bitwise operations in sympy
             return Mul(operand1, Pow(2, operand2))
         elif self.literal == '>>':
             return Mul(operand1, Pow(2, -operand2))
