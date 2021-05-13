@@ -1,13 +1,12 @@
-from sympy import symbols
-from Variable import ClassicalType
-from Solver import Solver
-from pysmt.shortcuts import get_model
+from Parser import Parser
+from Subroutine import SubroutineClassifier
+from SymbolicExecutionEngine import SymbolicExecutionEngine
 
-x, y, z = symbols('x, y, z')
-int5 = ClassicalType('int', 5)
-symbolTypes = {'x': int5, 'y': int5, 'z': int5}
-solver = Solver(symbolTypes)
-symbolicExpression = 2*x >= y*z + 42
-expression = solver.getSolvableExpression(symbolicExpression)
-model = get_model(expression)
+tree = Parser.buildParseTree('test.qasm')
+classifier = SubroutineClassifier(tree)
+symbolicExecutionTrees = []
+for identifier in classifier.subroutines.keys():
+    subroutine = classifier.subroutines[identifier]
+    symbolicExecutionTree = SymbolicExecutionEngine.getSubroutineSymbolicExecutionTree(subroutine)
+    symbolicExecutionTrees.append(symbolicExecutionTree)
 pass

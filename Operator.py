@@ -23,7 +23,7 @@ class UnaryOperator:
         elif self.literal == '!':
             return Not(operand)
         elif self.literal == '~':
-            return (operand)
+            return Not(operand)
         else:
             return operand
 

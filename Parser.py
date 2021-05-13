@@ -10,7 +10,7 @@ from qasm3sub.qasm3subListener import qasm3subListener
 class Node:
     def __init__(self, type: str, text: str = None):
         self.type = type if 'T__' not in type else None  # if it's an unnamed token set the type to None
-        self.text = text  # only set for leaves, None otherwise
+        self.text = text
         self.parent = None
         self.children = []  # list of children rules (order does matter)
         self.position = None  # index of the current Node in parent.children list
@@ -119,15 +119,17 @@ class ExtractorListener(qasm3subListener):
 # This is the actual function which shall be called from outside
 # It accepts a file path as an argument (the QASM source file)
 # and it returns our simplified parsing tree
-def buildParseTree(filePath: str):
-    file = FileStream(filePath)
-    lexer = qasm3subLexer(file)
-    stream = CommonTokenStream(lexer)
-    parser = qasm3subParser(stream)
-    tree = parser.program()
+class Parser:
+    @staticmethod
+    def buildParseTree(filePath: str):
+        file = FileStream(filePath)
+        lexer = qasm3subLexer(file)
+        stream = CommonTokenStream(lexer)
+        parser = qasm3subParser(stream)
+        tree = parser.program()
 
-    output = SimpleNamespace()
-    listener = ExtractorListener(output, parser)
-    walker = ParseTreeWalker()
-    walker.walk(listener, tree)
-    return output.tree
+        output = SimpleNamespace()
+        listener = ExtractorListener(output, parser)
+        walker = ParseTreeWalker()
+        walker.walk(listener, tree)
+        return output.tree
