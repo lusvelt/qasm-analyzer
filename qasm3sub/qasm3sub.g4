@@ -422,8 +422,8 @@ branchingStatement
     ;
 
 loopSignature
-    : 'for' membershipTest
-    | 'while' LPAREN booleanExpression RPAREN
+    : ('#invariant' COLON booleanExpression)? 'for' membershipTest
+    | ('#invariant' COLON booleanExpression)? 'while' LPAREN booleanExpression RPAREN
     ;
 
 loopStatement: loopSignature programBlock;
@@ -440,7 +440,7 @@ controlDirective
 
 /*** Subroutines ***/
 subroutineDefinition
-    : 'def' Identifier (LPAREN classicalArgumentList? RPAREN)? quantumArgumentList?
+    : ('#qubits' expression)? 'def' Identifier (LPAREN classicalArgumentList? RPAREN)? quantumArgumentList?
     returnSignature? subroutineBlock
     ;
 

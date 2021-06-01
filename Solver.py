@@ -1,5 +1,10 @@
 import sympy
 from pysmt import shortcuts as pysmt
+from pysmt.environment import get_env
+from Variable import Variable
+
+get_env().enable_infix_notation = True
+
 
 class Type:
     def __init__(self, literal, size=None):
@@ -8,24 +13,38 @@ class Type:
 
 
 class Solver:
-    def __init__(self, symbolTypes: dict):
-        self.symbolTypes = symbolTypes
+    @staticmethod
+    def getConvertedExpression(symbolicExpression):
+        expression, type = Solver.__getExpressionTree(symbolicExpression)
+        return expression, type
 
-    def getSolvableExpression(self, symbolicExpression):
-        expression, type = self.__getExpressionTree(symbolicExpression)
-        return expression
-
-    def solve(self, symbolicExpression):
-        expression, type = self.getSolvableExpression(symbolicExpression)
+    @staticmethod
+    def solve(symbolicExpression):
+        expression, type = Solver.getConvertedExpression(symbolicExpression)
         return expression.solve()
 
-    def __getExpressionTree(self, symbolicExpression):
+    @staticmethod
+    def isSat(symbolicExpression):
+        if isinstance(symbolicExpression, bool):
+            return symbolicExpression
+        expression, type = Solver.getConvertedExpression(symbolicExpression)
+        return pysmt.is_sat(expression)
+
+    @staticmethod
+    def isUnsat(symbolicExpression):
+        if isinstance(symbolicExpression, bool) or symbolicExpression.is_Boolean:
+            return not symbolicExpression
+        expression, type = Solver.getConvertedExpression(symbolicExpression)
+        return pysmt.is_unsat(expression)
+
+    @staticmethod
+    def __getExpressionTree(symbolicExpression):
         # TODO LATER: take into account bitwise shift operations
         args = []
         castType = None
         if len(symbolicExpression.args) > 0:
             for symbolicArg in symbolicExpression.args:
-                arg, type = self.__getExpressionTree(symbolicArg)
+                arg, type = Solver.__getExpressionTree(symbolicArg)
                 args.append(arg)
                 if castType is None:
                     castType = type
@@ -75,10 +94,12 @@ class Solver:
             return pysmt.Plus(args), castType
         elif isinstance(symbolicExpression, sympy.Mul):
             return pysmt.Times(args), castType
+        elif isinstance(symbolicExpression, sympy.Pow):
+            return pysmt.Pow(args[0], args[1]), castType
         # TODO LATER: deal with missing modulo operator from pysmt
         else:
             if isinstance(symbolicExpression, sympy.Symbol):
-                symbolType = self.symbolTypes[symbolicExpression.name]
+                symbolType = Variable.symbolTypes[symbolicExpression.name]
                 literal = symbolType.getTypeForSolver()
                 designator = symbolType.designatorExpr1
                 type = Type(literal, designator)
@@ -105,7 +126,7 @@ class Solver:
                 return pysmt.Symbol(symbolicExpression.name, pysmt.REAL)
             elif type.literal == 'Bool':
                 return pysmt.Symbol(symbolicExpression.name, pysmt.BOOL)
-            else: # type.literal == 'BitVector'
+            else:  # type.literal == 'BitVector'
                 return pysmt.Symbol(symbolicExpression.name, pysmt.BVType(type.size))
         else:
             if type.literal == 'Integer':
@@ -113,9 +134,9 @@ class Solver:
             elif type.literal == 'Real':
                 if isinstance(symbolicExpression, sympy.Rational):
                     return pysmt.Real(symbolicExpression.p / symbolicExpression.q)
-                else: # isinstance(symbolicExpression, sympy.Float)
-                    return pysmt.Real(float(symbolicExpression))
+                else:  # isinstance(symbolicExpression, sympy.Float)
+                    return pysmt.Real(symbolicExpression)
             elif type.literal == 'Bool':
                 return pysmt.Bool(symbolicExpression)
-            else: # type.literal == 'BitVector'
+            else:  # type.literal == 'BitVector'
                 return pysmt.BV(symbolicExpression, type.size)

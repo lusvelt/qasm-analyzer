@@ -116,6 +116,7 @@ class ExtractorListener(qasm3subListener):
         child = Node(tokenName, node.symbol.text)
         self.current.appendChild(child)
 
+
 # This is the actual function which shall be called from outside
 # It accepts a file path as an argument (the QASM source file)
 # and it returns our simplified parsing tree

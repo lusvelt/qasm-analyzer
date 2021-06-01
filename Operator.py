@@ -65,7 +65,7 @@ class BinaryOperator:
             return Xor(operand1, operand2)
         elif self.literal == '&':
             return And(operand1, operand2)
-        elif self.literal == '<<': # TODO LATER: find a good way to encode bitwise operations in sympy
+        elif self.literal == '<<':  # TODO LATER: find a good way to encode bitwise operations in sympy
             return Mul(operand1, Pow(2, operand2))
         elif self.literal == '>>':
             return Mul(operand1, Pow(2, -operand2))

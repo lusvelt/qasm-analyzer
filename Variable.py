@@ -1,12 +1,13 @@
 from sympy import symbols
 
+
 # Represents a classical type
 class ClassicalType:
     def __init__(self,
                  typeLiteral: str = None,
-                 designatorExpr1 = None,
-                 designatorExpr2 = None,
-                 node = None):
+                 designatorExpr1=None,
+                 designatorExpr2=None,
+                 node=None):
         assert typeLiteral is None and node is not None or typeLiteral is not None and node is None
         if node is not None:
             self.node = node
@@ -39,7 +40,7 @@ class ClassicalType:
             return 'Integer'
         elif self.typeLiteral in ['float', 'angle', 'fixed']:
             return 'Real'
-        else: # self.typeLiteral in ['bin', 'creg']
+        else:  # self.typeLiteral in ['bin', 'creg']
             return 'BitVector'
 
     def __str__(self):
@@ -52,10 +53,10 @@ class ClassicalType:
         return s
 
 
-
 class Variable:
     nextIndex = 0
     symbolTypes = {}
+
     def __init__(self, identifier: str, type: ClassicalType = None):
         self.identifier = identifier
         self.type = type
@@ -77,7 +78,7 @@ class Variable:
 
 
 class ClassicalVariable(Variable):
-    def __init__(self, identifier: str, type: ClassicalType = None, typeNode = None):
+    def __init__(self, identifier: str, type: ClassicalType = None, typeNode=None):
         assert typeNode is not None or type is None
         if typeNode is not None:
             type = ClassicalType(node=typeNode)
@@ -116,10 +117,9 @@ class Value:
     @staticmethod
     def stringToNumber(stringLiteral):
         num = 0
-        for i in range(len(stringLiteral)-1, -1, -1):
+        for i in range(len(stringLiteral) - 1, -1, -1):
             num += pow(2, i)
         return num
-
 
     def __str__(self):
         return self.value

@@ -1,10 +1,13 @@
 import copy
+
+from Register import CReg
 from Variable import Value, Variable
 from Parser import Node
 from Operator import UnaryOperator, BinaryOperator
 
+
 class SetDeclaration:
-    def __init__(self, node: Node):
+    def __init__(self, node):
         assert node.type == 'setDeclaration'
         self.node = node
         child = node.getChild()
@@ -144,7 +147,7 @@ class Expression:
             expressionNode = child
             expression = Expression.buildExpressionAST(expressionNode)
             # return UnaryOperator(literal, expression)
-            pass # TODO LATER: implement type-checking for truthy evaluation
+            pass  # TODO LATER: implement type-checking for implicit conditional evaluation
         else:
             leftExpressionNode = child
             literal = node.children[1].getChild().text
@@ -169,7 +172,7 @@ class Expression:
     def clone(self):
         return copy.deepcopy(self)
 
-    def evaluate(self, context):
+    def evaluate(self, context=None):
         expression = self.clone()
         expression.tree = Expression.__evaluate(expression.tree, context, isBoolean=self.isBoolean)
         return expression.tree
@@ -203,10 +206,7 @@ class Expression:
     @staticmethod
     def __getValueForSymbolicExpression(value: Value, isBoolean):
         if value.typeLiteral == 'Integer':
-            if isBoolean:
-                return bool(value.value)
-            else:
-                return value.value
+            return value.value
         elif value.typeLiteral == 'RealNumber':
             return value.value
         elif value.typeLiteral == 'Constant':
@@ -217,4 +217,4 @@ class Expression:
             elif value.value in ['euler', 'ℇ']:
                 return 2.71828
         elif value.typeLiteral == 'StringLiteral':
-            return Value.stringToNumber(value.value)
+            return CReg.fromStringLiteral(value.value)

@@ -278,15 +278,6 @@ class qasm3subListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by qasm3subParser#classicalTypeList.
-    def enterClassicalTypeList(self, ctx:qasm3subParser.ClassicalTypeListContext):
-        pass
-
-    # Exit a parse tree produced by qasm3subParser#classicalTypeList.
-    def exitClassicalTypeList(self, ctx:qasm3subParser.ClassicalTypeListContext):
-        pass
-
-
     # Enter a parse tree produced by qasm3subParser#classicalArgument.
     def enterClassicalArgument(self, ctx:qasm3subParser.ClassicalArgumentContext):
         pass

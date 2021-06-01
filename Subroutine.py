@@ -1,5 +1,6 @@
 from Parser import Node
 from Variable import ClassicalVariable, QuantumVariable, ClassicalType
+from Expression import Expression
 
 
 # Represents the 'classicalArgument' rule
@@ -40,13 +41,20 @@ class QuantumArgument(QuantumVariable):
 #   hasOnlyBranchingStatements
 #   isRecursive
 class Subroutine:
-    def __init__(self, node: Node):
+    def __init__(self, node: Node, parseTree):
         assert node.type == 'subroutineDefinition'
         self.node = node
+        self.parseTree = parseTree
         self.identifier = node.getChildByType('Identifier').text
         self.classicalArguments = []
         self.quantumArguments = []
 
+        # To be filled by SymbolicExecutionEngine
+        self.symbolicExecutionTree = None
+        self.qubitUpperBound = None
+        self.qubitChecks = []  # It's the array of qubit upper bound violations
+
+        self.__setQubitUpperBound()
         self.__analyzeClassicalArguments()
         self.__analyzeQuantumArguments()
         self.__analyzeReturnType()
@@ -54,6 +62,11 @@ class Subroutine:
 
         self.hasOnlyLimitedArgs = self.__hasOnlyLimitedArgs()
         self.hasInfiniteDomainArgs = not self.hasOnlyLimitedArgs
+
+    def __setQubitUpperBound(self):
+        expressionNode = self.node.getChildByType('expression')
+        if expressionNode is not None:
+            self.qubitUpperBound = Expression(expressionNode).evaluate()
 
     def __analyzeClassicalArguments(self):
         classicalArgumentListNode = self.node.getChildByType('classicalArgumentList')
@@ -99,6 +112,13 @@ class Subroutine:
             limitedArguments = limitedArguments and argument.hasLimitedDomain()
         return limitedArguments
 
+    def addQubitCheck(self, qubitCheck):
+        if qubitCheck is not None:
+            self.qubitChecks.append(qubitCheck)
+
+    def respectsQubitBound(self):
+        return len(self.qubitChecks) == 0
+
 
 # This is a helper class which takes the parse tree as an input and builds
 # a dictionary of all subroutines, setting the correct flags for each of them
@@ -116,4 +136,4 @@ class SubroutineClassifier:
             child = node.getChildByType('subroutineDefinition')
             if child is not None:
                 identifier = child.getChildByType('Identifier').text
-                self.subroutines[identifier] = Subroutine(child)
+                self.subroutines[identifier] = Subroutine(child, self.parseTree)
