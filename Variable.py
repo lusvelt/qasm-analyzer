@@ -98,7 +98,7 @@ class Value:
             elif typeLiteral == 'RealNumber':
                 self.value = float(value)
             elif typeLiteral == 'StringLiteral':
-                self.value = value
+                self.value = value[1:-1]
             else:
                 self.value = value
 

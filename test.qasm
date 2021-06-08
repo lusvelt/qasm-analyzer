@@ -25,3 +25,18 @@ def f2 (int[5]:x) qreg[5]:q, qreg[5]:u -> int[8] {
     int[5] s = r + x;
     return s;
 }
+
+def f3 (int[5]:x, bit[4]:b) qreg[5]:q -> int[8] {
+    bit c[5] = "0110";
+    c[2,3] = b[3,1];
+    if (c[2] == 1 && c[3] == 0) {
+        x += 2;
+    } else {
+        if (c >= 3) {
+            x += 3;
+        } else {
+            x -= 4;
+        }
+    }
+    return x;
+}

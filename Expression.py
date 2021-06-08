@@ -191,13 +191,22 @@ class Expression:
                 context.setValue(identifier, operand)
             return exprNode.applyTo(operand)
         elif isinstance(exprNode, BinaryOperator):
-            operand1 = Expression.__evaluate(exprNode.arg1, context, isBoolean)
-            operand2 = Expression.__evaluate(exprNode.arg2, context, isBoolean)
-            return exprNode.applyTo(operand1, operand2)
+            if exprNode.literal == '[]':
+                identifier = exprNode.arg1.identifier
+                index = exprNode.arg2.value
+                creg = context.getValue(identifier)
+                return creg.getBit(index).value
+            else:
+                operand1 = Expression.__evaluate(exprNode.arg1, context, isBoolean)
+                operand2 = Expression.__evaluate(exprNode.arg2, context, isBoolean)
+                return exprNode.applyTo(operand1, operand2)
         elif isinstance(exprNode, Variable):
             identifier = exprNode.identifier
             value = context.getValue(identifier)
-            return value
+            if isinstance(value, CReg):
+                return value.getSymbolicExpression()
+            else:
+                return value
         elif isinstance(exprNode, Value):
             return Expression.__getValueForSymbolicExpression(exprNode, isBoolean)
         else:

@@ -1,7 +1,7 @@
 import copy
 from sympy import *
 
-from Register import QReg, Qubit
+from Register import QReg, Qubit, CReg
 from Subroutine import Subroutine
 from Parser import Node
 from Expression import Expression
@@ -33,12 +33,17 @@ class Store:
         if key in self.store.keys():
             if self.store[key]['type'] is not None and type is None:
                 type = self.store[key]['type']
+        if type.typeLiteral in ['bit', 'creg'] and not isinstance(value, CReg):
+            size = Expression(type.designatorExpr1).evaluate(self.store)
+            value = CReg.fromSymbolAndSize(key, value, size)
         self.store[key] = {'value': value, 'type': type}
 
     def get(self, key: str):
         return self.store[key]
 
     def getValue(self, key: str):
+        if 'value' not in self.get(key).keys():
+            return None
         return self.get(key)['value']
 
     def setValue(self, key: str, value):
@@ -49,7 +54,7 @@ class Store:
 
     def setType(self, key: str, type):
         if key not in self.store.keys():
-            self.store[key] = {'type': None}
+            self.store[key] = {'type': type}
         else:
             self.store[key]['type'] = type
 
@@ -57,19 +62,74 @@ class Store:
         return self.get(key)['type']
 
     def evaluate(self, indexIdentifierNode):
-        # TODO LATER: extend for indexed identifiers
-        identifier = indexIdentifierNode.getChildByType('Identifier').text
-        return self.getValue(identifier)
+        child = indexIdentifierNode.getChildByType('indexIdentifier')
+        if child is not None:
+            sibling = indexIdentifierNode.getChildByType('indexIdentifier', 1)
+            evaluatedLeft = self.evaluate(child)
+            evaluatedRight = self.evaluate(sibling)
+            return CReg.concat(evaluatedLeft, evaluatedRight)
+        else:
+            identifier = indexIdentifierNode.getChildByType('Identifier').text
+            value = self.getValue(identifier)
+            if isinstance(value, CReg):
+                creg = value
+                rangeDefinitionNode = indexIdentifierNode.getChildByType('rangeDefinition')
+                expressionListNode = indexIdentifierNode.getChildByType('expressionList')
+                if rangeDefinitionNode is not None:
+                    rangeDefinition = Range(rangeDefinitionNode)
+                    return creg.getRange(rangeDefinition)
+                elif expressionListNode is not None:
+                    expressionNodes = expressionListNode.getChildrenByType('expression')
+                    expressions = [Expression(node).evaluate(self.store) for node in expressionNodes]
+                    return creg.getList(expressions)
+                else:
+                    return creg
+            else:
+                return value
 
     def assign(self, indexIdentifierNode, value):
-        # TODO LATER: extend for indexed identifiers
         identifier = indexIdentifierNode.getChildByType('Identifier').text
-        self.setValue(identifier, value)
+        oldValue = self.getValue(identifier)
+        if isinstance(oldValue, CReg):
+            creg = oldValue
+            rangeDefinitionNode = indexIdentifierNode.getChildByType('rangeDefinition')
+            expressionListNode = indexIdentifierNode.getChildByType('expressionList')
+            if rangeDefinitionNode is not None:
+                rangeDefinition = Range(rangeDefinitionNode)
+                creg.setRange(rangeDefinition, value)
+            elif expressionListNode is not None:
+                expressionNodes = expressionListNode.getChildrenByType('expression')
+                expressions = [Expression(node).evaluate(self.store) for node in expressionNodes]
+                creg.setList(expressions, value)
+            else:
+                self.setValue(identifier, value)
+        else:
+            self.setValue(identifier, value)
 
     def evaluateType(self, indexIdentifierNode):
-        # TODO LATER: extend for indexed identifiers
-        identifier = indexIdentifierNode.getChildByType('Identifier').text
-        return self.getType(identifier)
+        child = indexIdentifierNode.getChildByType('indexIdentifier')
+        if child is not None:
+            sibling = indexIdentifierNode.getChildByType('indexIdentifier', 1)
+            leftSize = self.evaluateType(child).size
+            rightSize = self.evaluateType(sibling).size
+            return ClassicalType('creg', leftSize + rightSize)
+        else:
+            identifier = indexIdentifierNode.getChildByType('Identifier').text
+            value = self.getValue(identifier)
+            if isinstance(value, CReg):
+                creg = value
+                rangeDefinitionNode = indexIdentifierNode.getChildByType('rangeDefinition')
+                expressionListNode = indexIdentifierNode.getChildByType('expressionList')
+                if rangeDefinitionNode is not None:
+                    rangeDefinition = Range(rangeDefinitionNode)
+                    return ClassicalType('creg', rangeDefinition.getSize())
+                elif expressionListNode is not None:
+                    expressionNodes = expressionListNode.getChildrenByType('expression')
+                    return ClassicalType('creg', len(expressionNodes))
+                else:
+                    return ClassicalType('creg', creg.size)
+            else:
+                return self.getType(identifier)
 
 
 # This class is used to manage the sequence of instructions
@@ -426,7 +486,7 @@ class SymbolicExecutionEngine:
             if rightHandSideNode.type == 'expression':
                 rightHandSide = Expression(rightHandSideNode).evaluate(state.store)
             elif rightHandSideNode.type == 'indexIdentifier':
-                rightHandSide = state.store.evaluate(indexIdentifierNode)
+                rightHandSide = state.store.evaluate(rightHandSideNode)
 
             assignmentOperatorNode = assignmentNode.getChildByType('assignmentOperator')
             if assignmentOperatorNode.hasChildren():

@@ -1,12 +1,14 @@
 import copy
 from sympy import Ne, Or
 from Solver import Solver
+from Variable import Variable, ClassicalType
 
 
 class CReg:
-    def __init__(self, identifier=None, size=1):
+    def __init__(self, identifier=None, size=1, symbol=None):
         self.identifier = identifier
         self.size = size
+        self.symbol = symbol
         self.content = []
 
     @staticmethod
@@ -17,6 +19,87 @@ class CReg:
             bit = Bit(creg, i, value)
             creg.content.append(bit)
         return creg
+
+    @staticmethod
+    def fromSymbolAndSize(identifier, symbol, size):
+        creg = CReg(identifier, size, symbol)
+        if isinstance(size, int) or size.is_Integer:
+            for i in range(size):
+                symbol = Variable.getNewSymbol(ClassicalType('int', 1))
+                bit = Bit(creg, i, symbol)
+                creg.content.append(bit)
+        else:
+            symbol = Variable.getNewSymbol(ClassicalType('creg', size))
+            bitRange = BitRange(creg, 0, size, symbol)
+            creg.content.append(bitRange)
+        return creg
+
+    @staticmethod
+    def concat(lreg, rreg):
+        size = lreg.size + rreg.size
+        creg = CReg(size=size)
+        lcontent = copy.deepcopy(lreg.content)
+        rcontent = copy.deepcopy(rreg.content)
+        content = [*lcontent, *rcontent]
+        creg.content = content
+        return creg
+
+    def findBit(self, index):
+        for bitRange in self.content:
+            if isinstance(bitRange, Bit):
+                if Solver.isUnsat(Ne(index, bitRange.start)):
+                    return bitRange
+        return None
+
+    def getBit(self, index):
+        bit = self.findBit(index)
+        if bit is None:
+            bit = Bit(self, index)
+        return bit
+
+    def findRange(self, rangeDefinition):
+        for bitRange in self.content:
+            if bitRange.start == rangeDefinition.start and bitRange.end == rangeDefinition.end:
+                return bitRange
+        return None
+
+    def getRange(self, rangeDefinition):
+        bitRange = self.findRange(rangeDefinition)
+        if bitRange is None:
+            bitRange = BitRange(self, rangeDefinition.start, rangeDefinition.end)
+        return bitRange
+
+    def getList(self, expressions):
+        creg = CReg(size=len(expressions))
+        for expression in expressions:
+            creg.content.append(self.getBit(expression))
+        if creg.size == 1:
+            return creg.content[0].value
+        else:
+            return creg
+
+    def setRange(self, rangeDefinition, value):
+        bitRange = self.getRange(rangeDefinition)
+        bitRange.value = value
+
+    def setList(self, expressions, value):
+        assert isinstance(value, CReg) and len(expressions) == value.size
+        for i in range(len(expressions)):
+            expression = expressions[i]
+            bit = self.getBit(expression)
+            bit.value = value.content[i].value
+
+    def getSymbolicExpression(self):
+        if isinstance(self.size, int):
+            value = 0
+            for i in range(self.size):
+                bit = self.getBit(i)
+                value += bit.value * 2**i
+            return value
+        else:
+            if self.symbol is None:
+                self.symbol = Variable.getNewSymbol(ClassicalType('creg', self.size))
+            return self.symbol
 
 
 class BitRange:
@@ -29,9 +112,8 @@ class BitRange:
 
 
 class Bit(BitRange):
-    def __init__(self, creg, index, value):
-        assert value == 0 or value == 1
-        super().__init__(creg, index, index)
+    def __init__(self, creg, index, value=None):
+        super().__init__(creg, index, index+1)
         self.value = value
 
     def getIndex(self):
