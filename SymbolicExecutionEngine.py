@@ -76,7 +76,7 @@ class Store:
                 rangeDefinitionNode = indexIdentifierNode.getChildByType('rangeDefinition')
                 expressionListNode = indexIdentifierNode.getChildByType('expressionList')
                 if rangeDefinitionNode is not None:
-                    rangeDefinition = Range(rangeDefinitionNode)
+                    rangeDefinition = Range(rangeDefinitionNode, self, creg.size)
                     return creg.getRange(rangeDefinition)
                 elif expressionListNode is not None:
                     expressionNodes = expressionListNode.getChildrenByType('expression')
@@ -95,7 +95,7 @@ class Store:
             rangeDefinitionNode = indexIdentifierNode.getChildByType('rangeDefinition')
             expressionListNode = indexIdentifierNode.getChildByType('expressionList')
             if rangeDefinitionNode is not None:
-                rangeDefinition = Range(rangeDefinitionNode)
+                rangeDefinition = Range(rangeDefinitionNode, self, creg.size)
                 creg.setRange(rangeDefinition, value)
             elif expressionListNode is not None:
                 expressionNodes = expressionListNode.getChildrenByType('expression')
@@ -121,7 +121,7 @@ class Store:
                 rangeDefinitionNode = indexIdentifierNode.getChildByType('rangeDefinition')
                 expressionListNode = indexIdentifierNode.getChildByType('expressionList')
                 if rangeDefinitionNode is not None:
-                    rangeDefinition = Range(rangeDefinitionNode)
+                    rangeDefinition = Range(rangeDefinitionNode, self, creg.size)
                     return ClassicalType('creg', rangeDefinition.getSize())
                 elif expressionListNode is not None:
                     expressionNodes = expressionListNode.getChildrenByType('expression')
@@ -130,6 +130,28 @@ class Store:
                     return ClassicalType('creg', creg.size)
             else:
                 return self.getType(identifier)
+
+    def symbolizeAll(self):
+        for key in self.store.keys():
+            self.store[key]['value'] = Variable.getNewSymbol(self.store[key]['type'])
+
+
+class Instruction:
+    def __init__(self):
+        pass
+
+
+class AddConstraintInstruction(Instruction):
+    def __init__(self, constraint):
+        super().__init__()
+        self.constraint = constraint
+
+
+class SetStoreValueInstruction(Instruction):
+    def __init__(self, identifier, value):
+        super().__init__()
+        self.identifier = identifier
+        self.value = value
 
 
 # This class is used to manage the sequence of instructions
@@ -156,6 +178,9 @@ class ExecutionStack:
 
     def clone(self):
         return copy.deepcopy(self)
+
+    def addInstruction(self, instruction: Instruction):
+        self.sequence.append(instruction)
 
 
 class QRegManager:
@@ -305,13 +330,13 @@ class QRegManager:
             entanglement.remove(qubit)
 
     def __mergeEntanglement(self, entanglement):
-        oldEntanglements = set()
+        oldEntanglements = []
         newEntanglement = set()
         for qubit in entanglement:
             oldEntanglement = self.findEntanglementContainingQubit(qubit)
             if oldEntanglement is not None:
                 self.potentialEntanglements.remove(oldEntanglement)
-                oldEntanglements.add(oldEntanglement)
+                oldEntanglements.append(oldEntanglement)
             else:
                 newEntanglement.add(qubit)
         for oldEntanglement in oldEntanglements:
@@ -321,7 +346,7 @@ class QRegManager:
 
 
 class Range:
-    def __init__(self, node, context, size):
+    def __init__(self, node, context, size=None):
         self.node = node
         numColons = len(node.getChildrenByType('COLON'))
         cursor = 1
@@ -349,6 +374,14 @@ class Range:
             else:
                 self.end = size
 
+    def isSymbolic(self):
+        return not ((isinstance(self.start, int) or self.start.is_Integer) and
+                    (isinstance(self.end, int) or self.start.is_Integer))
+
+    def toArray(self):
+        # TODO: if is symbolic return None
+        return list(range(self.start, self.end, self.step))
+
 
 # This class represents a Symbolic State in the symbolic execution tree
 # Each state consists in a triple (node, store, constraints)
@@ -372,6 +405,9 @@ class SymbolicState:
 
     def addConstraint(self, booleanExpression):
         self.constraints = And(self.constraints, booleanExpression)
+
+    def symbolizeAll(self):
+        self.store.symbolizeAll()
 
     def __str__(self):
         return self.store.__str__() + ' | ' + self.constraints.__str__()
@@ -407,63 +443,114 @@ class SymbolicExecutionEngine:
     @staticmethod
     def __simulateExecution(currentState: SymbolicState, executionStack: ExecutionStack):
         if not executionStack.isEmpty():
-            statementNode = executionStack.pop()
-            if statementNode.type == 'expressionStatement':
-                newState = currentState.clone(statementNode)
-                SymbolicExecutionEngine.__simulateExpressionStatement(statementNode, newState)
-                currentState.addChild(newState)
-                SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
-            elif statementNode.type == 'assignmentStatement':
-                newState = currentState.clone(statementNode)
-                SymbolicExecutionEngine.__simulateAssignmentStatement(statementNode, newState)
-                currentState.addChild(newState)
-                SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
-            elif statementNode.type == 'classicalDeclarationStatement':
-                newState = currentState.clone(statementNode)
-                SymbolicExecutionEngine.__simulateClassicalDeclarationStatement(statementNode, newState)
-                currentState.addChild(newState)
-                SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
-            elif statementNode.type == 'branchingStatement':
-                booleanExpressionNode = statementNode.getChildByType('booleanExpression')
-                booleanExpression = Expression(booleanExpressionNode, isBoolean=True).evaluate(currentState.store)
+            stackItem = executionStack.pop()
+            if isinstance(stackItem, Instruction):
+                instruction = stackItem
+                if isinstance(instruction, SetStoreValueInstruction):
+                    currentState.store.setValue(instruction.identifier, instruction.value)
+                elif isinstance(instruction, AddConstraintInstruction):
+                    currentState.addConstraint(instruction.constraint)
+                SymbolicExecutionEngine.__simulateExecution(currentState, executionStack)
+            else:
+                statementNode = stackItem
+                if statementNode.type == 'expressionStatement':
+                    newState = currentState.clone(statementNode)
+                    SymbolicExecutionEngine.__simulateExpressionStatement(statementNode, newState)
+                    currentState.addChild(newState)
+                    SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
+                elif statementNode.type == 'assignmentStatement':
+                    newState = currentState.clone(statementNode)
+                    SymbolicExecutionEngine.__simulateAssignmentStatement(statementNode, newState)
+                    currentState.addChild(newState)
+                    SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
+                elif statementNode.type == 'classicalDeclarationStatement':
+                    newState = currentState.clone(statementNode)
+                    SymbolicExecutionEngine.__simulateClassicalDeclarationStatement(statementNode, newState)
+                    currentState.addChild(newState)
+                    SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
+                elif statementNode.type == 'branchingStatement':
+                    booleanExpressionNode = statementNode.getChildByType('booleanExpression')
+                    booleanExpression = Expression(booleanExpressionNode, isBoolean=True).evaluate(currentState.store)
 
-                blockIfTrue = statementNode.getChildByType('programBlock', 0)
-                stackIfTrue = executionStack.clone()
-                stackIfTrue.append(blockIfTrue)
-                newStateIfTrue = currentState.clone(statementNode)
-                newStateIfTrue.addConstraint(booleanExpression)
-                if Solver.isSat(newStateIfTrue.constraints):
-                    SymbolicExecutionEngine.__simulateExecution(newStateIfTrue, stackIfTrue)
-                    currentState.addChild(newStateIfTrue)
+                    blockIfTrue = statementNode.getChildByType('programBlock', 0)
+                    stackIfTrue = executionStack.clone()
+                    stackIfTrue.append(blockIfTrue)
+                    newStateIfTrue = currentState.clone(statementNode)
+                    newStateIfTrue.addConstraint(booleanExpression)
+                    if Solver.isSat(newStateIfTrue.constraints):
+                        SymbolicExecutionEngine.__simulateExecution(newStateIfTrue, stackIfTrue)
+                        currentState.addChild(newStateIfTrue)
 
-                blockIfFalse = statementNode.getChildByType('programBlock', 1)
-                if blockIfFalse is not None:
-                    stackIfFalse = executionStack.clone()
-                    stackIfFalse.append(blockIfFalse)
-                    newStateIfFalse = currentState.clone(statementNode)
-                    newStateIfFalse.addConstraint(~booleanExpression)
-                    if Solver.isSat(newStateIfFalse.constraints):
-                        SymbolicExecutionEngine.__simulateExecution(newStateIfFalse, stackIfFalse)
-                        currentState.addChild(newStateIfFalse)
-            elif statementNode.type == 'aliasStatement':
-                # TODO LATER: implement alias statement execution
-                pass
-            elif statementNode.type == 'quantumStatement':
-                newState = currentState.clone(statementNode)
-                SymbolicExecutionEngine.__simulateQuantumStatement(statementNode, newState)
-                currentState.addChild(newState)
-                SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
-            elif statementNode.type == 'loopStatement':
-                guardExpressionNode = statementNode.getChildByType('booleanExpression', 0)
-                guardExpression = Expression(guardExpressionNode, isBoolean=True).evaluate(currentState.store)
-                invariantExpressionNode = statementNode.getChildByType('booleanExpression', 1)
-                invariantExpression = None
-                if invariantExpressionNode is not None:
-                    invariantExpression = Expression(invariantExpressionNode, isBoolean=True).evaluate(currentState.store)
-                # TODO: simulate loop
-            elif statementNode.type == 'controlDirectiveStatement':
-                # TODO LATER: implement control directive statement execution
-                pass
+                    blockIfFalse = statementNode.getChildByType('programBlock', 1)
+                    if blockIfFalse is not None:
+                        stackIfFalse = executionStack.clone()
+                        stackIfFalse.append(blockIfFalse)
+                        newStateIfFalse = currentState.clone(statementNode)
+                        newStateIfFalse.addConstraint(~booleanExpression)
+                        if Solver.isSat(newStateIfFalse.constraints):
+                            SymbolicExecutionEngine.__simulateExecution(newStateIfFalse, stackIfFalse)
+                            currentState.addChild(newStateIfFalse)
+                elif statementNode.type == 'aliasStatement':
+                    # TODO LATER: implement alias statement execution
+                    pass
+                elif statementNode.type == 'quantumStatement':
+                    newState = currentState.clone(statementNode)
+                    SymbolicExecutionEngine.__simulateQuantumStatement(statementNode, newState)
+                    currentState.addChild(newState)
+                    SymbolicExecutionEngine.__simulateExecution(newState, executionStack)
+                elif statementNode.type == 'loopStatement':
+                    loopSignatureNode = statementNode.getChildByType('loopSignature')
+                    programBlockNode = statementNode.getChildByType('programBlock')
+                    newState = currentState.clone(statementNode)
+                    newStack = executionStack.clone()
+                    invariantBooleanExpressionNode = None
+                    booleanExpressionNode = None
+                    membershipTestNode = None
+                    if len(loopSignatureNode.children) > 1:
+                        invariantBooleanExpressionNode = loopSignatureNode.getChildByType('booleanExpression')
+                        booleanExpressionNode = loopSignatureNode.getChildByType('booleanExpression', 1)
+                    else:
+                        booleanExpressionNode = loopSignatureNode.getChildByType('booleanExpression', 0)
+                    membershipTestNode = loopSignatureNode.getChildByType('membershipTest')
+                    if membershipTestNode is None:  # 'while' loop
+                        booleanExpression = Expression(booleanExpressionNode, isBoolean=True).evaluate(currentState.store)
+                        if Solver.isSat(booleanExpression):
+                            newState.symbolizeAll()
+                            newStack.addInstruction(AddConstraintInstruction(~booleanExpression))
+                            newStack.append(programBlockNode)
+                    else:  # 'for' loop
+                        iteratorIdentifier = membershipTestNode.getChildByType('Identifier').text
+                        setDeclarationNode = membershipTestNode.getChildByType('setDeclaration')
+                        expressionListNode = setDeclarationNode.getChildByType('expressionList')
+                        rangeDefinitionNode = setDeclarationNode.getChildByType('rangeDefinition')
+
+                        if expressionListNode is not None:
+                            expressionNodes = expressionListNode.getChildrenByType('expression')
+                            expressionNodes.reverse()
+                            for expressionNode in expressionNodes:
+                                newStack.append(programBlockNode)
+                                expression = Expression(expressionNode).evaluate(currentState.store)
+                                newStack.addInstruction(SetStoreValueInstruction(iteratorIdentifier, expression))
+                        else:
+                            rangeDefinition = Range(rangeDefinitionNode, currentState.store)
+                            rangeArray = rangeDefinition.toArray()
+                            if rangeArray is not None:
+                                rangeArray.reverse()
+                                for index in rangeArray:
+                                    newStack.append(programBlockNode)
+                                    newStack.addInstruction(SetStoreValueInstruction(iteratorIdentifier, index))
+                            else:
+                                newState.symbolizeAll()
+                                newStack.append(programBlockNode)
+                                newStack.addInstruction(SetStoreValueInstruction(iteratorIdentifier,
+                                                                                 Variable.getNewSymbol(
+                                                                                     ClassicalType('int'))))
+                    SymbolicExecutionEngine.__simulateExecution(newState, newStack)
+                    currentState.addChild(newState)
+
+                elif statementNode.type == 'controlDirectiveStatement':
+                    # TODO LATER: implement control directive statement execution
+                    pass
         else:
             qubitCheck = currentState.qregManager.checkQubitBound(currentState.subroutine.qubitUpperBound)
             currentState.subroutine.addQubitCheck(qubitCheck)
@@ -532,7 +619,8 @@ class SymbolicExecutionEngine:
                         expressionListNode = indexIdentifierNode.getChildByType('expressionList')
                         designatorExpr = None
                         if expressionListNode is not None:
-                            designatorExpr = Expression(expressionListNode.getChildByType('expression')).evaluate(state.store)
+                            designatorExpr = Expression(expressionListNode.getChildByType('expression')).evaluate(
+                                state.store)
                         type = ClassicalType(typeLiteral, designatorExpr)
                         state.store.setType(identifier, type)
                 else:
@@ -544,7 +632,8 @@ class SymbolicExecutionEngine:
                         expressionListNode = indexIdentifierNodes[i].getChildByType('expressionList')
                         designatorExpr = None
                         if expressionListNode is not None:
-                            designatorExpr = Expression(expressionListNode.getChildByType('expression')).evaluate(state.store)
+                            designatorExpr = Expression(expressionListNode.getChildByType('expression')).evaluate(
+                                state.store)
                         type = ClassicalType(typeLiteral, designatorExpr)
                         state.store.set(identifier, expression, type)
             else:
@@ -568,7 +657,8 @@ class SymbolicExecutionEngine:
                     equalsExpressionNodes = identifierOrEqualsListNode.getChildrenByType('equalsExpression')
                     for i in range(len(identifierNodes)):
                         identifier = identifierNodes[i].text
-                        expression = Expression(equalsExpressionNodes[i].getChildByType('expression')).evaluate(state.store)
+                        expression = Expression(equalsExpressionNodes[i].getChildByType('expression')).evaluate(
+                            state.store)
                         state.store.set(identifier, expression, type)
         elif declarationNode.type == 'constantDeclaration':
             equalsAssignmentListNode = declarationNode.getChildByType('equalsAssignmentList')

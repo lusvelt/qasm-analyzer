@@ -40,3 +40,14 @@ def f3 (int[5]:x, bit[4]:b) qreg[5]:q -> int[8] {
     }
     return x;
 }
+
+def f4 (int[2]:n) qreg[5]:q, qreg[4]:r {
+    for i in [0:4] {
+        CX q[i], q[i+1];
+    }
+    measure q[0];
+    for j in {0,2} {
+        CX r[j], r[j+1];
+    }
+    measure r[3];
+}
