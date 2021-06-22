@@ -752,7 +752,7 @@ doubleDesignator
     ;
 \end{lstlisting}
 A \texttt{designator} is simply a parameter for the type, for example \texttt{int[16]} indicates a 16-bit integer, where \texttt{16} is the designator. The single designator for the \texttt{float} and \texttt{angle} types is for specifying the precision. Another example could be \texttt{fixed[7, 24]}, which indicates a $24+7+1=32$-bit fixed point signed number having 7 integer bits and 24 fractional bits.\\
-\texttt{bitType} has a single designator that stands for the number of bits of the  array (or register, equivalently), while only the boolean type has no designator.
+\texttt{bitType} has a single designator that stands for the number of bits of the  array (or register, equivalently), while only the boolean type has no designator.\\
 
 
 
@@ -870,10 +870,238 @@ quantumDeclaration
     : quantumType indexIdentifierList
     ;
 \end{lstlisting}
-As we can notice, a quantum declaration is simply the declaration of a qubit array. It must be done globally, since qubits cannot be allocated dynamically.
+As we can notice, a quantum declaration is simply the declaration of a qubit (or an array of them). It must be done globally, since qubits cannot be allocated dynamically.\\
 
 
 
+\section{Statements}
+\begin{lstlisting}
+statement
+    : expressionStatement
+    | assignmentStatement
+    | classicalDeclarationStatement
+    | branchingStatement
+    | loopStatement
+    | quantumStatement
+    ;
+\end{lstlisting}
+In our simplified version of OpenQASM we consider six types of statement: expressions, assignments, classical declarations, branching if-then-elses, for and while loops and quantum statements. We now go over these statement types one by one, and we will be commenting only those that require further clarification, since most of them have similar syntax and semantic to other well-known programming languages.\\
+
+
+\subsection{Expression statements}
+\begin{lstlisting}
+expressionStatement
+    : expression SEMICOLON
+    ;
+    
+expressionList
+    : (expression COMMA)* expression
+    ;
+
+expression
+    : expressionTerminator
+    | unaryExpression
+    | xOrExpression
+    | expression '|' xOrExpression
+    ;
+
+xOrExpression
+    : bitAndExpression
+    | xOrExpression '^' bitAndExpression
+    ;
+
+bitAndExpression
+    : bitShiftExpression
+    | bitAndExpression '&' bitShiftExpression
+    ;
+
+bitShiftExpression
+    : additiveExpression
+    | bitShiftExpression ('<<' | '>>') additiveExpression
+    ;
+
+additiveExpression
+    : multiplicativeExpression
+    | additiveExpression (PLUS | MINUS) multiplicativeExpression
+    ;
+
+multiplicativeExpression
+    : expressionTerminator
+    | unaryExpression
+    | multiplicativeExpression (MUL | DIV | MOD) (expressionTerminator unaryExpression)
+    ;
+
+unaryExpression
+    : unaryOperator expressionTerminator
+    ;
+
+expressionTerminator
+    : Constant
+    | Integer
+    | RealNumber
+    | Identifier
+    | StringLiteral
+    | MINUS expressionTerminator
+    | LPAREN expression RPAREN
+    | expressionTerminator LBRACKET expression RBRACKET
+    | expressionTerminator incrementor
+    ;
+
+unaryOperator
+    : '~' | '!'
+    ;
+
+incrementor
+    : '++'
+    | '--'
+    ;
+\end{lstlisting}
+The grammar for expressions is defnined hierarchically to implement the conventional evaluation order of operators.\\
+Expression statements do not affect the memory unless incrementors are present, in which case the respective variables are updated accordingly to the incrementor sign.\\
+Even if they are not included in the \texttt{expressionStatement} rule, we show the grammar for boolean expressions here, because they will be used in other statement types from now on.\\
+\begin{lstlisting}
+booleanExpression
+    : membershipTest
+    | comparisonExpression
+    | booleanExpression logicalOperator comparisonExpression
+    ;
+
+comparisonExpression
+    : expression  // if (expression)
+    | expression relationalOperator expression
+    ;
+
+relationalOperator
+    : '>'
+    | '<'
+    | '>='
+    | '<='
+    | '=='
+    | '!='
+    ;
+
+logicalOperator
+    : '&&'
+    | '||'
+    ;
+
+membershipTest
+    : Identifier 'in' setDeclaration
+    ;
+
+setDeclaration
+    : LBRACE expressionList RBRACE
+    | rangeDefinition
+    | Identifier
+    ;
+\end{lstlisting}
+
+\subsection{Assignment statements}
+\begin{lstlisting}
+assignmentStatement: (classicalAssignment | quantumMeasurementAssignment) SEMICOLON;
+
+classicalAssignment
+    : indexIdentifier assignmentOperator (expression | indexIdentifier)
+    ;
+
+assignmentOperator
+    : EQUALS
+    | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '~=' | '^=' | '<<=' | '>>='
+    ;
+
+quantumMeasurement
+    : 'measure' indexIdentifierList
+    ;
+
+quantumMeasurementAssignment
+    : quantumMeasurement (ARROW indexIdentifierList)?
+    | indexIdentifierList EQUALS quantumMeasurement
+    ;
+\end{lstlisting}
+Assignments are defined in the usual way, with the addition of quantum measurements, that simply tell the hardware to perform a measurement on certain qubits and store the result in classical variables. As we explained in the previous chapter, we remark that after being measured, qubits collapse to the observed state, so measurements are usually done at the end of the algorithm.\\
+
+
+\subsection{Classical declarations}
+\begin{lstlisting}
+classicalDeclarationStatement
+    : (classicalDeclaration | constantDeclaration) SEMICOLON
+    ;
+
+classicalDeclaration
+    : singleDesignatorDeclaration
+    | doubleDesignatorDeclaration
+    | noDesignatorDeclaration
+    | bitDeclaration
+    ;
+
+singleDesignatorDeclaration
+    : singleDesignatorType designator (identifierList | equalsAssignmentList)
+    ;
+
+doubleDesignatorDeclaration
+    : doubleDesignatorType doubleDesignator (identifierList | equalsAssignmentList)
+    ;
+
+noDesignatorDeclaration
+    : noDesignatorType (identifierList | equalsAssignmentList)
+    ;
+
+bitDeclaration
+    : bitType (indexIdentifierList | indexEqualsAssignmentList)
+    ;
+
+constantDeclaration
+    : 'const' equalsAssignmentList
+    ;
+\end{lstlisting}
+
+\subsection{Branching statements}
+\begin{lstlisting}
+programBlock
+    : statement
+    | LBRACE statement* RBRACE
+    ;
+
+branchingStatement
+    : 'if' LPAREN booleanExpression RPAREN programBlock ('else' programBlock)?
+    ;
+\end{lstlisting}
+
+
+\subsection{Loop statements}
+\begin{lstlisting}
+loopStatement: loopSignature programBlock;
+
+loopSignature
+    : 'for' membershipTest
+    | 'while' LPAREN booleanExpression RPAREN
+    ;
+\end{lstlisting}
+
+
+\subsection{Quantum statements}
+\begin{lstlisting}
+quantumStatement
+    : quantumInstruction SEMICOLON
+    ;
+
+quantumInstruction
+    : quantumGateCall
+    | quantumMeasurement
+    ;
+
+quantumGateCall
+    : quantumGateName (LPAREN expressionList? RPAREN)? indexIdentifierList
+    ;
+
+quantumGateName
+    : 'CX'
+    | 'U'
+    | 'reset'
+    | Identifier
+    ;
+\end{lstlisting}
+Here it is worth mentioning that quantum gates can be called on multiple qubits, and this is the only possible cause of entanglement.
 
 
 \chapter{Static Analysis and Symbolic Execution}

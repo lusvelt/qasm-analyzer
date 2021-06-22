@@ -23,10 +23,17 @@
 \contentsline {section}{\numberline {3.3}Types}{19}%
 \contentsline {subsection}{\numberline {3.3.1}Quantum types}{19}%
 \contentsline {subsection}{\numberline {3.3.2}Classical types}{19}%
-\contentsline {section}{\numberline {3.4}Index identifiers}{20}%
+\contentsline {section}{\numberline {3.4}Index identifiers}{21}%
 \contentsline {section}{\numberline {3.5}Global statements}{21}%
 \contentsline {subsection}{\numberline {3.5.1}Subroutine definition}{22}%
 \contentsline {subsection}{\numberline {3.5.2}Quantum gate definition}{23}%
 \contentsline {subsection}{\numberline {3.5.3}Quantum declaration statements}{23}%
-\contentsline {chapter}{\numberline {4}Static Analysis and Symbolic Execution}{24}%
-\contentsline {chapter}{\numberline {5}Estimation of the Number of Qubits}{25}%
+\contentsline {section}{\numberline {3.6}Statements}{23}%
+\contentsline {subsection}{\numberline {3.6.1}Expression statements}{24}%
+\contentsline {subsection}{\numberline {3.6.2}Assignment statements}{26}%
+\contentsline {subsection}{\numberline {3.6.3}Classical declarations}{27}%
+\contentsline {subsection}{\numberline {3.6.4}Branching statements}{28}%
+\contentsline {subsection}{\numberline {3.6.5}Loop statements}{28}%
+\contentsline {subsection}{\numberline {3.6.6}Quantum statements}{28}%
+\contentsline {chapter}{\numberline {4}Static Analysis and Symbolic Execution}{30}%
+\contentsline {chapter}{\numberline {5}Estimation of the Number of Qubits}{31}%

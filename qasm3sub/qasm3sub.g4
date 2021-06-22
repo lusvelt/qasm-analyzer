@@ -422,8 +422,8 @@ branchingStatement
     ;
 
 loopSignature
-    : ('#invariant' COLON booleanExpression)? 'for' membershipTest
-    | ('#invariant' COLON booleanExpression)? 'while' LPAREN booleanExpression RPAREN
+    : 'for' membershipTest
+    | 'while' LPAREN booleanExpression RPAREN
     ;
 
 loopStatement: loopSignature programBlock;
