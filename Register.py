@@ -1,7 +1,7 @@
 import copy
 from sympy import Ne, Or
 from Solver import Solver
-from Variable import Variable, ClassicalType
+from Variable import Variable, ClassicalType, Symbol
 
 
 class CReg:
@@ -25,11 +25,11 @@ class CReg:
         creg = CReg(identifier, size, symbol)
         if isinstance(size, int) or size.is_Integer:
             for i in range(size):
-                symbol = Variable.getNewSymbol(ClassicalType('int', 1))
+                symbol = Symbol.getNewSymbol(ClassicalType('int', 1))
                 bit = Bit(creg, i, symbol)
                 creg.content.append(bit)
         else:
-            symbol = Variable.getNewSymbol(ClassicalType('creg', size))
+            symbol = Symbol.getNewSymbol(ClassicalType('creg', size))
             bitRange = BitRange(creg, 0, size, symbol)
             creg.content.append(bitRange)
         return creg
@@ -98,7 +98,7 @@ class CReg:
             return value
         else:
             if self.symbol is None:
-                self.symbol = Variable.getNewSymbol(ClassicalType('creg', self.size))
+                self.symbol = Symbol.getNewSymbol(ClassicalType('creg', self.size))
             return self.symbol
 
 

@@ -6,7 +6,7 @@ from Subroutine import Subroutine
 from Parser import Node
 from Expression import Expression
 from Operator import BinaryOperator
-from Variable import Variable, ClassicalType
+from Variable import Variable, ClassicalType, Symbol
 from Solver import Solver
 
 
@@ -133,7 +133,7 @@ class Store:
 
     def symbolizeAll(self):
         for key in self.store.keys():
-            self.store[key]['value'] = Variable.getNewSymbol(self.store[key]['type'])
+            self.store[key]['value'] = Symbol.getNewSymbol(self.store[key]['type'])
 
 
 class Instruction:
@@ -422,7 +422,7 @@ class SymbolicExecutionEngine:
         constraints = True
 
         for classicalArgument in subroutine.classicalArguments:
-            symbol = Variable.getNewSymbol(classicalArgument.type)
+            symbol = Symbol.getNewSymbol(classicalArgument.type)
             store.set(classicalArgument.identifier, symbol, classicalArgument.type)
 
         qregManager = QRegManager.fromParseTree(subroutine.parseTree)
@@ -543,7 +543,7 @@ class SymbolicExecutionEngine:
                                 newState.symbolizeAll()
                                 newStack.append(programBlockNode)
                                 newStack.addInstruction(SetStoreValueInstruction(iteratorIdentifier,
-                                                                                 Variable.getNewSymbol(
+                                                                                 Symbol.getNewSymbol(
                                                                                      ClassicalType('int'))))
                     SymbolicExecutionEngine.__simulateExecution(newState, newStack)
                     currentState.addChild(newState)
@@ -595,7 +595,7 @@ class SymbolicExecutionEngine:
                 indexIdentifierNodes = indexIdentifierListNode.getChildrenByType('indexIdentifier')
                 for indexIdentifierNode in indexIdentifierNodes:
                     type = state.store.evaluateType(indexIdentifierNode)
-                    symbol = Variable.getNewSymbol(type)
+                    symbol = Symbol.getNewSymbol(type)
                     state.store.assign(indexIdentifierNode, symbol)
             quantumMeasurementNode = assignmentNode.getChildByType('quantumMeasurement')
             indexIdentifierListNode = quantumMeasurementNode.getChildByType('indexIdentifierList')

@@ -778,6 +778,7 @@ rangeDefinition
 \end{lstlisting}
 These rules are used to refer to specific bits or qubits in both classical and quantum registers. For better understanding, we provide some examples given two registers \texttt{x} and \texttt{y}, each having 8 bits:
 \begin{itemize}
+    \itemsep 0em
     \item \texttt{x || y}: the 16-bit concatenation of \texttt{x} and \texttt{y}
     \item \texttt{x[0]}: the first bit of \texttt{x}
     \item \texttt{y[-1]}: the last bit of \texttt{y}
@@ -789,92 +790,7 @@ These rules are used to refer to specific bits or qubits in both classical and q
 
 
 
-\section{Global statements}
-After the header, the program consists in a sequence of statements and global statements. Global statements are defined by the rule:
-\begin{lstlisting}
-globalStatement
-    : subroutineDefinition
-    | quantumGateDefinition
-    | quantumDeclarationStatement
-    ;
-\end{lstlisting}
-In this section we will discuss each type of global statement.
-
-
-
-\subsection{Subroutine definition}
-\begin{lstlisting}
-subroutineDefinition
-    : 'def' Identifier ( LPAREN classicalArgumentList? RPAREN )? quantumArgumentList returnSignature? subroutineBlock
-    ;
-
-classicalArgumentList
-    : (classicalArgument COMMA)* classicalArgument
-    ;
-
-classicalArgument
-    : classicalType association
-    ;
-
-quantumArgumentList
-    : (quantumArgument COMMA)* quantumArgument
-    ;
-
-quantumArgument
-    : quantumType designator? association
-    ;
-
-association
-    : COLON Identifier
-    ;
-
-returnStatement: 'return' statement;
-
-returnSignature
-    : ARROW classicalType
-    ;
-
-subroutineBlock
-    : LBRACE statement* returnStatement? RBRACE
-    ;
-\end{lstlisting}
-
-Subroutines have two sets of arguments: classical arguments and quantum arguments. They also have an optional return signature, which is used to specify the return type of the function. Here is an example of a subroutine definition:
-\begin{lstlisting}
-def f3 (int[5]:x, bit[4]:b) qreg[5]:q -> int[8] {
-    bit c[5] = "0110";
-    c[2,3] = b[3,1];
-    if (c[2] == 1 && c[3] == 0) {
-        x += 2;
-    } else {
-        if (c >= 3) {
-            x += 3;
-        } else {
-            x -= 4;
-        }
-    }
-    return x;
-}
-\end{lstlisting}
-
-
-\subsection{Quantum gate definition}
-We will not delve into the actual grammar of quantum gate definitions, since the analysis that we are going to discuss in the next chapters does not take them into account. In fact, our analyzer treats them as black-boxes that entangle all the input qubits together.
-
-
-\subsection{Quantum declaration statements}
-\begin{lstlisting}
-quantumDeclarationStatement: quantumDeclaration SEMICOLON;
-
-quantumDeclaration
-    : quantumType indexIdentifierList
-    ;
-\end{lstlisting}
-As we can notice, a quantum declaration is simply the declaration of a qubit (or an array of them). It must be done globally, since qubits cannot be allocated dynamically.\\
-
-
-
-\section{Statements}
+\section{Generical statements}
 \begin{lstlisting}
 statement
     : expressionStatement
@@ -1101,15 +1017,249 @@ quantumGateName
     | Identifier
     ;
 \end{lstlisting}
-Here it is worth mentioning that quantum gates can be called on multiple qubits, and this is the only possible cause of entanglement.
+Here it is worth mentioning that quantum gates can be called on multiple qubits, and this is the only possible cause of entanglement.\\
 
 
-\chapter{Static Analysis and Symbolic Execution}
-\chapter{Estimation of the Number of Qubits}
+
+
+\section{Global statements}
+After the header, the program consists in a sequence of statements and global statements. Global statements are defined by the rule:
+\begin{lstlisting}
+globalStatement
+    : subroutineDefinition
+    | quantumGateDefinition
+    | quantumDeclarationStatement
+    ;
+\end{lstlisting}
+
+
+
+\subsection{Subroutine definition}
+\begin{lstlisting}
+subroutineDefinition
+    : 'def' Identifier ( LPAREN classicalArgumentList? RPAREN )? quantumArgumentList returnSignature? subroutineBlock
+    ;
+
+classicalArgumentList
+    : (classicalArgument COMMA)* classicalArgument
+    ;
+
+classicalArgument
+    : classicalType association
+    ;
+
+quantumArgumentList
+    : (quantumArgument COMMA)* quantumArgument
+    ;
+
+quantumArgument
+    : quantumType designator? association
+    ;
+
+association
+    : COLON Identifier
+    ;
+
+returnStatement: 'return' statement;
+
+returnSignature
+    : ARROW classicalType
+    ;
+
+subroutineBlock
+    : LBRACE statement* returnStatement? RBRACE
+    ;
+\end{lstlisting}
+
+Subroutines have two sets of arguments: classical arguments and quantum arguments. They also have an optional return signature, which is used to specify the return type of the function. Here is an example of a subroutine definition:
+\begin{lstlisting}
+def f3 (int[5]:x, bit[4]:b) qreg[5]:q -> int[8] {
+    bit c[5] = "0110";
+    c[2,3] = b[3,1];
+    if (c[2] == 1 && c[3] == 0) {
+        x += 2;
+    } else {
+        if (c >= 3) {
+            x += 3;
+        } else {
+            x -= 4;
+        }
+    }
+    return x;
+}
+\end{lstlisting}
+
+
+\subsection{Quantum gate definition}
+We will not delve into the actual grammar of quantum gate definitions, since the analysis that we are going to discuss in the next chapters does not take them into account. In fact, our analyzer treats them as black-boxes that entangle all the input qubits together.
+
+
+\subsection{Quantum declaration statements}
+\begin{lstlisting}
+quantumDeclarationStatement: quantumDeclaration SEMICOLON;
+
+quantumDeclaration
+    : quantumType indexIdentifierList
+    ;
+\end{lstlisting}
+As we can notice, a quantum declaration is simply the declaration of a qubit (or an array of them). It must be done globally, since qubits cannot be allocated dynamically.\\\\
+Having clear how the language is defined, we can now discuss the tool that performs analysis on QASM programs and estimates the number of qubits.
+
+
+
+\chapter{QASM Analyzer}
+QASM Analyzer is a tool written in Python 3 that performs static analysis on QASM programs, more specifically it classifies all the subroutines (based on the presence of loops, recursive calls, branching statements and so on) and simulates their execution by substituting formal parameters with immutable symbols, that are then involved in assignments, branching conditions and loop guards. By invoking an SMT solver, the analyzer determines all the paths that the execution will \textit{effectively} take, and estimates the number of qubits that are \textit{effectively} used. We remark the word ``\textit{effectively}'' because there may be regions of code that are never executed, like an unsatisfiable condition in an if-then-else statement.\\
+% CITE qasm-analyzer
+The source code is available on GitHub and it is split into multiple modules:
+\begin{itemize}
+    \itemsep 0em
+    \item \textbf{Parser}: takes the QASM program as input and outputs a parse tree.
+    \item \textbf{Types and variables}: utility classes to manage types, variables and subroutine arguments
+    \item \textbf{Subroutine classifier}: navigates the parse tree and builds a data structure containing information about all the subroutines, each wrapped by an object of class `Subroutine'.
+    \item \textbf{Expression manipulator}: takes an expression node of the parse tree and builds an Abstract Syntax Tree, which is then used to evaluate that expression in a certain context.
+    \item \textbf{SMT solver}: takes a symbolic boolean expression as input and checks whether it is satisfiable or not.
+    \item \textbf{Symbolic execution engine}: takes a subroutine object and builds a symbolic execution tree by simulating the instructions of that subroutine. At the end of the simulation it checks if each branch of the execution does not exceed the number of qubits declared by the programmer as annotation in the QASM program.
+\end{itemize}
+In this chapter we provide details about each of them and explain how symbolic execution works.
+
+\section{Parser}
+% ANTLRv4 parses the file and provides a tree walker, we build our custom tree from there
+% Node
+% Parser class
+% CITE Antlr
+The module we start with is the parser, since it provides the data structure that will be used throughout all the other modules: the parse tree.\\
+Having defined the grammar of the language in the \texttt{qasm3sub.g4} file, we can invoke the ANTLRv4 tool to generate the actual parser:
+\begin{lstlisting}
+$ antlr4 -Dlanguage=Python3 qasm3sub.g4
+\end{lstlisting}
+This command generates a series of files which are stored in the \texttt{qasm3sub} folder. One of these files contains the \texttt{Listener} class, that allows us to navigate the raw parse tree built by ANTLRv4 and pick only the information that we need to build a simplified version of the parse tree, which we will be using in the other modules of the analyzer.\\
+Our parse tree is composed by interconnected instances of the \texttt{Node} class.
+
+\subsection{Node}
+This class represents the core of the parse tree, and it encapsulates a grammar rule.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{type}: the name of the grammar rule (e.g. `assignmentStatement', `classicalDeclaration'), \textit{None} if it is a lexer token.
+    \item \texttt{children}: an array containing all the nodes obtained by expanding the rule with its actual production.
+    \item \texttt{parent}: the node whose rule the current rule is obtained from.
+    \item \texttt{text}: the space-trimmed string of the input program corresponding to the current rule
+    \item \texttt{rules}: a dictionary that maps a rule type with the (ordered) list of all child nodes matching that type
+    \item \texttt{position}: the index of the current Node in \texttt{parent.children} list
+    \item \texttt{index}: the index of the current node in \texttt{parent.rules[self.type]}
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(type, text)}: sets the \texttt{type} and \texttt{text} attributes
+    \item \texttt{appendChild(child)}: used internally for the ANTLRv4 tree walker to build the custom parse tree.
+    \item \texttt{getChildByType(type, index=0)}: returns the \texttt{index}-th child matching \texttt{type}.
+    \item \texttt{getChildrenByType(type)}: returns the array of all children matching \texttt{type}.
+    \item \texttt{getChild(index=0)}: returns the \texttt{index}-th child.
+    \item \texttt{getDescendantsByType(type)}: returns an array containing all the nodes matching the \texttt{type} which appear in the subtree using DFS visit.
+    \item \texttt{getLastChild()}: returns the last child in the \texttt{children} array.
+    \item \texttt{hasChildren()}: returns whether the current node has any child or not.
+\end{itemize}
+The parse tree root node can be obtained by calling the static function passing the program path string as argument:
+\begin{lstlisting}
+Parser.buildParseTree(filePath)
+\end{lstlisting}
+
+
+\section{Types and variables}
+This is an utility module for encapsulating all the information regarding types and variables.
+We describe these classes providing details about what their attributes and methods are.
+
+\subsection{ClassicalType}
+This class represents a classical type as defined in the QASM grammar, with zero, one or two designator expressions.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{node}: the parse tree node which the type comes from
+    \item \texttt{typeLiteral}: the string literal of the type, it can be one of `bit', `creg', `int', `uint', `float', `angle' and `fixed'.
+    \item \texttt{designatorExpr1}: the expression node of the first designator (\textit{None} if it is a no-designator type).
+    \item \texttt{designatorExpr2}: the expression node of the second designator (if present, \text{None} otherwise).
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(typeLiteral, designatorExpr1, dedsignatorExpr2, node)}: if \texttt{node} is not \textit{None}, instantiates a \texttt{ClassicalType} and reads the information in the \texttt{node} to fill the other attributes; otherwise they must explicitly be passed as arguments.
+    \item \texttt{hasLimitedDomain()}: returns a boolean value indicating if the current type has a limited (`bit', `creg' or `bool') or unlimited domain.
+    \item \texttt{getTypeForSolver()}: returns the mathematical numerical set of the current type (`Bool', `Integer', `Real' or `BitVector') in order to allow the SMT solver to evaluate satisfiability according to the right domains.
+\end{itemize}
+
+\subsection{Symbol}
+Symbolic expressions (which are different from our parse expression trees) are managed by the \texttt{sympy} library, which allows us to define symbols and automatically performs simplifications on expressions involving them.\\
+This class acts as a static symbol provider, and has both static attributes and static methods.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{nextIndex}: since new symbols can be defined at any time, they are given an incremental index in order to make them unique. This attribute keeps track of what the index of the next symbol should be.
+    \item \texttt{symbolTypes}: a dictionary that associates each symbol to its classical type.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{getNewSymbol(type)}: invokes \texttt{sympy} to create and return another symbol, whose label is the character \texttt{\$} concatenated to the \texttt{nextIndex} stringified value (\texttt{\$0}, \texttt{\$1}, \texttt{\$2}, $\ldots$). Additionally, it stores the newly-created symbol type in the \texttt{symbolTypes} dictionary.
+    \item \texttt{getSymbolType(label)}: returns the classical type associated to the symbol matching \texttt{label}.
+\end{itemize}
+
+\subsection{Variable}
+This class represents a classical variable in an expression AST (which will be described in the next section).
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{identifier}: the variable identifier.
+    \item \texttt{type}: the variable classical type.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(identifier, type)}: instantiates a new variable named \texttt{identifier} encapsulating its \texttt{type}.
+\end{itemize}
+Child classes \texttt{ClassicalVariables(Variable)} and \texttt{QuantumVariable(Variable)} are also defined, with the only abstraction that the former has a constructor that accepts a \texttt{typeNode} argument and automatically calls the \texttt{ClassicalType} constructor to set the \texttt{type} attribute.
+
+\subsection{Value}
+This class represents a hard-coded value in an expression AST.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{typeLiteral}: a string representing the type of the value, which determines its domain.
+    \item \texttt{value}: the actual value.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(value, typeLiteral)}: instantiates an element having the specified \texttt{value} and \texttt{typeLiteral}. If the latter is \textit{None}, it is automatically detected.
+\end{itemize}
+
+
+
+\section{Subroutine classifier}
+% Subroutine params, how the classification is performed, classical arguments and quantum arguments
+
+
+\section{Expression manipulator}
+% Types, values, variables, registers, operators, ASTs, expressions
+
+
+\section{SMT solver}
+% Converter, isSat and isUnsat
+
+
+\section{Symbolic execution engine}
+% Store, execution stack, meta instructions, QRegManager, symbolic state, engine
+
+
+\section{Estimation of the Number of Qubits}
+
+
 \end{document}
 
 % https://www.zerounoweb.it/techtarget/searchdatacenter/quantum-computing-cose-a-cosa-serve-e-perche-e-importante/
 % https://qiskit.github.io/openqasm/index.html
 % Quantum Computing for Computer Scientists
 % https://qiskit.org/textbook/preface.html
+% https://www.antlr.org/
+% https://github.com/lusvelt/qasm-analyzer
 %%%
