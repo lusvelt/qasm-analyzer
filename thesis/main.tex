@@ -1116,6 +1116,7 @@ The source code is available on GitHub and it is split into multiple modules:
     \item \textbf{Parser}: takes the QASM program as input and outputs a parse tree.
     \item \textbf{Types and variables}: utility classes to manage types, variables and subroutine arguments
     \item \textbf{Subroutine classifier}: navigates the parse tree and builds a data structure containing information about all the subroutines, each wrapped by an object of class `Subroutine'.
+    \item \textbf{Registers and ranges}: utility classes, helpful for working with arrays of bits or qubits
     \item \textbf{Expression manipulator}: takes an expression node of the parse tree and builds an Abstract Syntax Tree, which is then used to evaluate that expression in a certain context.
     \item \textbf{SMT solver}: takes a symbolic boolean expression as input and checks whether it is satisfiable or not.
     \item \textbf{Symbolic execution engine}: takes a subroutine object and builds a symbolic execution tree by simulating the instructions of that subroutine. At the end of the simulation it checks if each branch of the execution does not exceed the number of qubits declared by the programmer as annotation in the QASM program.
@@ -1237,7 +1238,124 @@ This class represents a hard-coded value in an expression AST.
 
 \section{Subroutine classifier}
 % Subroutine params, how the classification is performed, classical arguments and quantum arguments
+This module has four classes: \texttt{ClassicalArgument}, \texttt{QuantumArgument}, \texttt{Subroutine} and \texttt{SubroutineClassifier}. The first two are extensions of \texttt{ClassicalVariable} and \texttt{QuantumVariable} respectively.
+\subsection{ClassicalArgument}
+This class extends \texttt{ClassicalVariable}, inheriting attributes and methods.
+The utility of this class resides merely on the constructor.
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(node)}: takes a `classicalArgument' node and instantiates a classical variable based on the information that the node carries.
+    \item \texttt{hasLimitedDomain()}: returns a boolean indicating whether the encapsulated argument has a limited domain or not.
+\end{itemize}
 
+\subsection{QuantumArgument}
+This class extends \texttt{QuantumVariable}.
+Again, the utility resides on the constructor.
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(node)}: takes a `quantumArgument' node and instantiates a quantum variable based on the information that the node carries.
+\end{itemize}
+
+\subsection{Subroutine}
+This class holds all the information about a subroutine. By calling its constructor on a `subroutine' node, it basically fills up all the attributes that tell us what the properties of the subroutine are.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{identifier}: the subroutine identifier string.
+    \item \texttt{classicalArgument}: an array containing a \texttt{ClassicalArgument} instance for each classical argument of the subroutine.
+    \item \texttt{quantumArgument}: an array containing a \texttt{QuantumArgument} instance for each quantum argument of the subroutine.
+    \item \texttt{symbolicExecutionTree}: the root state of the symbolic execution tree (it will be discussed later).
+    \item \texttt{qubitUpperBound}: the symbolic expression annotated by the programmer to check against the number of qubits in each branch of the execution tree.
+    \item \texttt{qubitChecks}: an array of symbolic expressions and \textit{True} values. The former ones represent violations of the upper bound on the number of qubits, while the latter ones represent successful checks. It is filled during the last stages of the symbolic execution.
+\end{itemize}
+Other than these, there are a bunch more of attributes wich are actually \textit{properties} of the subroutine:
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{hasOnlyLimitedArgs}: a boolean value indicating if the only arguments that the subroutine has have a limited domain.
+    \item \texttt{hasInfiniteDomainArgs}: the logical negation of \texttt{hasOnlyLimitedArgs}
+    \item \texttt{returnType}: an instance of \texttt{ClassicalType}, indicating the return type of the subroutine. \textit{None} if there is no return value.
+    \item \texttt{hasBranchingStatements}: a boolean value indicating whether the subroutine contains any if-then-else statement in its body.
+    \item \texttt{hasLoops}: indicates if there are any loops in the subroutine body.
+    \item \texttt{hasSubroutineCalls}: indicates if there are any subroutine calls in the subroutine body.
+    \item \texttt{isPlainSequential}: indicates if the subroutine has no statements other than assignments and expressions in its body.
+    \item \texttt{hasOnlyBranchingStatements}: indicates if the subroutine has no other statement than assignment, expression and branching statements.
+    \item \texttt{isRecursive}: indicates if the function makes any recursive call.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(node, parseTree)}: takes a `subroutineDefinition' node and the root parse tree node, and fills the \texttt{classicalArguments} and \texttt{quantumArguments} arrays, and all the \textit{property} attributes with the right values. This last thing is accomplished by traversing the subroutine parse tree and checking for the existance of if-then-else statements, loops and subroutine calls.
+    \item \texttt{addQubitCheck(qubitCheck)}: takes a symbolic expression representing an upper bound violation, or \textit{True} and pushes it into the \texttt{qubitChecks} array.
+    \item \texttt{respectsQubitBound()}: returns whether all the branches of the execution respect the upper bound on the number of qubits or not by checking if there are any non-\textit{True} values in the \texttt{qubitChecks} array.
+\end{itemize}
+
+\subsection{SubroutineClassifier}
+This class is simply a wrapper for \texttt{Subroutine}. Its constructor takes \texttt{parseTree} as only argument, it goes over all global statements and for each subroutine that it encounters it instantiates a \texttt{Subroutine} object, which automatically performs all the analysis. A dictionary attribute, namely \texttt{subroutines}, associates each subroutine object to its identifier, so that it is possible to retrieve information about a particular subroutine by simply looking for it in that dictionary.
+
+\section{Registers and ranges}
+This module contains multiple utility classes that are used to work with both classical and quantum registers, and to simplify array ranges manipulation.
+
+
+\subsection{BitRange}
+This class encapsulates a range of bits in a classical register \texttt{creg}, it has a \texttt{start} and an \texttt{end} expressions (which can be either numerical or symbolic), a \texttt{symbol} to represent it in symbolic expressions, and a \texttt{value}, which can also be \textit{None} if not specified.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{creg}: the classical register that has the current range as content.
+    \item \texttt{start}: the range's starting index with respect to the parent \texttt{creg}.
+    \item \texttt{end}: the range's ending index with respect to the parent \texttt{creg}.
+    \item \texttt{symbol}: a \texttt{sympy} symbol used to represent the current range.
+    \item \texttt{value}: the actual value of the range (either numerical or symbolic).
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(creg, start, end, symbol)}: sets the range attributes according to the parameters.
+\end{itemize}
+
+\subsection{Bit}
+A bit is a particular case of bit range, where the start and end expression coincide. So this class inherits all from \texttt{BitRange} and its constructor makes sure that the range is one bit long.
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(creg, index, value)}: sets the \texttt{start} attribute to \texttt{index} and the \texttt{end} one to \texttt{index+1}. Sets the other attributes according to parameters.
+\end{itemize}
+
+
+
+
+\subsection{CReg}
+CReg stands for ``Classical Register'', which is an array of bits.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{identifier}: the classical register identifier.
+    \item \texttt{size}: the number of the register bits.
+    \item \texttt{symbol}: the symbol which is used in symbolic expressions to represent the register value. More about symbolic expressions and registers will be discussed in the `Expression manipulator' section.
+    \item \texttt{content}: an array containing instances of the \texttt{BitRange} and \texttt{Bit} classes, which symbolically represent the actual content of the register.
+\end{itemize}
+\subsubsection{Static methods}
+\begin{itemize}
+    \item \texttt{fromStringLiteral(stringLiteral)}: returns a \texttt{CReg} having as content as many \texttt{Bit}s as the length of \texttt{stringLiteral}, with the former ones matching the \texttt{0}s and \texttt{1}s of the latter.
+    \item \texttt{fromSymbolAndSize(identifier, symbol, size)}: returns a \texttt{CReg} having a certain \texttt{size}, represented by \texttt{symbol} and identified by \texttt{identifier}.
+    \item \texttt{concat(lreg, rreg)}: takes two \texttt{CReg}s and returns a \texttt{CReg} having size \texttt{lreg.size} \texttt{+} \texttt{rreg.size}, and being the concatenation of \texttt{lreg} and \texttt{rreg}, in the order.
+\end{itemize}
+
+\subsubsection{Instance methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{findBit(index)}: returns the first bit in the \texttt{content} array having \texttt{start == index}, \textit{None} if not present.
+    \item \texttt{getBit(index)}: returns the first bit in the \texttt{content} array having \texttt{start == index}, creating it if not present.
+    \item \texttt{findRange(rangeDefinition)}: returns the range in the \texttt{content} array matching the \texttt{rangeDefinition}, \textit{None} if not present.
+    \item \texttt{getRange(rangeDefinition)}: returns the range in the \texttt{content} array matching the \texttt{rangeDefinition}, creating it if not present.
+    \item \texttt{getList(expressions)}: returns the list of \texttt{Bit}s specified in the \texttt{expressions} array, creating them if not present.
+    \item \texttt{setRange(rangeDefinition, value)}: sets the value of the range matching the \texttt{rangeDefinition}, creating it if not present.
+    \item \texttt{setList(expressions, values)}: sets each \texttt{Bit} having \texttt{index} in \texttt{expressions} to the correspondent expression in \texttt{values} (which is a \texttt{BitRange})
+    \item \texttt{getSymbolicExpression()}: returns an expression that represents the content of the register. If there are no symbolic indexes, the actual integer value is returned (by converting the content from binary to integer).
+    
+\end{itemize}
 
 \section{Expression manipulator}
 % Types, values, variables, registers, operators, ASTs, expressions

@@ -117,7 +117,10 @@ class Subroutine:
             self.qubitChecks.append(qubitCheck)
 
     def respectsQubitBound(self):
-        return len(self.qubitChecks) == 0
+        for check in self.qubitChecks:
+            if not isinstance(check, bool) or check is False:
+                return False
+        return True
 
 
 # This is a helper class which takes the parse tree as an input and builds
