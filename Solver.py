@@ -19,11 +19,6 @@ class Solver:
         return expression, type
 
     @staticmethod
-    def solve(symbolicExpression):
-        expression, type = Solver.getConvertedExpression(symbolicExpression)
-        return expression.solve()
-
-    @staticmethod
     def isSat(symbolicExpression):
         if isinstance(symbolicExpression, bool):
             return symbolicExpression

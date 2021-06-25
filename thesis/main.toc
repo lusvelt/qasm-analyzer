@@ -1,78 +1,119 @@
 \babel@toc {english}{}
-\contentsline {chapter}{\numberline {1}Introduction}{4}%
-\contentsline {chapter}{\numberline {2}Quantum Computing}{6}%
-\contentsline {section}{\numberline {2.1}Quantum states}{6}%
-\contentsline {subsection}{\numberline {2.1.1}Deterministic systems}{6}%
-\contentsline {subsection}{\numberline {2.1.2}Probabilistic systems}{7}%
-\contentsline {subsection}{\numberline {2.1.3}Quantum systems}{7}%
-\contentsline {section}{\numberline {2.2}Qubits and quantum registers}{8}%
-\contentsline {subsection}{\numberline {2.2.1}Bits and qubits}{8}%
-\contentsline {subsection}{\numberline {2.2.2}Measurement}{9}%
-\contentsline {subsection}{\numberline {2.2.3}Quantum registers}{10}%
-\contentsline {subsection}{\numberline {2.2.4}Entanglement}{10}%
-\contentsline {section}{\numberline {2.3}Quantum Gates}{11}%
-\contentsline {subsection}{\numberline {2.3.1}Hadamard gate}{11}%
-\contentsline {subsection}{\numberline {2.3.2}Controlled NOT gate}{12}%
-\contentsline {subsection}{\numberline {2.3.3}Phase shift gate}{12}%
-\contentsline {section}{\numberline {2.4}Quantum Circuits}{13}%
-\contentsline {subsection}{\numberline {2.4.1}Deutsch algorithm}{13}%
-\contentsline {subsection}{\numberline {2.4.2}Deutsch-Jozsa algorithm}{15}%
-\contentsline {chapter}{\numberline {3}OpenQASM}{17}%
-\contentsline {section}{\numberline {3.1}Header}{17}%
-\contentsline {section}{\numberline {3.2}Lexer rules}{18}%
-\contentsline {section}{\numberline {3.3}Types}{19}%
-\contentsline {subsection}{\numberline {3.3.1}Quantum types}{19}%
-\contentsline {subsection}{\numberline {3.3.2}Classical types}{19}%
-\contentsline {section}{\numberline {3.4}Index identifiers}{21}%
-\contentsline {section}{\numberline {3.5}Generical statements}{21}%
-\contentsline {subsection}{\numberline {3.5.1}Expression statements}{22}%
-\contentsline {subsection}{\numberline {3.5.2}Assignment statements}{24}%
-\contentsline {subsection}{\numberline {3.5.3}Classical declarations}{25}%
-\contentsline {subsection}{\numberline {3.5.4}Branching statements}{26}%
-\contentsline {subsection}{\numberline {3.5.5}Loop statements}{26}%
-\contentsline {subsection}{\numberline {3.5.6}Quantum statements}{26}%
-\contentsline {section}{\numberline {3.6}Global statements}{27}%
-\contentsline {subsection}{\numberline {3.6.1}Subroutine definition}{27}%
-\contentsline {subsection}{\numberline {3.6.2}Quantum gate definition}{29}%
-\contentsline {subsection}{\numberline {3.6.3}Quantum declaration statements}{29}%
-\contentsline {chapter}{\numberline {4}QASM Analyzer}{30}%
-\contentsline {section}{\numberline {4.1}Parser}{31}%
-\contentsline {subsection}{\numberline {4.1.1}Node}{31}%
-\contentsline {subsubsection}{Attributes}{31}%
-\contentsline {subsubsection}{Methods}{32}%
-\contentsline {section}{\numberline {4.2}Types and variables}{32}%
-\contentsline {subsection}{\numberline {4.2.1}ClassicalType}{32}%
+\contentsline {chapter}{\numberline {1}Introduction}{5}%
+\contentsline {chapter}{\numberline {2}Quantum Computing}{7}%
+\contentsline {section}{\numberline {2.1}Quantum states}{7}%
+\contentsline {subsection}{\numberline {2.1.1}Deterministic systems}{7}%
+\contentsline {subsection}{\numberline {2.1.2}Probabilistic systems}{8}%
+\contentsline {subsection}{\numberline {2.1.3}Quantum systems}{8}%
+\contentsline {section}{\numberline {2.2}Qubits and quantum registers}{9}%
+\contentsline {subsection}{\numberline {2.2.1}Bits and qubits}{9}%
+\contentsline {subsection}{\numberline {2.2.2}Measurement}{10}%
+\contentsline {subsection}{\numberline {2.2.3}Quantum registers}{11}%
+\contentsline {subsection}{\numberline {2.2.4}Entanglement}{11}%
+\contentsline {section}{\numberline {2.3}Quantum Gates}{12}%
+\contentsline {subsection}{\numberline {2.3.1}Hadamard gate}{12}%
+\contentsline {subsection}{\numberline {2.3.2}Controlled NOT gate}{13}%
+\contentsline {subsection}{\numberline {2.3.3}Phase shift gate}{13}%
+\contentsline {section}{\numberline {2.4}Quantum Circuits}{14}%
+\contentsline {subsection}{\numberline {2.4.1}Deutsch algorithm}{14}%
+\contentsline {subsection}{\numberline {2.4.2}Deutsch-Jozsa algorithm}{16}%
+\contentsline {chapter}{\numberline {3}OpenQASM}{18}%
+\contentsline {section}{\numberline {3.1}Header}{18}%
+\contentsline {section}{\numberline {3.2}Lexer rules}{19}%
+\contentsline {section}{\numberline {3.3}Types}{20}%
+\contentsline {subsection}{\numberline {3.3.1}Quantum types}{20}%
+\contentsline {subsection}{\numberline {3.3.2}Classical types}{20}%
+\contentsline {section}{\numberline {3.4}Index identifiers}{22}%
+\contentsline {section}{\numberline {3.5}Generical statements}{22}%
+\contentsline {subsection}{\numberline {3.5.1}Expression statements}{23}%
+\contentsline {subsection}{\numberline {3.5.2}Assignment statements}{25}%
+\contentsline {subsection}{\numberline {3.5.3}Classical declarations}{26}%
+\contentsline {subsection}{\numberline {3.5.4}Branching statements}{27}%
+\contentsline {subsection}{\numberline {3.5.5}Loop statements}{27}%
+\contentsline {subsection}{\numberline {3.5.6}Quantum statements}{27}%
+\contentsline {section}{\numberline {3.6}Global statements}{28}%
+\contentsline {subsection}{\numberline {3.6.1}Subroutine definition}{28}%
+\contentsline {subsection}{\numberline {3.6.2}Quantum gate definition}{30}%
+\contentsline {subsection}{\numberline {3.6.3}Quantum declaration statements}{30}%
+\contentsline {chapter}{\numberline {4}QASM Analyzer}{31}%
+\contentsline {section}{\numberline {4.1}Parser}{32}%
+\contentsline {subsection}{\numberline {4.1.1}Node}{32}%
 \contentsline {subsubsection}{Attributes}{32}%
 \contentsline {subsubsection}{Methods}{33}%
-\contentsline {subsection}{\numberline {4.2.2}Symbol}{33}%
+\contentsline {section}{\numberline {4.2}Types and variables}{33}%
+\contentsline {subsection}{\numberline {4.2.1}ClassicalType}{33}%
 \contentsline {subsubsection}{Attributes}{33}%
-\contentsline {subsubsection}{Methods}{33}%
-\contentsline {subsection}{\numberline {4.2.3}Variable}{33}%
+\contentsline {subsubsection}{Methods}{34}%
+\contentsline {subsection}{\numberline {4.2.2}Symbol}{34}%
 \contentsline {subsubsection}{Attributes}{34}%
 \contentsline {subsubsection}{Methods}{34}%
-\contentsline {subsection}{\numberline {4.2.4}Value}{34}%
-\contentsline {subsubsection}{Attributes}{34}%
-\contentsline {subsubsection}{Methods}{34}%
-\contentsline {section}{\numberline {4.3}Subroutine classifier}{34}%
-\contentsline {subsection}{\numberline {4.3.1}ClassicalArgument}{34}%
-\contentsline {subsubsection}{Methods}{35}%
-\contentsline {subsection}{\numberline {4.3.2}QuantumArgument}{35}%
-\contentsline {subsubsection}{Methods}{35}%
-\contentsline {subsection}{\numberline {4.3.3}Subroutine}{35}%
+\contentsline {subsection}{\numberline {4.2.3}Variable}{34}%
 \contentsline {subsubsection}{Attributes}{35}%
+\contentsline {subsubsection}{Methods}{35}%
+\contentsline {subsection}{\numberline {4.2.4}Value}{35}%
+\contentsline {subsubsection}{Attributes}{35}%
+\contentsline {subsubsection}{Methods}{35}%
+\contentsline {section}{\numberline {4.3}Subroutine classifier}{35}%
+\contentsline {subsection}{\numberline {4.3.1}ClassicalArgument}{35}%
 \contentsline {subsubsection}{Methods}{36}%
-\contentsline {subsection}{\numberline {4.3.4}SubroutineClassifier}{36}%
-\contentsline {section}{\numberline {4.4}Registers and ranges}{37}%
-\contentsline {subsection}{\numberline {4.4.1}BitRange}{37}%
-\contentsline {subsubsection}{Attributes}{37}%
+\contentsline {subsection}{\numberline {4.3.2}QuantumArgument}{36}%
+\contentsline {subsubsection}{Methods}{36}%
+\contentsline {subsection}{\numberline {4.3.3}Subroutine}{36}%
+\contentsline {subsubsection}{Attributes}{36}%
 \contentsline {subsubsection}{Methods}{37}%
-\contentsline {subsection}{\numberline {4.4.2}Bit}{37}%
-\contentsline {subsubsection}{Methods}{37}%
-\contentsline {subsection}{\numberline {4.4.3}CReg}{37}%
+\contentsline {subsection}{\numberline {4.3.4}SubroutineClassifier}{37}%
+\contentsline {section}{\numberline {4.4}Registers and ranges}{38}%
+\contentsline {subsection}{\numberline {4.4.1}BitRange}{38}%
 \contentsline {subsubsection}{Attributes}{38}%
-\contentsline {subsubsection}{Static methods}{38}%
-\contentsline {subsubsection}{Instance methods}{38}%
-\contentsline {section}{\numberline {4.5}Expression manipulator}{39}%
-\contentsline {section}{\numberline {4.6}SMT solver}{39}%
-\contentsline {section}{\numberline {4.7}Symbolic execution engine}{39}%
-\contentsline {section}{\numberline {4.8}Estimation of the Number of Qubits}{39}%
+\contentsline {subsubsection}{Methods}{38}%
+\contentsline {subsection}{\numberline {4.4.2}Bit}{38}%
+\contentsline {subsubsection}{Methods}{38}%
+\contentsline {subsection}{\numberline {4.4.3}CReg}{38}%
+\contentsline {subsubsection}{Attributes}{39}%
+\contentsline {subsubsection}{Static methods}{39}%
+\contentsline {subsubsection}{Instance methods}{39}%
+\contentsline {subsection}{\numberline {4.4.4}QubitRange}{40}%
+\contentsline {subsubsection}{Attributes}{40}%
+\contentsline {subsubsection}{Methods}{40}%
+\contentsline {subsection}{\numberline {4.4.5}Qubit}{40}%
+\contentsline {subsubsection}{Methods}{40}%
+\contentsline {subsection}{\numberline {4.4.6}QReg}{40}%
+\contentsline {subsubsection}{Attributes}{41}%
+\contentsline {subsubsection}{Methods}{41}%
+\contentsline {subsection}{\numberline {4.4.7}Range}{41}%
+\contentsline {subsubsection}{Attributes}{41}%
+\contentsline {subsubsection}{Methods}{42}%
+\contentsline {subsection}{\numberline {4.4.8}SetDeclaration}{42}%
+\contentsline {subsubsection}{Attributes}{42}%
+\contentsline {subsubsection}{Methods}{42}%
+\contentsline {section}{\numberline {4.5}Expression manipulator}{42}%
+\contentsline {subsection}{\numberline {4.5.1}UnaryOperator}{43}%
+\contentsline {subsubsection}{Attributes}{43}%
+\contentsline {subsubsection}{Methods}{43}%
+\contentsline {subsection}{\numberline {4.5.2}BinaryOperator}{43}%
+\contentsline {subsubsection}{Attributes}{43}%
+\contentsline {subsubsection}{Methods}{44}%
+\contentsline {subsection}{\numberline {4.5.3}Expression}{44}%
+\contentsline {subsubsection}{Attributes}{44}%
+\contentsline {subsubsection}{Methods}{44}%
+\contentsline {section}{\numberline {4.6}SMT solver}{45}%
+\contentsline {subsection}{\numberline {4.6.1}Solver}{45}%
+\contentsline {subsubsection}{Static methods}{45}%
+\contentsline {section}{\numberline {4.7}Symbolic execution engine}{45}%
+\contentsline {subsection}{\numberline {4.7.1}SymbolicState}{46}%
+\contentsline {subsubsection}{Attributes}{46}%
+\contentsline {subsubsection}{Methods}{46}%
+\contentsline {subsection}{\numberline {4.7.2}Store}{46}%
+\contentsline {subsubsection}{Attributes}{47}%
+\contentsline {subsubsection}{Methods}{47}%
+\contentsline {subsection}{\numberline {4.7.3}QRegManager}{47}%
+\contentsline {subsubsection}{Attributes}{48}%
+\contentsline {subsubsection}{Static methods}{48}%
+\contentsline {subsubsection}{Instance methods}{48}%
+\contentsline {subsection}{\numberline {4.7.4}ExecutionStack}{49}%
+\contentsline {subsubsection}{Attributes}{49}%
+\contentsline {subsubsection}{Methods}{49}%
+\contentsline {subsection}{\numberline {4.7.5}Meta-Instructions}{49}%
+\contentsline {subsection}{\numberline {4.7.6}SymbolicExecutionEngine}{49}%
+\contentsline {subsubsection}{Static methods}{50}%
+\contentsline {chapter}{\numberline {5}Estimation of the Number of Qubits}{51}%

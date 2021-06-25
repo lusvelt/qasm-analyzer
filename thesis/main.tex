@@ -94,7 +94,7 @@ A nonno Francesco
 The idea of quantum computing was conceived in the 1970s, when researchers of the caliber of Feynman, Manin and Deustch started to theorize that the properties of quantum mechanics might prove useful for performing computations differently from the classical paradigm. The main concept that lays at the core of this new model is the superposition of states, that is the simultaneous co-existence of multiple computational states at the same moment, with the possibility to perform the same operation to all of those states with a single computational step. Physical devices that are capable of such power are called ``quantum computers'', and they constitute a polynomial-time implementation of non-determinism, thus achieving an exponential-order level of parallelism. This fact invalidates the assumption that some problems (NP-complete ones, for instance) require too much time to be solved compared to human life duration, hence it opens the doors to a new variety of applications, and it also tears down the ones which rely on this assumption (like RSA cryptography). Literature usually refers to this scenario as ``Quantum Supremacy''.\\
 Quantum computers operate through qubits, which are the quantum equivalent of bits, and can have not only $0$s and $1$s as values, but also combinations of them. Qubits are sequenced together to form quantum registers, which hold the actual computational power of quantum computers. For instance, a 3-qubit register can be in a superposition of the states $\ket{000}, \ket{001}, \ket{010}, \ldots, \ket{111}$, that are $2^3=8$ base states. Generalizing the previous result, we notice that an $n$-qubit register can represent up to $2^n$ states simultaneously, thus showing where the exponential speedup resides.\\
 Some companies like Google and IBM have already built fully-functional quantum computers. However, all of them have a limited number of qubits due to the elevate cost of implementing them physically. Therefore, it is crucial that quantum programmers are thrifty with the usage of qubits while designing quantum circuits. The aim of this document is to show a simple tool which is able to analyze programs written in QASM language (Quantum Assembly) and check whether the number of qubits that are \textit{effectively} used is bounded by a certain expression.
-We start by introducing some concepts of quantum computing, then we describe the QASM language and we provide details about the features that are taken into account by the analyzer. Then we proceed by going through the concepts of static analysis and symbolic execution, and finally we describe the tool that performs the estimation of the number of qubits.\\
+We start by introducing some concepts of quantum computing, then we describe the QASM language and we provide details about the features that are taken into account by the analyzer. Finally we describe the tool that performs the estimation of the number of qubits by presenting the modules APIs it is built upon one by one, and in the last chapter we discuss how the estimation of the number of qubits is actually performed, going through some examples.\\
 
 
 
@@ -1037,7 +1037,7 @@ globalStatement
 \subsection{Subroutine definition}
 \begin{lstlisting}
 subroutineDefinition
-    : 'def' Identifier ( LPAREN classicalArgumentList? RPAREN )? quantumArgumentList returnSignature? subroutineBlock
+    : ('#qubits' expression)? 'def' Identifier ( LPAREN classicalArgumentList? RPAREN )? quantumArgumentList returnSignature? subroutineBlock
     ;
 
 classicalArgumentList
@@ -1071,24 +1071,24 @@ subroutineBlock
     ;
 \end{lstlisting}
 
-Subroutines have two sets of arguments: classical arguments and quantum arguments. They also have an optional return signature, which is used to specify the return type of the function. Here is an example of a subroutine definition:
+Subroutines have two sets of arguments: classical arguments and quantum arguments. They also have an optional return signature, which is used to specify the return type of the function.
+Before the \texttt{def} keyword, the programmer can annotate the expression of the upper bound on the number of qubit that she wishes to assert, so that the analyzer can compare it to the estimated number of effectively used qubits.
+Here is an example of a subroutine definition:
 \begin{lstlisting}
-def f3 (int[5]:x, bit[4]:b) qreg[5]:q -> int[8] {
-    bit c[5] = "0110";
-    c[2,3] = b[3,1];
-    if (c[2] == 1 && c[3] == 0) {
-        x += 2;
+#qubits 4
+def f2 (int[5]:x) qreg[5]:q, qreg[5]:u -> int[8] {
+    int[5] r;
+    if (x * x < 0) {
+        r = measure q;
     } else {
-        if (c >= 3) {
-            x += 3;
-        } else {
-            x -= 4;
-        }
+        CX q[0:3], u[1:4];
+        r[0:2] = measure q[2:4];
     }
-    return x;
+    int[5] s = r + x;
+    return s;
 }
 \end{lstlisting}
-
+Notice that the above example obviously passes the qubits check.
 
 \subsection{Quantum gate definition}
 We will not delve into the actual grammar of quantum gate definitions, since the analysis that we are going to discuss in the next chapters does not take them into account. In fact, our analyzer treats them as black-boxes that entangle all the input qubits together.
@@ -1354,22 +1354,293 @@ CReg stands for ``Classical Register'', which is an array of bits.
     \item \texttt{setRange(rangeDefinition, value)}: sets the value of the range matching the \texttt{rangeDefinition}, creating it if not present.
     \item \texttt{setList(expressions, values)}: sets each \texttt{Bit} having \texttt{index} in \texttt{expressions} to the correspondent expression in \texttt{values} (which is a \texttt{BitRange})
     \item \texttt{getSymbolicExpression()}: returns an expression that represents the content of the register. If there are no symbolic indexes, the actual integer value is returned (by converting the content from binary to integer).
-    
+\end{itemize}
+
+
+
+
+
+
+\subsection{QubitRange}
+This class encapsulates a range of qubits in a quantum register \texttt{qreg}. Like \texttt{BitRange}, it has \texttt{start} and \texttt{end} attributes, but neither value nor symbol.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{qreg}: the quantum register that has the current range as content.
+    \item \texttt{start}: the range's starting index with respect to the parent \texttt{qreg}.
+    \item \texttt{end}: the range's ending index with respect to the parent \texttt{creg}.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(creg, start, end)}: sets the range attributes according to the parameters.
+    \item \texttt{\_\_hash\_\_()}: returns the hash of \texttt{qreg.identifier} \texttt{+} \texttt{start} \texttt{+} \texttt{end} for the range, in order to create sets of \texttt{QubitRange}s.
+    \item \texttt{\_\_eq\_\_(qubitRange)}: defines the equality for \texttt{QubitRange}s. Returns \textit{True} if \texttt{qreg.} \texttt{identifier}s, \texttt{start} and \texttt{end} all match.
+\end{itemize}
+
+\subsection{Qubit}
+Like the case for bit ranges and bits, a qubit is a particular case of qubit range, where the start and end expression coincide. So this class inherits all from \texttt{QubitRange} and its constructor makes sure that the range is one qubit long.
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(qreg, index)}: sets the \texttt{start} attribute to \texttt{index} and the \texttt{end} one to \texttt{index+1}. Sets the \texttt{qreg} parent attribute according to the parameter.
+\end{itemize}
+
+
+\subsection{QReg}
+QReg stands for ``Quantum Register'', which is an array of qubits.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{identifier}: the quantum register identifier.
+    \item \texttt{size}: the number of the register qubits.
+    \item \texttt{content}: an array containing instances of the \texttt{QubitRange} and \texttt{Qubit} classes, which symbolically represent the actual content of the register.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{addItem(item)}: appends \texttt{item} to the \texttt{content} array.
+    \item \texttt{findQubit(index)}: returns the first qubit in the \texttt{content} array having \texttt{start == index}, \textit{None} if not present.
+    \item \texttt{getQubit(index)}: returns the first qubit in the \texttt{content} array having \texttt{start == index}, creating it if not present.
+    \item \texttt{findRange(start, end)}: returns the range in the \texttt{content} array matching \texttt{start} and \texttt{end}, \textit{None} if not present.
+    \item \texttt{getRange(start, end)}: returns the range in the \texttt{content} array matching the \texttt{start} and \texttt{end}, creating it if not present.
+    \item \texttt{getAll()}: returns the list of all \texttt{Qubit}s and \texttt{QubitRange}s in the register.
+    \item \texttt{clone()}: returns a deep copy of the register
+\end{itemize}
+
+\subsection{Range}
+This class is defined in the `Symbolic execution engine' module due to dependency issues, but we discuss it here for clearness. It represents a Python-like range.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{node}: the parse tree node that the range is obtained from.
+    \item \texttt{start}: the range start symbolic expression (e.g. in [1:4], the \texttt{start} would be \texttt{1}).
+    \item \texttt{end}: the range end symbolic expression (e.g. in \texttt{[1:4]}, the \texttt{end} would be \texttt{4}). The \texttt{end} expression is not included in the resulting range.
+    \item \texttt{step}: the range step expression (e.g. in \texttt{[0:2:8]} the step is \texttt{2}, meaning that the range will be \texttt{[0, 2, 4, 6]})
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(node, context, size)}: instantiates a \texttt{Range} object by inspecting the \texttt{node} and evaluating its expressions in the provided \texttt{context}. In case one extreme is not specified, the \texttt{size} parameter is used to determine the actual range.
+    \item \texttt{isSymbolic()}: returns whether the range is determined by actual numbers, or it has symbolic expressions as \texttt{start} or \texttt{end}.
+    \item \texttt{toArray()}: returns the array that the range defines. If the range is symbolic, \textit{None} is returned instead.
+\end{itemize}
+
+
+\subsection{SetDeclaration}
+This class is defined in the `Expression manipulator' module due to dependency issues, but we discuss it here for clearness. It represents an abstraction over `setDeclaration' nodes of the parse tree.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{node}: the parse tree node that the set declaration is obtained from.
+    \item \texttt{items}: an array containing the elements of the declared set.
+    \item \texttt{start}: the start expression, in case the set is a range.
+    \item \texttt{end}: the end expression, in case the set is a range.
+    \item \texttt{step}: the step integer, in case the set is a range.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(node)}: constructs a \texttt{SetDeclaration} object by inspecting the \texttt{node} and setting the attributes accordingly.
 \end{itemize}
 
 \section{Expression manipulator}
 % Types, values, variables, registers, operators, ASTs, expressions
+The aim of this module is to setup a tool which can evaluate expressions (coming from the parse tree) symbolically. This is done by taking an `expression' node from the parse tree, building the respective Abstract Syntax Tree (AST) and translating it in a symbolic \texttt{sympy} expression.\\
+An AST is composed of \texttt{UnaryOperator}s and \texttt{BinaryOperator}s as internal nodes, and \texttt{Variable}s and \texttt{Value}s as leaves.\\
+Operators are simple data structures that hold a string literal for what operation they do represent, and one or two arguments (depending on the operator being unary or binary), which are AST nodes in turn. Furthermore, they have the \texttt{applyTo} method, which takes symbolic operands as arguments and returns the symbolic expression of them combined with the operator.\\
+\subsection{UnaryOperator}
+This class constitutes a possible internal node for an expression AST.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{literal}: the operator string literal (e.g. `-' for the negative sign, `!' for the logical NOT, `~' for the bitwise NOT).
+    \item \texttt{arg}: the AST node the operator must be applied to
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(literal, arg)}: returns an instance of \texttt{UnaryOperator} with the attributes set accordingly to parameters.
+    \item \texttt{hasLeafArgument()}: returns \textit{True} if the argument is a leaf (\texttt{Value} or \texttt{Variable}), or \textit{False} if it is another operator in turn.
+    \item \texttt{applyTo(operand)}: takes a symbolic \texttt{sympy} expression as argument and returns the symbolic expression with the current operator applied to the operand (e.g. \texttt{UnaryOperator(`-').applyTo(x+y)} returns \texttt{-(x+y)}, which is simplified to \texttt{-x-y} automatically by \texttt{sympy}).
+\end{itemize}
+
+\subsection{BinaryOperator}
+This class constitutes another possible internal node for an expression AST.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{literal}: the operator string literal (e.g. `+' for the addition, `-' for the subtraction, `*' for the multiplication, etc.).
+    \item \texttt{arg1}: the AST node that the operator takes as left argument
+    \item \texttt{arg2}: the AST node that the operator takes as right argument
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(literal, arg1, arg2)}: returns an instance of \texttt{BinaryOperator} with the attributes set accordingly to parameters.
+    \item \texttt{hasLeafAsFirstArgument()}: returns \textit{True} if \texttt{arg1} is a leaf, \textit{False} if it is another operator in turn.
+    \item \texttt{hasLeafAsSecondArgument()}: returns \textit{True} if \texttt{arg2} is a leaf, \textit{False} if it is another operator in turn.
+    \item \texttt{applyTo(operand1, operand2)}: takes a two symbolic \texttt{sympy} expressions as arguments and returns the symbolic expression with the current operator applied to those operands (e.g. \texttt{BinaryOperator(`*').applyTo(x+y, x-y)} returns \texttt{(x+y)} \texttt{*} \texttt{(x-y)}).
+\end{itemize}
+
+\subsection{Expression}
+This is the core class of this module, and it is used for both arithmetical and boolean expressions.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{node}: the parse tree node the expression comes from
+    \item \texttt{tree}: the root of the expression AST
+    \item \texttt{isBoolean}: whether or not it is a boolean expression
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(node, tree, isBoolean)}: returns an \texttt{Expression} object having attributes set as specified by the parameters.
+    \item \texttt{buildExpressionAST(node)}: builds the AST for the expression by inspecting the \texttt{node} and recursively instantiating \texttt{UnaryOperator}s, \texttt{BinaryOperator}s until \texttt{Value}s and \texttt{Variable}s are reached as base cases. The root of the AST is assigned to the attribute \texttt{tree}.
+    \item \texttt{applyBinaryOperator(literal, secondOperand)}: modifies the expression by creating a new \texttt{BinaryOperator}, setting it as \texttt{tree} root. The operands are, in the order, the old expression and the \texttt{secondOperand}.
+    \item \texttt{clone()}: returns a deep copy of the expression.
+    \item \texttt{evaluate(context)}: recursively calls the \texttt{applyTo} methods of the operators in the AST in order to build the corresponding \texttt{sympy} symbolic expression. When a \texttt{Variable} base case is reached, the evaluator asks the \texttt{context} what the actual value of that variable is; while when a \texttt{Value} is reached, no calls to the \texttt{context} are required since its actual value is hard-coded. The \texttt{context} argument is an instance of \texttt{Store}, which will be discussed in the `Symbolic execution engine' section.
+\end{itemize}
 
 
 \section{SMT solver}
-% Converter, isSat and isUnsat
+SMT stands for `Satisfiability Modulo Theory', which means that an SMT solver is able to check formulas of a certain theory for satisfiability. In this case, the theory we are using is non-linear arithmetic, since our boolean expressions can include comparisons, equalities and inequalities between complex symbolic arithmetic expressions involving multiplications, powers, fractions and so on.\\
+Building an SMT solver is a long and complex task, so we use the \texttt{PySMT} library. However, since our symbolic expressions are stored in \texttt{sympy} format, we need to convert them to allow \texttt{PySMT} to check for satisfiability.\\
+This module simply converts a \texttt{sympy} expression to \texttt{PySMT} format and checks for satisfiability or unsatisfiability modulo non-linear arithmetic theory.
+\subsection{Solver}
+\subsubsection{Static methods}
+All of the following methods take a \texttt{sympy} symbolic expression as argument.
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{getConvertedExpression(symbolicExpression)}: returns the \texttt{PySMT}-formatted expression by visiting the \texttt{symbolicExpression} \texttt{sympy} tree and progressively building the correspondent \texttt{PySMT} tree.
+    \item \texttt{isSat(symbolicExpression)}: returns \textit{True} if the \texttt{symbolicExpression} is satisfiable, \textit{False} otherwise.
+    \item \texttt{isUnsat(symbolicExpression)}: returns \textit{True} if the \texttt{symbolicExpression} is unsatisfiable, \textit{False} otherwise.
+\end{itemize}
 
 
 \section{Symbolic execution engine}
 % Store, execution stack, meta instructions, QRegManager, symbolic state, engine
+This is the core module of the project, it is responsible for the simulation of the QASM program, and during the symbolic execution it calls the SMT solver to determine whether certain execution paths are taken or not. Based on this, some regions of code that contain potential entanglements and measurements are detected to be unreachable, so they are not considered in the count of the effectively used qubits. In this section we are going to describe the APIs of the classes that this module is composed of, and we defer the actual explaination of the implementation to the last chapter.\\
+The main concern of this module is to build a symbolic execution tree. Such a tree is composed of \texttt{SymbolicState}s.
+
+\subsection{SymbolicState}
+Each \texttt{SymbolicState} holds the following information:
+\begin{itemize}
+    \itemsep 0em
+    \item The \textbf{memory configuration} in a \texttt{Store} object
+    \item The \textbf{constraints} that state assertions on the symbols defined that far.
+    \item The set of all \textbf{potential entanglements} that are active and \textbf{quantum measurements} that have been detected that far (in the \texttt{QRegManager}).
+\end{itemize}
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{subroutine}: the \texttt{Subroutine} that the symbolic execution is performed on.
+    \item \texttt{node}: the parse tree node of the instruction that generated the state.
+    \item \texttt{store}: the \texttt{Store} object (discussed later).
+    \item \texttt{constraints}: a \texttt{sympy} boolean expression made up by a conjunction of multiple assertions on the symbols defined that far. Those assertions are made by the execution engine whenever a certain condition occurs in the program. The details will be discussed in the next chapter.
+    \item \texttt{qregManager}: the \texttt{QRegManager} object (discussed later).
+    \item \texttt{children}: the children \texttt{SymbolicState}s. Only one in case of a sequential instruction, two in case of a branching statement or a loop.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{addChild(childState)}: adds \texttt{childState} (which is a \texttt{SymbolicState}) to the array of \texttt{children}.
+    \item \texttt{clone(newNode)}: returns a deep copy of the symbolic state.
+    \item \texttt{addConstraint(booleanExpression)}: adds a constraint to the state by making a conjunction with the previous \texttt{constraint} expression.
+    \item \texttt{symbolizeAll()}: substitutes all the variable values in the memory with fresh symbols. This is used when loops are simulated and there is no information on the post-condition of those variables.
+\end{itemize}
+
+\subsection{Store}
+This class represents the memory configuration in a \texttt{SymbolicState}.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{store}: a dictionary that maps variable names to memory items. Each item is a dictionary that has two keys, `value' and `type', that represent respectively the symbolic expression (or \texttt{CReg} object, in case it is a register) associated to the variable, and the \texttt{ClassicalType} of it.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(store)}: initializes the \texttt{store} with the parameter, or an empty dictionary if it is \textit{None}.
+    \item \texttt{clone()}: returns a deep copy of the store
+    \item \texttt{set(key, value, type)}: sets the \texttt{value} and \texttt{type} of the item associated to the variable named \texttt{key} according to parameters.
+    \item \texttt{get(key)}: returns the item associated to \texttt{key}.
+    \item \texttt{getValue(key)}: returns the symbolic expression associated to the variable named \texttt{key}. \textit{None} if the variable is not defined.
+    \item \texttt{setValue(key, value)}: sets the \texttt{value} of the variable named \texttt{key}.
+    \item \texttt{setType(key, type)}: sets the \texttt{type} of the variable named \texttt{key}.
+    \item \texttt{getType(key)}: returns the \texttt{ClassicalType} of the variable named \texttt{key}. \textit{None} if the variable is not defined.
+    \item \texttt{evaluate(indexIdentifierNode)}: returns the symbolic expression associated to the \texttt{CReg} associated to the variable referenced by \texttt{indexIdentifierNode}, according to the indexes that appear in the latter.
+    \item \texttt{assign(indexIdentifierNode, value)}: sets the \texttt{value} of the register referenced by \texttt{indexIdentifierNode}, according to the indexes that appear in the latter.
+    \item \texttt{evaluateType(indexIdentifierNode)}: returns the \texttt{ClassicalType} associated to \texttt{indexIdentifierNode}, with the \texttt{designatorExpr1} set according to the size of the referenced portion of register.
+    \item \texttt{symbolizeAll()}: substitutes all `value' fields of each item with a fresh symbol.
+\end{itemize}
 
 
-\section{Estimation of the Number of Qubits}
+\subsection{QRegManager}
+This class implements a tool to keep track of potential entanglements and quantum measurements that occur in the program, so that the estimation of the number of qubits is reduced to a simple count of all the qubits that are entangled with a measured one, or are themselves measured.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{quantumRegisters}: dictionary that holds information about all the globally declared qubits.
+    \item \texttt{potentialEntanglements}: an array of sets. Each one contains a certain number of \texttt{Qubit}s and \texttt{QubitRange}s that are potentially entangled.
+    \item \texttt{effectiveQubits}: a set of \texttt{Qubit}s that have been measured, or were entangled to a measured one. The number of qubits in this set is the estimated upper bound to the number of effectively used qubits.
+\end{itemize}
+\subsubsection{Static methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{fromParseTree(parseTree)}: returns a \texttt{QRegManager} with the \texttt{quantumRegisters} attribute already initialized with the ones that are declared in the program code.
+\end{itemize}
+\subsubsection{Instance methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{\_\_init\_\_(quantumRegisters, potentialEntanglements, effectiveQubits)}: creates a new \texttt{QRegManager} object having the specified attributes.
+    \item \texttt{addQReg(identifier, size)}: inserts a new \texttt{QReg} named \texttt{identifier} having the specified \texttt{size} in the \texttt{quantumRegisters} dictionary.
+    \item \texttt{markAsMeasured(indexIdentifierNode, context)}: searches for the qubits specified in the \texttt{indexIdentifierNode} (evaluating its indexes in the specified \texttt{context}) and adds them to the \texttt{effectiveQubits} set.
+    \item \texttt{addPotentialEntanglement(indexIdentifierNodes, context)}: searches for all the qubits referenced in the \texttt{indexIdentifierNodes} array (evaluating the indexes in the specified \texttt{context}), and merges all the already-existent potential entanglements containing one of them. If a qubit is not present in any of the potential entanglements, a new one is created and immediately merged with the others. At the end of the procedure, all the specified qubits will be in the same entanglement set and there will be no duplicates in the other potential entanglements.
+    \item \texttt{clone()}: returns a deep copy of the \texttt{QRegManager}.
+    \item \texttt{findEntanglementContainingQubit(qubit)}: returns the element appearing in the \texttt{potentialEntanglements} array that contains the specified \texttt{qubit}. \texttt{None} if there is no match.
+    \item \texttt{checkQubitBound(bound)}: returns whether the effective number of qubits in the current state does not exceed the \texttt{bound} expression.
+\end{itemize}
+
+\subsection{ExecutionStack}
+An instance of this class is a stack that holds the next program statements to be executed. A statement can cause one or more new statements to be pushed on top of the stack, since some of them hold program blocks that have to be expanded.
+\subsubsection{Attributes}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{sequence}: the array of statements that have to be executed. The last element is the first to be popped out.
+\end{itemize}
+\subsubsection{Methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{pop()}: returns the next statement to be executed, removing it from the stack.
+    \item \texttt{appens(block)}: pushes all the statements in the \texttt{block} on the stack.
+    \item \texttt{isEmpty()}: returns \textit{True} if the stack is empty, \textit{False} otherwise.
+    \item \texttt{clone()}: returns a deep copy of the execution stack.
+    \item \texttt{addMetaInstruction(instruction)}: pushes a meta-instruction on the stack.
+\end{itemize}
+
+
+\subsection{Meta-Instructions}
+Meta-instructions are instances of the \texttt{MetaInstruction} superclass, and they represent instructions for the symbolic execution engine. For example, at the end of a `for' loop iteration, the engine must increment the value of the loop iterator, so the engine must know the exact moment when this operation needs to be done. This is achieved by pushing a meta-instruction on the stack underlying the loop body statements that reminds the engine to update the value of the iterator before going on with the other program statements.\\
+The classes that represent meta-instructions are the following:
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{AddConstraintInstruction(constraint)}: adds the specified \texttt{constraint } to the \texttt{SymbolicState}.
+    \item \texttt{SetStoreValueInstruction(identifier, value)}: updates the \texttt{Store} by updating the \texttt{value} of the variable having the specified \texttt{identifier}.
+\end{itemize}
+
+
+
+\subsection{SymbolicExecutionEngine}
+This is a static class that has a single public method, but it wraps all the logic that allows the symbolic simulation to be performed, and the effective number of qubits to be estimated. As already anticipated, the details on how the engine operates are discussed in the next chapter. Here we describe the API of the class.
+\subsubsection{Static methods}
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{analyzeSubroutine(subroutine)}: takes a \texttt{Subroutine} object as argument and sets its \texttt{symbolicExecutionTree} attribute. It also sets the \texttt{qubitChecks} array so that it is possible to determine if the upper bound on the number of qubits is respected.
+\end{itemize}
+
+
+\chapter{Estimation of the Number of Qubits}
+% simulateExecution
 
 
 \end{document}

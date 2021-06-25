@@ -136,18 +136,18 @@ class Store:
             self.store[key]['value'] = Symbol.getNewSymbol(self.store[key]['type'])
 
 
-class Instruction:
+class MetaInstruction:
     def __init__(self):
         pass
 
 
-class AddConstraintInstruction(Instruction):
+class AddConstraintInstruction(MetaInstruction):
     def __init__(self, constraint):
         super().__init__()
         self.constraint = constraint
 
 
-class SetStoreValueInstruction(Instruction):
+class SetStoreValueInstruction(MetaInstruction):
     def __init__(self, identifier, value):
         super().__init__()
         self.identifier = identifier
@@ -179,7 +179,7 @@ class ExecutionStack:
     def clone(self):
         return copy.deepcopy(self)
 
-    def addInstruction(self, instruction: Instruction):
+    def addMetaInstruction(self, instruction: Instruction):
         self.sequence.append(instruction)
 
 
@@ -516,7 +516,7 @@ class SymbolicExecutionEngine:
                         booleanExpression = Expression(booleanExpressionNode, isBoolean=True).evaluate(currentState.store)
                         if Solver.isSat(booleanExpression):
                             newState.symbolizeAll()
-                            newStack.addInstruction(AddConstraintInstruction(~booleanExpression))
+                            newStack.addMetaInstruction(AddConstraintInstruction(~booleanExpression))
                             newStack.append(programBlockNode)
                     else:  # 'for' loop
                         iteratorIdentifier = membershipTestNode.getChildByType('Identifier').text
@@ -530,7 +530,7 @@ class SymbolicExecutionEngine:
                             for expressionNode in expressionNodes:
                                 newStack.append(programBlockNode)
                                 expression = Expression(expressionNode).evaluate(currentState.store)
-                                newStack.addInstruction(SetStoreValueInstruction(iteratorIdentifier, expression))
+                                newStack.addMetaInstruction(SetStoreValueInstruction(iteratorIdentifier, expression))
                         else:
                             rangeDefinition = Range(rangeDefinitionNode, currentState.store)
                             rangeArray = rangeDefinition.toArray()
@@ -538,11 +538,11 @@ class SymbolicExecutionEngine:
                                 rangeArray.reverse()
                                 for index in rangeArray:
                                     newStack.append(programBlockNode)
-                                    newStack.addInstruction(SetStoreValueInstruction(iteratorIdentifier, index))
+                                    newStack.addMetaInstruction(SetStoreValueInstruction(iteratorIdentifier, index))
                             else:
                                 newState.symbolizeAll()
                                 newStack.append(programBlockNode)
-                                newStack.addInstruction(SetStoreValueInstruction(iteratorIdentifier,
+                                newStack.addMetaInstruction(SetStoreValueInstruction(iteratorIdentifier,
                                                                                  Symbol.getNewSymbol(
                                                                                      ClassicalType('int'))))
                     SymbolicExecutionEngine.__simulateExecution(newState, newStack)
