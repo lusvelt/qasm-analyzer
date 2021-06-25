@@ -1,0 +1,166 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{ynt/global//global/global}
+    \entry{antlr}{online}{}
+      \name{author}{1}{}{%
+        {{hash=c47f872d41a4441186be0d66723a9e57}{%
+           family={Parr},
+           familyi={P\bibinitperiod},
+           given={Terence},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{c47f872d41a4441186be0d66723a9e57}
+      \strng{fullhash}{c47f872d41a4441186be0d66723a9e57}
+      \strng{bibnamehash}{c47f872d41a4441186be0d66723a9e57}
+      \strng{authorbibnamehash}{c47f872d41a4441186be0d66723a9e57}
+      \strng{authornamehash}{c47f872d41a4441186be0d66723a9e57}
+      \strng{authorfullhash}{c47f872d41a4441186be0d66723a9e57}
+      \field{labelalpha}{Par14}
+      \field{sortinit}{2}
+      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ANTLR}
+      \field{year}{2014}
+      \verb{urlraw}
+      \verb https://www.antlr.org/
+      \endverb
+      \verb{url}
+      \verb https://www.antlr.org/
+      \endverb
+      \keyw{parser,generator,grammar}
+    \endentry
+    \entry{zuw}{online}{}
+      \name{author}{1}{}{%
+        {{hash=04b66a060b3100a97a6ba388005fea13}{%
+           family={Mauro},
+           familyi={M\bibinitperiod},
+           given={Raffaele},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{04b66a060b3100a97a6ba388005fea13}
+      \strng{fullhash}{04b66a060b3100a97a6ba388005fea13}
+      \strng{bibnamehash}{04b66a060b3100a97a6ba388005fea13}
+      \strng{authorbibnamehash}{04b66a060b3100a97a6ba388005fea13}
+      \strng{authornamehash}{04b66a060b3100a97a6ba388005fea13}
+      \strng{authorfullhash}{04b66a060b3100a97a6ba388005fea13}
+      \field{labelalpha}{Mau}
+      \field{sortinit}{9}
+      \field{sortinithash}{54047ffb55bdefa0694bbd554c1b11a0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Quantum computing: cos’è, a cosa serve e perché è importante}
+      \verb{urlraw}
+      \verb https://www.zerounoweb.it/techtarget/searchdatacenter/quantum-computing-cose-a-cosa-serve-e-perche-e-importante/
+      \endverb
+      \verb{url}
+      \verb https://www.zerounoweb.it/techtarget/searchdatacenter/quantum-computing-cose-a-cosa-serve-e-perche-e-importante/
+      \endverb
+      \keyw{quantum,computing}
+    \endentry
+    \entry{qasm}{online}{}
+      \name{author}{1}{}{%
+        {{hash=37100acc6e26e1804d8a5e9015f6ee40}{%
+           family={Qiskit},
+           familyi={Q\bibinitperiod}}}%
+      }
+      \strng{namehash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{fullhash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{bibnamehash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{authorbibnamehash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{authornamehash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{authorfullhash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \field{extraname}{1}
+      \field{labelalpha}{Qis}
+      \field{sortinit}{9}
+      \field{sortinithash}{54047ffb55bdefa0694bbd554c1b11a0}
+      \field{extraalpha}{1}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{OpenQASM}
+      \verb{urlraw}
+      \verb https://qiskit.github.io/openqasm/index.html
+      \endverb
+      \verb{url}
+      \verb https://qiskit.github.io/openqasm/index.html
+      \endverb
+      \keyw{qasm,language,quantum}
+    \endentry
+    \entry{qsk}{online}{}
+      \name{author}{1}{}{%
+        {{hash=37100acc6e26e1804d8a5e9015f6ee40}{%
+           family={Qiskit},
+           familyi={Q\bibinitperiod}}}%
+      }
+      \strng{namehash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{fullhash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{bibnamehash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{authorbibnamehash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{authornamehash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \strng{authorfullhash}{37100acc6e26e1804d8a5e9015f6ee40}
+      \field{extraname}{2}
+      \field{labelalpha}{Qis}
+      \field{sortinit}{9}
+      \field{sortinithash}{54047ffb55bdefa0694bbd554c1b11a0}
+      \field{extraalpha}{2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Qiskit}
+      \verb{urlraw}
+      \verb https://qiskit.org/textbook/preface.html
+      \endverb
+      \verb{url}
+      \verb https://qiskit.org/textbook/preface.html
+      \endverb
+      \keyw{quantum,computing,qiskit,qubit}
+    \endentry
+    \entry{lusvelt}{online}{}
+      \name{author}{1}{}{%
+        {{hash=6e02086705a9c850fded5ec71b50ab4a}{%
+           family={Scevola},
+           familyi={S\bibinitperiod},
+           given={Damiano},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{6e02086705a9c850fded5ec71b50ab4a}
+      \strng{fullhash}{6e02086705a9c850fded5ec71b50ab4a}
+      \strng{bibnamehash}{6e02086705a9c850fded5ec71b50ab4a}
+      \strng{authorbibnamehash}{6e02086705a9c850fded5ec71b50ab4a}
+      \strng{authornamehash}{6e02086705a9c850fded5ec71b50ab4a}
+      \strng{authorfullhash}{6e02086705a9c850fded5ec71b50ab4a}
+      \field{labelalpha}{Sce}
+      \field{sortinit}{9}
+      \field{sortinithash}{54047ffb55bdefa0694bbd554c1b11a0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{QASM Analyzer}
+      \verb{urlraw}
+      \verb https://github.com/lusvelt/qasm-analyzer
+      \endverb
+      \verb{url}
+      \verb https://github.com/lusvelt/qasm-analyzer
+      \endverb
+      \keyw{qasm,analyzer}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
