@@ -5,7 +5,7 @@ from SymbolicExecutionEngine import SymbolicExecutionEngine
 
 class QASMAnalyzer:
     @staticmethod
-    def checkQubitBound(programPath, upperBound):
+    def checkQubitBound(programPath):
         tree = Parser.buildParseTree(programPath)
         classifier = SubroutineClassifier(tree)
 

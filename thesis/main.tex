@@ -8,6 +8,7 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{tikz}
+\usepackage{xspace}
 \usepackage[
 backend=biber,
 style=alphabetic,
@@ -19,6 +20,8 @@ sorting=ynt
 
 
 \usetikzlibrary{quantikz}
+\usetikzlibrary{shapes}
+
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
@@ -1097,7 +1100,7 @@ def f2 (int[5]:x) qreg[5]:q, qreg[5]:u -> int[8] {
     return s;
 }
 \end{lstlisting}
-Notice that the above example obviously passes the qubits check.
+Notice that the above example obviously passes the qubits check, since the branch where \texttt{x * x < 0} is never taken.
 
 \subsection{Quantum gate definition}
 We will not delve into the actual grammar of quantum gate definitions, since the analysis that we are going to discuss in the next chapters does not take them into account. In fact, our analyzer treats them as black-boxes that entangle all the input qubits together.
@@ -1647,16 +1650,138 @@ This is a static class that has a single public method, but it wraps all the log
 
 
 \chapter{Symbolic Execution}
-% simulateExecution
+This last chapter focuses on the actual symbolic execution of subroutines \cite{SurveySymExec-CSUR18}, how the various types of statement are simulated, and presents some concrete examples.\\
+We are now going to discuss the implementation of the \texttt{SymbolicExecutionEngine}'s \texttt{analyzeSubroutine} method.\\
+\section{Initial state and execution stack}
+Suppose we have the following subroutine and we want to build its symbolic execution tree:
+\begin{lstlisting}
+def foo(int:x, int:y) {
+    int t = 0;
+    if (x > y) {
+        t = x++;
+    } else {
+        t = x + y;
+    }
+    t /= 2;
+    return t;
+}
+\end{lstlisting}
+The \texttt{analyzeSubroutine} method takes the subroutine as an argument, analyzes its signature and builds the root \texttt{SymbolicState} (which we call \texttt{initialState}) with the following properties:
+\begin{itemize}
+    \itemsep 0em
+    \item \texttt{constraints}: \textit{True}
+    \item \texttt{store}: $\{x: \$_0, y: \$_1\}$
+\end{itemize}
+As we see, the two arguments of the subroutine have been assigned a fresh symbol each, and since there is no assumption on the state yet, we could set the constraints to \textit{True}, meaning that the state is valid for each possible domain value of the symbols.\\
+After defining the initial state, the \texttt{ExecutionStack} must be built, so we take the `subroutineBlock' node, unravel its children (which are all statements) and push them on a brand new \texttt{executionStack}.\\
+
+\section{Simulation of statements}
+The next step is to call the \texttt{simulateExecution} private method, which takes a \texttt{SymbolicState} (representing the \texttt{currentState}), and an \texttt{ExecutionStack}. That is, this method performs the simulation of all the statements that are in the \texttt{executionStack} starting from the \texttt{currentState} parameter and generates a symbolic execution tree like the following one:\\
+
+\begin{tikzpicture}[
+    grow=down,
+    level 1/.style={sibling distance=8cm,level distance=2.4cm},
+    edge from parent/.style={thick,draw=black, shorten >=5pt, shorten <=5pt},
+    edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
+    kant/.style={text width=2cm, text centered, sloped},
+    every node/.style={inner sep=2mm},
+    punkt/.style={rectangle, top color=white,
+    bottom color=white, draw=black}
+]
+
+\node[punkt] [rectangle split, rectangle split parts=2] {
+    A | \texttt{def foo(int:x, int:y)}
+    \nodepart{second}
+    \textit{True} |
+    $\{x: \$_0, y: \$_1\}$
+}
+child {
+node[punkt] [rectangle split, rectangle split parts=2] {
+    B | \texttt{int t = 0;}
+    \nodepart{second}
+    \textit{True} |
+    $\{x: \$_0, y: \$_1, t: 0\}$
+}
+child {
+node[punkt] [rectangle split, rectangle split parts=2] {
+    C | \texttt{if (x > y)}
+    \nodepart{second}
+    \textit{True} |
+    $\{x: \$_0, y: \$_1, t: 0\}$
+}
+    child {
+        node[punkt] [rectangle split, rectangle split parts=2] {
+            D | \texttt{if (x > y)}
+            \nodepart{second}
+            \texttt{x > y} |
+            $\{x: \$_0, y: \$_1, t: 0\}$
+        }
+        child {
+            node[punkt] [rectangle split, rectangle split parts=2] {
+                E | \texttt{t = x++;}
+                \nodepart{second}
+                \texttt{x > y} |
+                $\{x: \$_0+1, y: \$_1, t: \$_0+1\}$
+            }
+            child {
+                node[punkt] [rectangle split, rectangle split parts=2] {
+                    F | \texttt{t /= 2;}
+                    \nodepart{second}
+                    \texttt{x > y} |
+                    $\{x: \$_0+1, y: \$_1, t: \$_0/2+1/2\}$
+                }
+            }
+        }
+    }
+    child {
+        node[punkt] [rectangle split, rectangle split parts=2] {
+            G | \texttt{else}
+            \nodepart{second}
+            \texttt{x <= y} |
+            $\{x: \$_0, y: \$_1, t: 0\}$
+        }
+        child {
+            node[punkt] [rectangle split, rectangle split parts=2] {
+                H | \texttt{t = x + y;}
+                \nodepart{second}
+                \texttt{x <= y} |
+                $\{x: \$_0, y: \$_1, t: \$_0+\$_1 \}$
+            }
+            child {
+                node[punkt] [rectangle split, rectangle split parts=2] {
+                    I | \texttt{t /= 2;}
+                    \nodepart{second}
+                    \texttt{x <= y} |
+                    $\{x: \$_0, y: \$_1, t: \$_0/2+\$_1/2\}$
+                }
+            }
+        }
+    }
+}
+};
+\end{tikzpicture}\\
+
+In order to generate such a tree, the \texttt{simulateExecution} method pops the statement on top of the stack, and it checks whether it is a concrete statement or a meta-instruction. In the first case we need to detect the statement type and simulate its behavior. One or more child states are created (based on the type of statement), and after setting them up (as well as the execution stack, if it needs to be modified) there is a recursive call for each of the child states. The base case occurs when the execution stack is empty, when the qubit upper bound is checked against the information that the \texttt{QRegManager} holds.
+Now we describe the operations of the symbolic execution engine for each statement type.
+
+\subsection{Expression statements}
+\subsection{Assignment statements}
+\subsection{Classical declarations}
+\subsection{Branching statements}
+% update of the execution stack
+\subsection{Quantum statements}
+\subsection{Loop statements}
+% only finite case
+% example, unrolling of the loop
+
+
+
+\section{Entanglements and measurements}
+% Example of qregManager behavior
+
+\section{Limits and future development}
+% todos and undetermined loops with assertions
 
 
 \printbibliography
 \end{document}
-
-% https://www.zerounoweb.it/techtarget/searchdatacenter/quantum-computing-cose-a-cosa-serve-e-perche-e-importante/
-% https://qiskit.github.io/openqasm/index.html
-% Quantum Computing for Computer Scientists
-% https://qiskit.org/textbook/preface.html
-% https://www.antlr.org/
-% https://github.com/lusvelt/qasm-analyzer
-%%%

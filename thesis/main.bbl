@@ -48,6 +48,57 @@
       \endverb
       \keyw{parser,generator,grammar}
     \endentry
+    \entry{SurveySymExec-CSUR18}{article}{}
+      \name{author}{5}{}{%
+        {{hash=22a28bd4c4375f650b7bc5ca7e1def0b}{%
+           family={Baldoni},
+           familyi={B\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+        {{hash=838313855b1318a89487737723f117a9}{%
+           family={Coppa},
+           familyi={C\bibinitperiod},
+           given={Emilio},
+           giveni={E\bibinitperiod}}}%
+        {{hash=15733f28f5b2f56920a80612e2344d89}{%
+           family={D'Elia},
+           familyi={D\bibinitperiod},
+           given={Daniele\bibnamedelima Cono},
+           giveni={D\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=0d818aa3e968cd8759e8d31211dc6382}{%
+           family={Demetrescu},
+           familyi={D\bibinitperiod},
+           given={Camil},
+           giveni={C\bibinitperiod}}}%
+        {{hash=988d2602b6318807e4481ff5c673bbd5}{%
+           family={Finocchi},
+           familyi={F\bibinitperiod},
+           given={Irene},
+           giveni={I\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{e61bf9b5a1d08d8f9562b57211fe1ff7}
+      \strng{fullhash}{5ef0b297c6acf997e66cabfade4fc840}
+      \strng{bibnamehash}{e61bf9b5a1d08d8f9562b57211fe1ff7}
+      \strng{authorbibnamehash}{e61bf9b5a1d08d8f9562b57211fe1ff7}
+      \strng{authornamehash}{e61bf9b5a1d08d8f9562b57211fe1ff7}
+      \strng{authorfullhash}{5ef0b297c6acf997e66cabfade4fc840}
+      \field{labelalpha}{Bal+18}
+      \field{sortinit}{2}
+      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM Comput. Surv.}
+      \field{number}{3}
+      \field{title}{A Survey of Symbolic Execution Techniques}
+      \field{volume}{51}
+      \field{year}{2018}
+    \endentry
     \entry{zuw}{online}{}
       \name{author}{1}{}{%
         {{hash=04b66a060b3100a97a6ba388005fea13}{%
