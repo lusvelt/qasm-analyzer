@@ -1886,9 +1886,24 @@ So, when the engine simulates the \texttt{for} statement, the execution stack be
     };
 \end{tikzpicture}
 \end{example}
-\section{Limits and future development}
+\section{Limitations and future development}
 % todos and undetermined loops with assertions
+There are some features that have not been implemented in this simple version of QASM analyzer, such as:
+\begin{itemize}
+    \itemsep 0em
+    \item Function calls in expressions (e.g. \texttt{2 + a + getNumber()})
+    \item Boolean auto-cast in conditional statements (e.g. \texttt{if (variable)}): the libraries make it hard to cast from number to boolean.
+    \item Bitwise shift operations (\texttt{<<} and \texttt{>>}): bit vectors are only available in \texttt{PySMT}, not in \texttt{sympy}.
+    \item Modulo operation (\texttt{\%}): not available in \texttt{PySMT}
+    \item Alias statements (e.g. \texttt{let y = x}): keeping track of all the references could be difficult, especially if there are more levels of indirection.
+    \item Indeterminate loops (e.g. \texttt{while (a > 0)}): here some technique should be used to detect loop invariants and use them to make assertions about pre- and post-conditions.
+    \item Control directive statements (\texttt{break}, \texttt{continue} and \texttt{end}): they would complicate indeterminate loop handling even more.
+    \item Symbolic designators in index identifiers (e.g. \texttt{a[n]}, where \texttt{n} is not known at compile time): every time a symbolic designator is detected, it should be checked against all the previous ones and check for equalities. This is quite time-consuming and it does not always guarantee that the analysis is correct.
+\end{itemize}
+In conclusion, we could say that this is the first version of a static analyzer for QASM, and the main concern is to estimate the number of qubits that are measured and/or entangled to measured ones. This could help quantum programmers to care about the resources that they use, and this is fundamental in quantum computing since qubits are really expensive, and the real power of quantum superpositions, that allow multiple states to be computed at the same time, is exponential with respect to the number of qubits.\\
 
+\section{Conclusion}
+The path for Quantum Supremacy is still long, but every step counts. Reducing the number of qubits that a program requires is a tiny step, but together with other innovations and newer technologies for the physical implementation of qubits, could make the difference and lead to a completely new scenario for communications, cryptography, big data and simulations of chemicals and phisical phenomena.
 
 \printbibliography
 \end{document}
