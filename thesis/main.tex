@@ -21,6 +21,7 @@ sorting=ynt
 
 \usetikzlibrary{quantikz}
 \usetikzlibrary{shapes}
+\usetikzlibrary{shapes.multipart}
 
 
 \theoremstyle{definition}
@@ -1690,42 +1691,42 @@ The next step is to call the \texttt{simulateExecution} private method, which ta
 ]
 
 \node[punkt] [rectangle split, rectangle split parts=2] {
-    A | \texttt{def foo(int:x, int:y)}
+    \texttt{def foo(int:x, int:y)}
     \nodepart{second}
     \textit{True} |
     $\{x: \$_0, y: \$_1\}$
 }
 child {
 node[punkt] [rectangle split, rectangle split parts=2] {
-    B | \texttt{int t = 0;}
+    \texttt{int t = 0;}
     \nodepart{second}
     \textit{True} |
     $\{x: \$_0, y: \$_1, t: 0\}$
 }
 child {
 node[punkt] [rectangle split, rectangle split parts=2] {
-    C | \texttt{if (x > y)}
+    \texttt{if (x > y)}
     \nodepart{second}
     \textit{True} |
     $\{x: \$_0, y: \$_1, t: 0\}$
 }
     child {
         node[punkt] [rectangle split, rectangle split parts=2] {
-            D | \texttt{if (x > y)}
+            \texttt{if (x > y)}
             \nodepart{second}
             \texttt{x > y} |
             $\{x: \$_0, y: \$_1, t: 0\}$
         }
         child {
             node[punkt] [rectangle split, rectangle split parts=2] {
-                E | \texttt{t = x++;}
+                \texttt{t = x++;}
                 \nodepart{second}
                 \texttt{x > y} |
                 $\{x: \$_0+1, y: \$_1, t: \$_0+1\}$
             }
             child {
                 node[punkt] [rectangle split, rectangle split parts=2] {
-                    F | \texttt{t /= 2;}
+                    \texttt{t /= 2;}
                     \nodepart{second}
                     \texttt{x > y} |
                     $\{x: \$_0+1, y: \$_1, t: \$_0/2+1/2\}$
@@ -1735,21 +1736,21 @@ node[punkt] [rectangle split, rectangle split parts=2] {
     }
     child {
         node[punkt] [rectangle split, rectangle split parts=2] {
-            G | \texttt{else}
+            \texttt{else}
             \nodepart{second}
             \texttt{x <= y} |
             $\{x: \$_0, y: \$_1, t: 0\}$
         }
         child {
             node[punkt] [rectangle split, rectangle split parts=2] {
-                H | \texttt{t = x + y;}
+                \texttt{t = x + y;}
                 \nodepart{second}
                 \texttt{x <= y} |
                 $\{x: \$_0, y: \$_1, t: \$_0+\$_1 \}$
             }
             child {
                 node[punkt] [rectangle split, rectangle split parts=2] {
-                    I | \texttt{t /= 2;}
+                    \texttt{t /= 2;}
                     \nodepart{second}
                     \texttt{x <= y} |
                     $\{x: \$_0, y: \$_1, t: \$_0/2+\$_1/2\}$
@@ -1761,24 +1762,130 @@ node[punkt] [rectangle split, rectangle split parts=2] {
 };
 \end{tikzpicture}\\
 
-In order to generate such a tree, the \texttt{simulateExecution} method pops the statement on top of the stack, and it checks whether it is a concrete statement or a meta-instruction. In the first case we need to detect the statement type and simulate its behavior. One or more child states are created (based on the type of statement), and after setting them up (as well as the execution stack, if it needs to be modified) there is a recursive call for each of the child states. The base case occurs when the execution stack is empty, when the qubit upper bound is checked against the information that the \texttt{QRegManager} holds.
+In order to generate such a tree, the \texttt{simulateExecution} method pops the statement on top of the stack, and it checks whether it is a concrete statement or a meta-instruction. In the first case we need to detect the statement type and simulate its behavior. One or more child states are created (based on the type of statement), and after setting them up (as well as the execution stack, if it needs to be modified) there is a recursive call for each of the child states. The base case occurs when the execution stack is empty, in which case the qubit upper bound is checked against the information that the \texttt{QRegManager} holds.
 Now we describe the operations of the symbolic execution engine for each statement type.
 
 \subsection{Expression statements}
+The simulation of expression statements, just like the majority of the others, starts with the cloning of the current state. The expression statement can only modify the state if incrementors are present (i.e. \texttt{++} or \texttt{--}). The expression node is passed to the \texttt{Expression} constructor, and an evaluation is performed on the store of the new state. Since the evaluation procedure automatically updates the values of variables in the store if incrementors are found, the simulation is over after the evaluation. The final value of the expression is discarded, and the engine can proceed with the execution of the next statement.
 \subsection{Assignment statements}
+There are two types of assignment statements: classical ones and quantum measurements.
+\subsubsection{Classical assignments}
+Classical assignments involve a LHS (Left-Hand Side) and a RHS (Right-Hand Side) expressions. The RHS can be either an expression or an index identifier. In the first case it is evaluated to a symbolic expression, while in the second case it becomes a \texttt{CReg}. The assignment operator can include a binary operator (e.g. \texttt{+=}, \texttt{-=}, etc.), in which case the LHS is also evaluated and the binary operator is applied to the couple (LHS, RHS).
+The final step is setting the value in the store, which is done by calling its \texttt{assign} method. If the old value in the store is a simple symbolic expression, it is just overwritten, but if it is a \texttt{CReg}, its \texttt{content} array is updated according to the new value.
+\subsubsection{Quantum measurements}
+Quantum measurements return a fresh symbol and set it in the store, since we ignore what happens at quantum level. Furthermore, when a quantum measurement is performed, the measured qubits and all the ones entangled to them are transfered by the \texttt{QRegManager} from the \texttt{potentialEntanglements} array to the \texttt{effectiveQubits} set by invoking the \texttt{markAsMeasured} method.
+
 \subsection{Classical declarations}
+The main difference between declarations and assignments is that the first have to take the type and domain of the variable into account. This is accomplished by calling the \texttt{ClassicalType} class constructor with the arguments obtained by inspecting the statement subtree.\\
+Since declaration can have an immediate assignment, that case is handled like the corresponding statement, after having initialized the store item with the correct type.\\
+Constant declarations are allowed too, but the type does not need to be specified. Thus, the store item will only contain the `value' field, and this is fine because the type is only needed when treating symbols with the SMT solver.
+
 \subsection{Branching statements}
-% update of the execution stack
+When simulating if-then-else statements, both paths need to be generated, unless one of them has an unsatisfiable condition. In other words, the first thing to do is evaluate the boolean expression of the condition and check both it and its negation for unsatisfiability. If one of them is unsatisfiable, the corresponding path is not generated.\\
+Once determined which paths are to be generated, a clone state and a clone execution stack is created for each one of them, and the corresponding program blocks are expanded into sequences of statements and pushed on top of their execution stack. This is necessary because a branching instruction hides all the statements that are in the nested blocks, and so they need to be explicitly pushed on the stack for the engine to execute them. Notice that the statements that appear after the end of the if-then-else remain untouched and are present in all the execution stack's clones, just below the expanded blocks.\\
+All child states are appended to the current state's \texttt{children} array, and a recursive call to the \texttt{simulateExecution} method is done for each one of them, with the corresponding execution stack passed as second argument.
+
+
 \subsection{Quantum statements}
+When a quantum gate call is encountered, all the qubits that appear in the it are considered to be potentially entangled, so the \texttt{addPotentialEntanglement} method of \texttt{QRegManager} is called on them.
+\begin{example}
+Suppose we have the following quantum registers:
+\begin{lstlisting}
+qreg q[4];
+qreg r[4];
+qreg s[4];
+\end{lstlisting}
+Here is an example of how the \texttt{QRegManager} arrays are affected by quantum statements (we put the array contents as comments between statements):
+\begin{lstlisting}
+// potentialEntanglements: []
+// effectiveQubits: []
+
+CX q[0], q[1];
+
+// potentialEntanglements: [ {q[0],q[1]} ]
+// effectiveQubits: []
+
+CX q[2], r[0];
+
+// potentialEntanglements: [ {q[0],q[1]}, {q[2],r[0]} ]
+// effectiveQubits: []
+
+CX q[1], q[3];
+
+// potentialEntanglements: [ {q[0],q[1],q[3]}, {q[2],r[0]} ]
+// effectiveQubits: []
+
+CX r[1:4], s[1:4];
+
+// potentialEntanglements: [ {q[0],q[1],q[3]}, {q[2],r[0]},
+//     {r[1],s[1]}, {r[2],s[2]}, {r[3],s[3]} ]
+// effectiveQubits: []
+
+CX r[2], r[3];
+
+// potentialEntanglements: [ {q[0],q[1],q[3]}, {q[2],r[0]},
+//     {r[1],s[1]}, {r[2],s[2],r[3],s[3]} ]
+// effectiveQubits: []
+
+CX r[0], s[3];
+
+// potentialEntanglements: [ {q[0],q[1],q[3]},
+//     {q[2],r[0],r[2],s[2],r[3],s[3]}, {r[1],s[1]} ]
+// effectiveQubits: []
+
+measure r[2];
+
+// potentialEntanglements: [ {q[0],q[1],q[3]}, {r[1],s[1]} ]
+// effectiveQubits: [ q[2],r[0],r[2],s[2],r[3],s[3] ]
+
+measure q[0];
+
+// potentialEntanglements: [ {r[1],s[1]} ]
+// effectiveQubits: [ q[2],r[0],r[2],s[2],r[3],s[3],q[0],
+//     q[1],q[3] ]
+\end{lstlisting}
+The code above uses only 9 qubits (the size of \texttt{effectiveQubits} array) out of 12 that have been declared. The QASM analyzer is therefore able to tell the programmer which qubits are effectively used, so that resources can be saved for other computations.
+\end{example}
 \subsection{Loop statements}
-% only finite case
-% example, unrolling of the loop
+Simulating loops symbolically is a hard task, so in this version of the analyzer only `for' loops with a known number of iterations have been considered. When such a loop statement is encountered, the execution stack is updated so that the loop block is repeated the correct number of times, and between two consecutive sequences there is a \texttt{SetStoreValueInstruction} that updates the value of the iterator.
+\begin{example}
+Suppose we have the following `for' loop.
+\begin{lstlisting}
+for i in [0:4] {
+    CX q[i], r[i];
+    c[i] = measure r[i];
+}
+\end{lstlisting}
+Suppose also that the execution stack is already filled with some statements and the \texttt{for} loop on the top.\\
+\\
+\begin{tikzpicture}[stack/.style={rectangle split, rectangle split parts=#1,draw, anchor=center}]
+    \node[stack=2]  {\texttt{for i in [0:4] \{\ldots\}}
+    \nodepart{two}\texttt{$\vdots$}
+    };
+\end{tikzpicture}
+\\
+So, when the engine simulates the \texttt{for} statement, the execution stack becomes:\\
+\\
+\begin{tikzpicture}[stack/.style={rectangle split, rectangle split parts=#1,draw, anchor=center}]
+    \node[stack=14]  {
+        \texttt{SetStoreValueInstruction(`i', 0)}
+    \nodepart{two}\texttt{CX q[i], r[i]}
+    \nodepart{three}\texttt{c[i] = measure r[i]}
+    \nodepart{four}\texttt{SetStoreValueInstruction(`i', 1)}
+    \nodepart{five}\texttt{CX q[i], r[i]}
+    \nodepart{six}\texttt{c[i] = measure r[i]}
+    \nodepart{seven}\texttt{SetStoreValueInstruction(`i', 2)}
+    \nodepart{eight}\texttt{CX q[i], r[i]}
+    \nodepart{nine}\texttt{c[i] = measure r[i]}
+    \nodepart{ten}\texttt{SetStoreValueInstruction(`i', 3)}
+    \nodepart{eleven}\texttt{CX q[i], r[i]}
+    \nodepart{twelve}\texttt{c[i] = measure r[i]}
+    \nodepart{thirteen}\texttt{SetStoreValueInstruction(`i', 4)}
+    \nodepart{fourteen}\texttt{$\vdots$}
 
-
-
-\section{Entanglements and measurements}
-% Example of qregManager behavior
-
+    };
+\end{tikzpicture}
+\end{example}
 \section{Limits and future development}
 % todos and undetermined loops with assertions
 
