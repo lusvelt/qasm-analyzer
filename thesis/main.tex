@@ -82,6 +82,7 @@ Corso di Laurea in Informatica }}
 {\large{\bf Relatore:\\
 Chiar.mo Prof.\\
 Ugo Dal Lago\\
+% TODO: chiedere se ci serve anche il co-relatore
 }}
 \end{minipage}
 \hfill
@@ -108,7 +109,7 @@ A nonno Francesco
 The idea of quantum computing was conceived in the 1970s, when researchers of the caliber of Feynman, Manin and Deustch started to theorize that the properties of quantum mechanics might prove useful for performing computations differently from the classical paradigm \cite{zuw}. The main concept that lays at the core of this new model is the superposition of states, that is the simultaneous co-existence of multiple computational states at the same moment, with the possibility to perform the same operation to all of those states with a single computational step. Physical devices that are capable of such power are called ``quantum computers'', and they constitute a polynomial-time implementation of non-determinism, thus achieving an exponential-order level of parallelism. This fact invalidates the assumption that some problems (NP-complete ones, for instance) require too much time to be solved compared to human life duration, hence it opens the doors to a new variety of applications, and it also tears down the ones which rely on this assumption (like RSA cryptography). Literature usually refers to this scenario as ``Quantum Supremacy''.\\
 Quantum computers operate through qubits, which are the quantum equivalent of bits, and can have not only $0$s and $1$s as values, but also combinations of them. Qubits are sequenced together to form quantum registers, which hold the actual computational power of quantum computers. For instance, a 3-qubit register can be in a superposition of the states $\ket{000}, \ket{001}, \ket{010}, \ldots, \ket{111}$, that are $2^3=8$ base states. Generalizing the previous result, we notice that an $n$-qubit register can represent up to $2^n$ states simultaneously, thus showing where the exponential speedup resides.\\
 Some companies like Google and IBM have already built fully-functional quantum computers. However, all of them have a limited number of qubits due to the elevate cost of implementing them physically. Therefore, it is crucial that quantum programmers are thrifty with the usage of qubits while designing quantum circuits. The aim of this document is to show a simple tool which is able to analyze programs written in QASM language (Quantum Assembly) and check whether the number of qubits that are \textit{effectively} used is bounded by a certain expression.
-We start by introducing some concepts of quantum computing, then we describe the QASM language and we provide details about the features that are taken into account by the analyzer. Finally we describe the tool that performs the estimation of the number of qubits by presenting the modules APIs it is built upon one by one, and in the last chapter we discuss how the estimation of the number of qubits is actually performed, going through some examples.\\
+We start by introducing some concepts of quantum computing, then we describe the QASM language and we provide details about the features that are taken into account by the analyzer. Finally we describe the tool that performs the estimation of the number of qubits by presenting the module APIs it is built upon one by one, and in the last chapter we discuss how the estimation of the number of qubits is actually performed, going through some examples.\\
 
 
 
@@ -156,11 +157,11 @@ Imagine now that the floor the employee is on is not known for sure, but we are 
         p_{n-1}\\
     \end{bmatrix}\in [0,1]^n
 \end{equation*}
-We now have a generalized version of our previously defined state vector, because each entry $p_i$ is a real number between $0$ and $1$. Since we are talking about probabilities, we set the constraint that all the entries of $\mathbf{v}$ must sum up to $1$.
+We now have a generalized version of our previously defined state vector, because each entry $p_i$ is a real number between $0$ and $1$. Since we are talking about probabilities, we impose the constraint that all the entries of $\mathbf{v}$ must sum up to $1$.
 \begin{equation*}
     \sum_{i=0}^{n-1} p_i = 1
 \end{equation*}
-It should be noticed that there is no way to represent probabilistic states with a single number like we do for deterministic ones. It is clear, however, that in case we know the exact location of the employee, the vector would collapse to the previous case. In fact, if we are certain that the employee is on the $k$-th floor, then $p_k=1$, and $\forall i \in \{0,1,\ldots,n-1\} \smallsetminus \{k\},\ p_i=0$.\\
+It should be noticed that there is no way to represent probabilistic states with a single number like we do for deterministic ones. It is clear, however, that in case we know the exact location of the employee, the probability vector would collapse to the previous case. In fact, if we are certain that the employee is on the $k$-th floor, then $p_k=1$, and $\forall i \in \{0,1,\ldots,n-1\} \smallsetminus \{k\},\ p_i=0$.\\
 Now it is time to define state vectors for quantum systems.\\
 
 
@@ -180,7 +181,7 @@ Consider a quantum object (e.g. an electron or a photon), and assume its positio
 \end{tikzpicture}
 \end{center}
 
-To each position $x_i$, it corresponds a basic vector having as entries all zeros and a $1$ as the $i$-th entry.
+To each position $x_i$, it corresponds a basic vector having all zeros as elements except for a single $1$ as the $i$-th entry.
 \begin{equation*}
     \ket{x_1} = \begin{bmatrix}
         1\\
@@ -221,9 +222,9 @@ where
     \sum_{i=0}^{n-1} \left\lvert c_i \right\rvert ^2 = 1
 \end{equation*}
 \end{definition}
-Since it is a weighted sum of basic states, we say that $\ket{\psi}$ is a \textit{superposition} of the basic states.
-The square norm of $c_i$ tells us the probability of observing the particle in the position $x_i$, and since the particle is indeed in one of those positions, the sum of square norms must add up to $1$.\\
-The reason why we need complex numbers to represent quantum states is that quantum objects (like photons or electrons) behave both like particles and waves, so they can interfere either constructively or disruptively. By using complex numbers, we can sum waves and capture the fact that they could interfere disruptively, since the square norm of the sum of two complex number is not necessarily greater than both of the square norms of the addends.
+Since it is a weighted sum of basic states, we say that $\ket{\psi}$ is a \textit{superposition} of them.
+The square norm of $c_i$ tells us the probability of observing the particle in the position $x_i$, and since the sum of probabilities must add up to $1$, so does the sum of the square norms.\\
+The reason why we need complex numbers to represent quantum states is that quantum objects (like elementary particles) have a wave-like behavior, so they can interfere either constructively or disruptively. By using complex numbers, we can sum waves and capture the fact that they could interfere disruptively, since the square norm of the sum of two complex number is not necessarily greater than both of the square norms of the addends.
 
 
 
@@ -241,7 +242,7 @@ As we know, a bit can only assume values in the domain $\{0,1\}$.
 \filldraw[black] (1,0) circle (2pt) node[anchor=north] {$1$};
 \end{tikzpicture}
 \end{center}
-By following the approach of the previous section, we can also describe bits using a two-dimensional state vector, where the first element stands for $0$, and the last for $1$:
+By following the approach of the previous section, we can also describe bits using a two-dimensional state vector, where the top entry stands for $0$, and the bottom for $1$:
 \begin{equation*}
     \ket{0}=\begin{bmatrix}
         1\\
@@ -295,9 +296,8 @@ Of course, the following are also qubits:
         \frac{1}{\sqrt{2}}
     \end{bmatrix}
 \end{equation*}
+We shall notice that all the qubits described so far are superpositions of the basic states $\ket{0}$ and $\ket{1}$.
 \end{example}
-We shall notice that $\ket{q}$, $\ket{q_0}$ and $\ket{q_1}$ are all superpositions of the basic states $\ket{0}$ and $\ket{1}$.
-
 
 
 
@@ -309,7 +309,7 @@ Consider a qubit whose state is
     \ket{\psi}=\frac{\sqrt{3}}{2}\ket{0}+\frac{1}{2}\ket{1}
 \end{equation*}
 If we measure it, we have $\left(\frac{\sqrt{3}}{2}\right)^2=\frac{3}{4}=75\%$ of probability to observe the outcome being $0$, and $\left(\frac{1}{2}\right)^2=\frac{1}{4}=25\%$ of probability of it being $1$.\\
-Let's say we obtained $0$ from the measurement. The state of the qubit is not $\ket{\psi}$ anymore, but it has become $\ket{\psi'}=\ket{0}$ because the measurement made it collapse as a side effect, so if we measure it again we have $100\%$ of chances to observe the value $0$ again.\\
+Let's say we obtained $0$ from the actual measurement. The state of the qubit is not $\ket{\psi}$ anymore, but it has become $\ket{\psi'}=\ket{0}$ because the measurement made it collapse as a side effect.\\
 This fact is at the core of quantum mechanics, and it just tells us that in order to observe something we must inevitably interact with it and alter its internal state.
 \end{example}
 
@@ -317,7 +317,7 @@ This fact is at the core of quantum mechanics, and it just tells us that in orde
 
 
 \subsection{Quantum registers}
-Quantum computers with a single qubit are not very interesting, so we need a way to combine qubits and form registers. In order to combine quantum systems, we need to use the tensor product.
+Quantum computers with a single qubit are not very interesting, so we need a way to combine qubits and form registers. In order to combine quantum systems, we use the tensor product.
 For example, let's say we wanted to represent the two-qubits state $\ket{01}$. We would then need to compute the tensor product $\ket{0}\otimes\ket{1}$ as follows:
 \begin{equation*}
     \ket{0}\otimes\ket{1}=\begin{bmatrix}
@@ -347,7 +347,7 @@ For example, let's say we wanted to represent the two-qubits state $\ket{01}$. W
             c_{11}
     \end{bmatrix}
 \end{equation*}
-If we observe the result carefully, we can notice that the normalization constraint still holds, and the only $1$ that appears in the final result corresponds to $c_{01}$, which is right the coefficient labelled with our state $\ket{01}$. If we try to do the same thing with the state $\ket{101}$, we will obtain:
+If we observe the result carefully, we can notice that the normalization constraint still holds, and the only $1$ that appears in the final result corresponds to $c_{01}$, which is right the coefficient labelled with our state $\ket{01}$. If we try to do the same thing with the state $\ket{101}$, we obtain:
 \begin{equation*}
     \ket{101}=\ket{1}\otimes\ket{0}\otimes\ket{1}=\begin{bmatrix}
         0\\
@@ -378,14 +378,14 @@ Of course, considering the fact that quantum computers allow superpositions of m
 
 
 \subsection{Entanglement}
-When multiple qubits are involved to form a quantum register, it can sometimes have the property that if we measure one of the qubits, then we automatically know the value of the others. We say, then, that those qubits are \textit{entangled}.
+When multiple qubits are involved to form a quantum register, the latter can sometimes have the property that if we measure one of the qubits, then we automatically know the value of the others. We say, then, that those qubits are \textit{entangled}.
 \begin{example}
 Consider a quantum register with 2 qubits and assume its state is
 \begin{equation*}
     \ket{\psi}=\frac{\ket{00}+\ket{11}}{\sqrt{2}}
 \end{equation*}
-Then, if we measure the first qubit and we observe the value $1$, we automatically know that the other qubit also has value $1$ by just noticing that the only basic state that appears in $\ket{\psi}$ and has a $\ket{1}$ at the first position is $\ket{11}$, so we know for sure that the other one is $\ket{1}$ too.\\
-In this case, the measurement not only affects the state of the measured qubit making it collapse to $\ket{1}$, but it also collapses the state of the entangled one.
+If we measure the first qubit and we observe the value $1$, we automatically know that the other also has value $1$ by just noticing that the only basic state that appears in $\ket{\psi}$ and has a $\ket{1}$ at the first position is $\ket{11}$, so we know for sure that the other one is $\ket{1}$ as well.\\
+In this case, the measurement not only makes the state of the measured qubit collapse to $\ket{1}$, but it also affects the state of the entangled one.
 \end{example}
 
 
@@ -395,7 +395,7 @@ In this case, the measurement not only affects the state of the measured qubit m
 So far we have discussed how to represent qubits and quantum registers and what their properties are, but in order to perform a computation we need a way to manipulate them according to an algorithm and exploit their computational power.\\
 Just like classical computers manipulate bits using logic gates, quantum computers use quantum gates to achieve their objective.\\
 The physical implementation of quantum gates is as complicated as that of qubits, but we can represent what these gates do by using mathematical objects that operate on state vectors and keep the output normalized so that the sum of the square norms of the coefficients of the output vector is always $1$. These objects are unitary matrices.\\
-There are infinite possible quantum gates. Here we describe the set of universal ones $\{H, CNOT, R(\theta)\}$, which includes three gates that can be combined together to simulate an arbitrary gate.\\
+There are infinite possible quantum gates. Here we describe the set of universal ones $\{H, CNOT, R(\theta)\}$, which contains three gates that can be combined together to simulate an arbitrary gate.\\
 
 
 
@@ -411,8 +411,8 @@ The Hadamard gate is encoded by the following matrix:
         1 & -1
     \end{bmatrix}
 \end{equation*}
-The Hadamard matrix is the transition matrix from the canonical basis $\left\{\begin{bmatrix} 1 \\ 0\end{bmatrix}, \begin{bmatrix} 0 \\ 1\end{bmatrix}\right\}$ to the Hadamard basis $\left\{\begin{bmatrix} \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}}\end{bmatrix}, \begin{bmatrix} \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}}\end{bmatrix}\right\}$, which is used to express arbitrary states in terms of superpositions of basic states, and this allows calculations to be performed on a superposition, hence on all of the basic states it is composed of with a single computational step.\\
-Since $H$ is unitary, by applying it twice we go back to the canonical basis, so after calculations are finished, Hadamard gate can be applied again to translate the results back into the canonical basis, ready to be measured by the observer.
+The Hadamard matrix is the transition matrix from the canonical basis $\left\{\begin{bmatrix} 1 \\ 0\end{bmatrix}, \begin{bmatrix} 0 \\ 1\end{bmatrix}\right\}$ to the Hadamard basis $\left\{\begin{bmatrix} \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}}\end{bmatrix}, \begin{bmatrix} \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}}\end{bmatrix}\right\}$, which is used to express arbitrary states in terms of superpositions of basic states. This allows calculations to be performed on a superposition (or equivalently, on all the basic states it is composed) with a single computational step.\\
+Since $H$ is unitary, by applying it twice we go back to the canonical basis, so after calculations are finished, the Hadamard gate can be applied again to translate the results back into the canonical basis, ready to be measured by the observer.
 \begin{example}
 By applying Hadamard gate to the qubits $\ket{0}$ and $\ket{1}$ we get:
 \begin{equation*}
@@ -440,7 +440,7 @@ By applying Hadamard gate to the qubits $\ket{0}$ and $\ket{1}$ we get:
     \end{bmatrix}=\frac{\ket{0}-\ket{1}}{\sqrt{2}}=\ket{-}
 \end{equation*}
 It is easy to verify that applying Hadamard on $\ket{+}$ and $\ket{-}$ we go back respectively to $\ket{0}$ and $\ket{1}$.\\
-We will represent the Hadamard gate as a box labelled with `H'\\\\
+We will represent the Hadamard gate as a box labelled with `H'.\\\\
 \begin{quantikz}
     & \lstick{$\ket{0}$} & \gate{H} & \rstick{$\frac{\ket{0}+\ket{1}}{\sqrt{2}}$}\qw&\\
 \end{quantikz}\\
@@ -501,7 +501,7 @@ Before describing the Deutsch algorithm, let's define what balanced and constant
 A function $f: \{0,1\} \longrightarrow \{0,1\}$ is \textit{balanced} if $f(0)\neq f(1)$, otherwise it is \textit{constant}.
 \end{definition}
 The Deutch algorithm solves the following problem:
-\begin{problem}[Deutsch-Jozsa]
+\begin{problem}[Deutsch]
 Suppose we have a function $f: \{0,1\} \longrightarrow \{0,1\}$ which we can evaluate, but we do not know its exact definition. Determine whether $f$ is balanced or constant.
 \end{problem}
 If we wanted to use the classical approach, we would need to evaluate $f$ twice and compare the results. With the Deutsch algorithm, we will see that only one evaluation is sufficient.\\
@@ -578,7 +578,7 @@ Finally, the last Hadamard gate brings our state back to the canonical basis, an
     \end{cases}
 \end{equation*}
 Now we can measure the top qubit, and we can be sure about the function being balanced or constant by just looking at the result.\\
-Notice that the quantum algorithm only evaluated the function once, namely on the superposition $\ket{+,-}$. The generalized version of this algorithm, the Deutsch-Jozsa algorithm, shows the speedup in the computation even more.
+Notice that the quantum algorithm only evaluated the function once on the superposition $\ket{+,-}$. The generalized version of this algorithm, the Deutsch-Jozsa algorithm, shows the speedup in the computation even more.
 
 
 
@@ -589,23 +589,23 @@ Notice that the quantum algorithm only evaluated the function once, namely on th
 Although we are not going to illustrate all the analysis of the Deutsch-Jozsa algorithm, we will still define the problem, show the circuit that solves it and state some facts about its computational complexity compared to the classical case.
 Let's generalize the definition of balanced and constant functions.
 \begin{definition}[Balanced and constant functions]
-    A function $f: \{0,1\}^n \longrightarrow \{0,1\}$ is \textit{balanced} if exactly half of the inputs go to $0$ (and the other half go to $1$), while it is \textit{constant} if all of the inputs go to the same output (either $0$ or $1$).
+    A function $f: \{0,1\}^n \longrightarrow \{0,1\}$ is \textit{balanced} if exactly half of the inputs go to $0$ (and the other half go to $1$). Otherwise,it is \textit{constant} if all of the inputs go to the same output (either $0$ or $1$).
 \end{definition}
-The Deutsch-Jozsa problem is the same as the Deutsch one, with the assumptions that $f:\{0,1\}^n\longrightarrow \{0,1\}$ and that $f$ is guaranteed to be either constant or balanced.\\
-With the classical approach, in order to determine whether $f$ is balanced or constant we need to evaluate it at most on one plus half of the inputs. This is because as soon as we detect two different output values, we can conclude that the function is balanced, but if $f$ is constant, we cannot be sure of it until we check that more than half of its outputs are the same. So the worst case scenario requires $1 + \frac{2^n}{2} = 1 + 2^{n-1}$ evaluations, which is exponential with respect to the size of the input.\\
+The Deutsch-Jozsa problem is the same as the previous one, only with the assumptions that $f:\{0,1\}^n\longrightarrow \{0,1\}$ and $f$ is guaranteed to be either constant or balanced.\\
+With the classical approach, in order to determine whether $f$ is balanced or constant we need to evaluate it at most on half plus one of the inputs. This is because as soon as we detect two different output values, we can conclude that the function is balanced, but if $f$ is constant, we cannot be sure of it until we check that more than half of its outputs are the same. So the worst case scenario requires $\frac{2^n}{2} + 1 = 2^{n-1} + 1$ evaluations, which is exponential with respect to the size of the input.\\
 Let's now delve into the quantum world and contemplate its power.\\
 Since we are given the possibility to evaluate $f$, assume there is a unitary matrix $U_f$ that fulfills the task:\\
 \begin{quantikz}\\
     & \lstick{$\ket{\mathbf{x}}$} & \qw & \qwbundle{n}\qw & \gate[wires=2][2cm]{U_f}& \qw & \qwbundle{n}\qw & \rstick{$\ket{\mathbf{x}}$}\qw\\
     & \lstick{$\ket{y}$} & \qw & \qw & & \qw & \qw & \rstick{$\ket{f(\mathbf{x})\oplus y}$}\qw\\
 \end{quantikz}\\
-Here we denoted the top input $\ket{\mathbf{x}}=\ket{x_0x_1\ldots x_{n-1}}$ in bold and the wire mark \begin{quantikz} & \qwbundle{n}\qw \end{quantikz} indicates that it is a bit sting with length $n$.
+Here we denoted the top input $\ket{\mathbf{x}}=\ket{x_0x_1\ldots x_{n-1}}$ in bold and the wire mark\begin{quantikz} & \qwbundle{n}\qw \end{quantikz}\ indicates that it is a bit string with length $n$.
 The circuit that solves the problem  is the following:\\
 \begin{quantikz}\\
     & \lstick{$\ket{\mathbf{0}}$} & \qw & \qwbundle{n}\qw & \gate{H^{\otimes n}} & \qw & \qwbundle{n}\qw & \gate[wires=2][2cm]{U_f}& \qw & \qwbundle{n}\qw & \gate{H^{\otimes n}} & \qw & \qwbundle{n}\qw & \meter{}\\
     & \lstick{$\ket{1}$} & \qw & \qw & \gate{H} & \qw & \qw &  & \qw & \qw & \qw & \qw & \qw & \qw &\\
 \end{quantikz}\\
-We can notice that it is very similar to the Deutsch circuit, with the only difference that there are $n$ qubits as the top input, and we denoted the fact that we are applying Hadamard to each one of them with the gate $H^{\otimes n}$, that is the tensor product of $n$ Hadamard matrices.\\
+We can notice that it is very similar to the previous circuit, with the only difference that there are $n$ qubits as the top input, and we denoted the fact that we are applying Hadamard to each one of them with the gate $H^{\otimes n}$, that is the tensor product of $n$ Hadamard matrices.\\
 This circuit is capable to tell us if $f$ is balanced or constant in a single run. In other words, we have an exponential speedup compared to the classical algorithm for the same problem. There are many other problems that benefit of the quantum speedup, and some of them are of a practical nature. This is why quantum computing is so powerful.\\
 In order to design and execute quantum algorithms, we need a language that allows us to describe them in terms of gates and classical instructions. In the next chapter we will explore OpenQASM, which is a powerful and compact language that achieves the goal.
 
@@ -619,7 +619,7 @@ In order to design and execute quantum algorithms, we need a language that allow
 
 \chapter{OpenQASM}
 OpenQASM is an imperative programming language designed for quantum algorithms and applications. It has a dual nature as an assembly language and as a hardware description language \cite{qasm}. There are multiple versions of OpenQASM, but we will describe a simplified version of OpenQASM 3.0.\\
-The formal grammar of the language is presented using the ANTLRv4 syntax, and starts with:
+The formal grammar of the language is presented using the ANTLRv4 syntax \cite{antlr}, and starts with:
 \begin{lstlisting}
 program
     : header (globalStatement | statement)*
@@ -765,7 +765,7 @@ doubleDesignator
     ;
 \end{lstlisting}
 A \texttt{designator} is simply a parameter for the type, for example \texttt{int[16]} indicates a 16-bit integer, where \texttt{16} is the designator. The single designator for the \texttt{float} and \texttt{angle} types is for specifying the precision. Another example could be \texttt{fixed[7, 24]}, which indicates a $24+7+1=32$-bit fixed point signed number having 7 integer bits and 24 fractional bits.\\
-\texttt{bitType} has a single designator that stands for the number of bits of the  array (or register, equivalently), while only the boolean type has no designator.\\
+\texttt{bitType} has a single designator that stands for the number of bits of the  array (or register, equivalently), whereas only the boolean type has no designator.\\
 
 
 
@@ -789,7 +789,7 @@ rangeDefinition
     : LBRACKET expression? COLON expression? (COLON expression)? RBRACKET
     ;
 \end{lstlisting}
-These rules are used to refer to specific bits or qubits in both classical and quantum registers. For better understanding, we provide some examples given two registers \texttt{x} and \texttt{y}, each having 8 bits:
+These rules are used to refer to specific bits or qubits in both classical and quantum registers. For better understanding, we provide some examples. Given two registers \texttt{x} and \texttt{y}, each having 8 bits:
 \begin{itemize}
     \itemsep 0em
     \item \texttt{x || y}: the 16-bit concatenation of \texttt{x} and \texttt{y}
@@ -947,7 +947,7 @@ quantumMeasurementAssignment
     | indexIdentifierList EQUALS quantumMeasurement
     ;
 \end{lstlisting}
-Assignments are defined in the usual way, with the addition of quantum measurements, that simply tell the hardware to perform a measurement on certain qubits and store the result in classical variables. As we explained in the previous chapter, we remark that after being measured, qubits collapse to the observed state, so measurements are usually done at the end of the algorithm.\\
+Assignments are defined in the usual way, with the addition of quantum measurements, that simply tell the hardware to perform a measurement on certain qubits and store the result in classical variables. As we explained in the previous chapter, we remark that after being measured, qubits collapse to the observed state, so measurements are usually done at the end of the circuit.\\
 
 
 \subsection{Classical declarations}
@@ -1101,10 +1101,10 @@ def f2 (int[5]:x) qreg[5]:q, qreg[5]:u -> int[8] {
     return s;
 }
 \end{lstlisting}
-Notice that the above example obviously passes the qubits check, since the branch where \texttt{x * x < 0} is never taken.
+Notice that the above example obviously passes the qubit check, since the branch where \texttt{x * x < 0} is never taken.
 
 \subsection{Quantum gate definition}
-We will not delve into the actual grammar of quantum gate definitions, since the analysis that we are going to discuss in the next chapters does not take them into account. In fact, our analyzer treats them as black-boxes that entangle all the input qubits together.
+We will not delve into the actual grammar of quantum gate definitions, since the analysis that we are going to discuss in the next chapters does not take them into account. In fact, our analyzer treats them as black-boxes that can potentially entangle all the input qubits together.
 
 
 \subsection{Quantum declaration statements}
@@ -1681,7 +1681,7 @@ The next step is to call the \texttt{simulateExecution} private method, which ta
 
 \begin{tikzpicture}[
     grow=down,
-    level 1/.style={sibling distance=8cm,level distance=2.4cm},
+    level 1/.style={sibling distance=8cm,level distance=2.05cm},
     edge from parent/.style={thick,draw=black, shorten >=5pt, shorten <=5pt},
     edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
     kant/.style={text width=2cm, text centered, sloped},

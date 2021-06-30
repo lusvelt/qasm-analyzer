@@ -21,225 +21,225 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.2.3}Quantum registers}{11}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.4}Entanglement}{11}%
+\contentsline {subsection}{\numberline {2.2.4}Entanglement}{12}%
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.3}Quantum Gates}{12}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.3.1}Hadamard gate}{12}%
+\contentsline {subsection}{\numberline {2.3.1}Hadamard gate}{13}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.3.2}Controlled NOT gate}{13}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.3.3}Phase shift gate}{13}%
+\contentsline {subsection}{\numberline {2.3.3}Phase shift gate}{14}%
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.4}Quantum Circuits}{14}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.4.1}Deutsch algorithm}{14}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.4.2}Deutsch-Jozsa algorithm}{16}%
+\contentsline {subsection}{\numberline {2.4.2}Deutsch-Jozsa algorithm}{17}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}OpenQASM}{18}%
+\contentsline {chapter}{\numberline {3}OpenQASM}{19}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.1}Header}{18}%
+\contentsline {section}{\numberline {3.1}Header}{19}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.2}Lexer rules}{19}%
+\contentsline {section}{\numberline {3.2}Lexer rules}{20}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.3}Types}{20}%
+\contentsline {section}{\numberline {3.3}Types}{21}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.1}Quantum types}{20}%
+\contentsline {subsection}{\numberline {3.3.1}Quantum types}{21}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.2}Classical types}{20}%
+\contentsline {subsection}{\numberline {3.3.2}Classical types}{21}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.4}Index identifiers}{22}%
+\contentsline {section}{\numberline {3.4}Index identifiers}{23}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.5}Generical statements}{22}%
+\contentsline {section}{\numberline {3.5}Generical statements}{23}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.1}Expression statements}{23}%
+\contentsline {subsection}{\numberline {3.5.1}Expression statements}{24}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.2}Assignment statements}{25}%
+\contentsline {subsection}{\numberline {3.5.2}Assignment statements}{26}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.3}Classical declarations}{26}%
+\contentsline {subsection}{\numberline {3.5.3}Classical declarations}{27}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.4}Branching statements}{27}%
+\contentsline {subsection}{\numberline {3.5.4}Branching statements}{28}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.5}Loop statements}{27}%
+\contentsline {subsection}{\numberline {3.5.5}Loop statements}{28}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.6}Quantum statements}{27}%
+\contentsline {subsection}{\numberline {3.5.6}Quantum statements}{28}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.6}Global statements}{28}%
+\contentsline {section}{\numberline {3.6}Global statements}{29}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.6.1}Subroutine definition}{28}%
+\contentsline {subsection}{\numberline {3.6.1}Subroutine definition}{29}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.6.2}Quantum gate definition}{30}%
+\contentsline {subsection}{\numberline {3.6.2}Quantum gate definition}{31}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.6.3}Quantum declaration statements}{30}%
+\contentsline {subsection}{\numberline {3.6.3}Quantum declaration statements}{31}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {4}QASM Analyzer}{31}%
+\contentsline {chapter}{\numberline {4}QASM Analyzer}{32}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.1}Parser}{32}%
+\contentsline {section}{\numberline {4.1}Parser}{33}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.1.1}Node}{32}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Attributes}{32}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{33}%
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.2}Types and variables}{33}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2.1}ClassicalType}{33}%
+\contentsline {subsection}{\numberline {4.1.1}Node}{33}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{33}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{34}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2.2}Symbol}{34}%
+\contentsline {section}{\numberline {4.2}Types and variables}{34}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2.1}ClassicalType}{34}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{34}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{34}%
+\contentsline {subsubsection}{Methods}{35}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2.3}Variable}{34}%
+\contentsline {subsection}{\numberline {4.2.2}Symbol}{35}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{35}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{35}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2.4}Value}{35}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Attributes}{35}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{35}%
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.3}Subroutine classifier}{35}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.3.1}ClassicalArgument}{35}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{36}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.3.2}QuantumArgument}{36}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{36}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.3.3}Subroutine}{36}%
+\contentsline {subsection}{\numberline {4.2.3}Variable}{35}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{36}%
 \defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Methods}{36}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2.4}Value}{36}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Attributes}{36}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Methods}{36}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.3}Subroutine classifier}{36}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3.1}ClassicalArgument}{36}%
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{37}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.3.4}SubroutineClassifier}{37}%
+\contentsline {subsection}{\numberline {4.3.2}QuantumArgument}{37}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.4}Registers and ranges}{38}%
+\contentsline {subsubsection}{Methods}{37}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4.1}BitRange}{38}%
+\contentsline {subsection}{\numberline {4.3.3}Subroutine}{37}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Attributes}{38}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{38}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4.2}Bit}{38}%
+\contentsline {subsubsection}{Attributes}{37}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{38}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4.3}CReg}{38}%
+\contentsline {subsection}{\numberline {4.3.4}SubroutineClassifier}{38}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.4}Registers and ranges}{39}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4.1}BitRange}{39}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{39}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Static methods}{39}%
+\contentsline {subsubsection}{Methods}{39}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Instance methods}{39}%
+\contentsline {subsection}{\numberline {4.4.2}Bit}{39}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4.4}QubitRange}{40}%
+\contentsline {subsubsection}{Methods}{39}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4.3}CReg}{39}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{40}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{40}%
+\contentsline {subsubsection}{Static methods}{40}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4.5}Qubit}{40}%
+\contentsline {subsubsection}{Instance methods}{40}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{40}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4.6}QReg}{40}%
+\contentsline {subsection}{\numberline {4.4.4}QubitRange}{41}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{41}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{41}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4.7}Range}{41}%
+\contentsline {subsection}{\numberline {4.4.5}Qubit}{41}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Attributes}{41}%
+\contentsline {subsubsection}{Methods}{41}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{42}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4.8}SetDeclaration}{42}%
+\contentsline {subsection}{\numberline {4.4.6}QReg}{41}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{42}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{42}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.5}Expression manipulator}{42}%
+\contentsline {subsection}{\numberline {4.4.7}Range}{42}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.5.1}UnaryOperator}{43}%
+\contentsline {subsubsection}{Attributes}{42}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Methods}{43}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4.8}SetDeclaration}{43}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{43}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{43}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.5.2}BinaryOperator}{43}%
+\contentsline {section}{\numberline {4.5}Expression manipulator}{43}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Attributes}{43}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{44}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.5.3}Expression}{44}%
+\contentsline {subsection}{\numberline {4.5.1}UnaryOperator}{44}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{44}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{44}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.6}SMT solver}{45}%
+\contentsline {subsection}{\numberline {4.5.2}BinaryOperator}{44}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.6.1}Solver}{45}%
+\contentsline {subsubsection}{Attributes}{44}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Static methods}{45}%
+\contentsline {subsubsection}{Methods}{45}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4.7}Symbolic execution engine}{45}%
+\contentsline {subsection}{\numberline {4.5.3}Expression}{45}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7.1}SymbolicState}{46}%
+\contentsline {subsubsection}{Attributes}{45}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Attributes}{46}%
+\contentsline {subsubsection}{Methods}{45}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{46}%
+\contentsline {section}{\numberline {4.6}SMT solver}{46}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7.2}Store}{46}%
+\contentsline {subsection}{\numberline {4.6.1}Solver}{46}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Static methods}{46}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.7}Symbolic execution engine}{46}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.7.1}SymbolicState}{47}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{47}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{47}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7.3}QRegManager}{47}%
+\contentsline {subsection}{\numberline {4.7.2}Store}{47}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{48}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Static methods}{48}%
+\contentsline {subsubsection}{Methods}{48}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Instance methods}{48}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7.4}ExecutionStack}{49}%
+\contentsline {subsection}{\numberline {4.7.3}QRegManager}{48}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{49}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{49}%
+\contentsline {subsubsection}{Static methods}{49}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7.5}Meta-Instructions}{49}%
+\contentsline {subsubsection}{Instance methods}{49}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7.6}SymbolicExecutionEngine}{49}%
+\contentsline {subsection}{\numberline {4.7.4}ExecutionStack}{50}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Static methods}{50}%
+\contentsline {subsubsection}{Attributes}{50}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {5}Symbolic Execution}{51}%
+\contentsline {subsubsection}{Methods}{50}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.1}Initial state and execution stack}{51}%
+\contentsline {subsection}{\numberline {4.7.5}Meta-Instructions}{50}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.2}Simulation of statements}{52}%
+\contentsline {subsection}{\numberline {4.7.6}SymbolicExecutionEngine}{50}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Static methods}{51}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {5}Symbolic Execution}{52}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.1}Initial state and execution stack}{52}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.2}Simulation of statements}{53}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {5.2.1}Expression statements}{54}%
 \defcounter {refsection}{0}\relax 
@@ -249,7 +249,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Quantum measurements}{54}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.2.3}Classical declarations}{54}%
+\contentsline {subsection}{\numberline {5.2.3}Classical declarations}{55}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {5.2.4}Branching statements}{55}%
 \defcounter {refsection}{0}\relax 
@@ -259,4 +259,4 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {5.3}Limitations and future development}{58}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.4}Conclusion}{58}%
+\contentsline {section}{\numberline {5.4}Conclusion}{59}%
