@@ -209,13 +209,13 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{47}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7.2}Store}{47}%
+\contentsline {subsection}{\numberline {4.7.2}Store}{48}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{48}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{48}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7.3}QRegManager}{48}%
+\contentsline {subsection}{\numberline {4.7.3}QRegManager}{49}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{49}%
 \defcounter {refsection}{0}\relax 
@@ -231,7 +231,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.7.5}Meta-Instructions}{50}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7.6}SymbolicExecutionEngine}{50}%
+\contentsline {subsection}{\numberline {4.7.6}SymbolicExecutionEngine}{51}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Static methods}{51}%
 \defcounter {refsection}{0}\relax 
