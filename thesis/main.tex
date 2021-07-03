@@ -106,7 +106,7 @@ A nonno Francesco
 \end{dedication}
 
 \chapter*{Sommario}
-La computazione quantistica è la nuova frontiera del calcolo computazionale: la sua particolarità risiede nella capacità di rappresentare molteplici stati computazionali classici in un singolo stato quantistico e di effettuare su di essi la medesima operazione tramite una singola istruzione. Il numero di stati classici sovrapponibili in un dispositivo quantistico è esponenziale rispetto al numero di qubit disponibili, di conseguenza vi è uno \emph{speedup} esponenziale del tempo di esecuzione, e ciò apre le porte a problemi computazionali che anche il più potente supercomputer classico impiegherebbe una quantità di tempo inconcepibile per risolvere. 
+La computazione quantistica è la nuova frontiera del calcolo: la sua particolarità risiede nella capacità di rappresentare molteplici stati computazionali classici in un singolo stato quantistico e di effettuare su di essi la medesima operazione tramite una singola istruzione. Il numero di stati classici sovrapponibili in un dispositivo quantistico è esponenziale rispetto al numero di qubit disponibili, di conseguenza vi è uno \emph{speedup} esponenziale del tempo di esecuzione e ciò apre le porte alla risoluzione di problemi computazionali che anche il più potente supercomputer classico impiegherebbe una quantità di tempo inconcepibile per risolvere. 
 
 Un semplice esempio in cui si nota facilmente la differenza tra la computazione classica e quella quantistica è riscontrabile nell'algoritmo di Deutsch-Jozsa, che è in grado di determinare se una funzione black-box $f: \{0,1\}^n \longrightarrow \{0,1\}$ è \emph{bilanciata} o \emph{costante}. Con un modello di calcolo classico, la complessità di tale problema sarebbe dell'ordine di $2^n$, mentre grazie all'algoritmo suddetto, essa si riduce ad un numero costante di istruzioni quantistiche seguito da una scansione lineare dell'output.
 
@@ -132,9 +132,9 @@ L'analizzatore presentato nella tesi è soltanto una prima versione, e gli orizz
 
 
 \chapter{Introduction}
-\par The idea of quantum computing was conceived in the 1970s, when researchers of the caliber of Feynman, Manin and Deustch started to theorize that the properties of quantum mechanics might prove useful for performing computations differently from the classical paradigm \cite{zuw}. The main concept that lays at the core of this new model is the superposition of states, that is the simultaneous co-existence of multiple computational states at the same moment, with the possibility to perform the same operation to all of those states within a single computational step. Physical devices that are capable of such power are called ``quantum computers'', and they constitute a polynomial-time implementation of non-determinism, thus achieving an exponential-order level of parallelism. This fact invalidates the assumption that some problems (NP-complete ones, for instance) require too much time to be solved compared to human life duration, hence it opens the doors to a new variety of applications, and it also tears down the ones which rely on this assumption (like RSA cryptography). Literature usually refers to this scenario as ``Quantum Supremacy''.
+\par The idea of quantum computing was conceived in the 1970s, when researchers of the caliber of Feynman, Manin and Deustch started to theorize that the properties of quantum mechanics might prove useful for performing computations differently from the classical paradigm \cite{zuw}. The main concept that lays at the core of this new model is the superposition of states, that is the simultaneous co-existence of multiple computational states at the same moment, with the possibility to perform the same operation to all of those states within a single computational step. Physical devices that are capable of such power are called ``quantum computers'', and they constitute a polynomial-time implementation of non-determinism, thus achieving an exponential-order level of parallelism. This fact invalidates the assumption that some problems (NP-complete ones, for instance) require too much time to be solved compared to human life duration, hence it opens the doors to a new variety of applications, and it also tears down the ones which rely on this assumption (like RSA cryptography \cite{denning2019quantum}). Literature usually refers to this scenario as ``Quantum Supremacy''.
 
-Quantum computers operate through qubits, which are the quantum equivalent of bits, and can have not only $0$s and $1$s as values, but also combinations of them. Qubits are sequenced together to form quantum registers, which hold the actual computational power of quantum computers. For instance, a 3-qubit register can be in a superposition of the states $\ket{000}, \ket{001}, \ket{010}, \ldots, \ket{111}$, that are $2^3=8$ base states. Generalizing the previous result, we notice that an $n$-qubit register can represent up to $2^n$ states simultaneously, thus showing where the exponential speedup resides.
+Quantum computers operate through qubits, which are the quantum equivalent of bits, and can have not only $0$s and $1$s as values, but also combinations of them. Qubits are sequenced together to form quantum registers, which hold the actual computational power of quantum computers. For instance, a 3-qubit register can be in a superposition of the states $\ket{000}, \ket{001}, \ket{010}, \ldots, \ket{111}$, that are $2^3=8$ base states. Generalizing the previous result, we notice that an $n$-qubit register can represent up to $2^n$ states simultaneously, thus showing where the exponential speedup resides. Some more material about quantum computing can be found in \cite{qccs}, \cite{gribbin2014computing}, \cite{nielsen2010quantum} and \cite{perry2012quantum}
 
 Some companies like Google and IBM have already built fully-functional quantum computers. However, all of them have a limited number of qubits due to the elevate cost of implementing them physically. Therefore, it is crucial that quantum programmers are thrifty with the usage of qubits while designing quantum circuits. The aim of this document is to show a simple tool which is able to analyze programs written in QASM language (Quantum Assembly) and check whether the number of qubits that are \textit{actually} used is bounded by a certain expression.
 We start by introducing some concepts of quantum computing, then we describe the QASM language and we provide details about the features that are taken into account by the analyzer. After that we describe the tool that performs the estimation of the number of qubits by presenting the symbolic execution technique that is used, how it is able to simulate the various types of statements and how the estimation of the number of qubits is actually performed, going through some examples. Finally, before the conclusion, we describe the Python API of the tool, listing all the modules that it is build upon one by one.
@@ -190,14 +190,13 @@ We now have a generalized version of our previously defined state vector, becaus
 \begin{equation*}
     \sum_{i=0}^{n-1} p_i = 1
 \end{equation*}
-It should be noticed that there is no way to represent probabilistic states with a single number like we do for deterministic ones. It is clear, however, that in case we know the exact location of the employee, the probability vector would collapse to the previous case. In fact, if we are certain that the employee is on the $k$-th floor, then $p_k=1$, and $\forall i \in \{0,1,\ldots,n-1\} \smallsetminus \{k\},\ p_i=0$.\\
-Now we are able to define state vectors for quantum systems.
+It should be noticed that there is no way to represent probabilistic states with a single number like we do for deterministic ones. It is clear, however, that in case we know the exact location of the employee, the probability vector would collapse to the previous case. In fact, if we are certain that the employee is on the $k$-th floor, then $p_k=1$, and $\forall i \in \{0,1,\ldots,n-1\} \smallsetminus \{k\},\ p_i=0$. Now we are able to define state vectors for quantum systems.
 
 
 
 
 \subsection{Quantum Systems}
-Consider a quantum object (e.g. an electron or a photon), and assume its position can be measured in the domain $\{x_1, x_2, \ldots, x_n\}$.\\
+Consider a quantum object (e.g. an electron or a photon), and assume its position can be measured in the domain $\{x_1, x_2, \ldots, x_n\}$.
 \begin{center}
 \begin{tikzpicture}
 \draw (0,0) -- (5,0);
@@ -337,7 +336,7 @@ Consider a qubit whose state is
 \begin{equation*}
     \ket{\psi}=\frac{\sqrt{3}}{2}\ket{0}+\frac{1}{2}\ket{1}
 \end{equation*}
-If we measure it, we have $\left(\frac{\sqrt{3}}{2}\right)^2=\frac{3}{4}=75\%$ of probability to observe the outcome being $0$, and $\left(\frac{1}{2}\right)^2=\frac{1}{4}=25\%$ of probability of it being $1$. Let us say we obtained $0$ from the actual measurement. The state of the qubit is not $\ket{\psi}$ anymore, but it has become $\ket{\psi'}=\ket{0}$ because the measurement made it collapse as a side effect. This fact is at the core of quantum mechanics, and it just tells us that in order to \emph{observe} something we must inevitably \emph{interact} with it and alter its internal state.
+If we measure it, we have $\left(\frac{\sqrt{3}}{2}\right)^2=\frac{3}{4}=75\%$ of probability to observe the outcome being $0$, and $\left(\frac{1}{2}\right)^2=\frac{1}{4}=25\%$ of probability of it being $1$. Let us say we obtain $0$ from the actual measurement. The state of the qubit is not $\ket{\psi}$ anymore, but it has become $\ket{\psi'}=\ket{0}$ because the measurement made it collapse as a side effect. This fact is at the core of quantum mechanics, and it just tells us that in order to \emph{observe} something we must inevitably \emph{interact} with it and alter its internal state.
 \end{example}
 
 
@@ -396,7 +395,8 @@ If we observe the result carefully, we can notice that the normalization constra
         c_{111}
     \end{bmatrix}
 \end{equation*}
-Since the result of the tensor product enumerates all possible states with $n$ qubits, the dimension of the output is as large as $2^n$.\\
+Since the result of the tensor product enumerates all possible states with $n$ qubits, the dimension of the output is as large as $2^n$.
+
 Of course, considering the fact that quantum computers allow superpositions of many states, we shall clarify that the previous examples have only taken into account basic states. Hence we can also have a 3-qubit register in the state
 \begin{equation*}
     \ket{\psi}=\frac{\ket{000}+\ket{010}-\ket{011}-\ket{100}+\ket{110}}{\sqrt{5}}
@@ -411,7 +411,8 @@ Consider a quantum register with 2 qubits and assume its state is
 \begin{equation*}
     \ket{\psi}=\frac{\ket{00}+\ket{11}}{\sqrt{2}}
 \end{equation*}
-If we measure the first qubit and we observe the value $1$, we automatically know that the other also has value $1$ by just noticing that the only basic state that appears in $\ket{\psi}$ and has a $\ket{1}$ at the first position is $\ket{11}$, so we know for sure that the other one is $\ket{1}$ as well.\\
+If we measure the first qubit and we observe the value $1$, we automatically know that the other also has value $1$ by just noticing that the only basic state that appears in $\ket{\psi}$ and has a $\ket{1}$ at the first position is $\ket{11}$, so we know for sure that the other one is $\ket{1}$ as well.
+
 In this case, the measurement not only makes the state of the measured qubit collapse to $\ket{1}$, but it also affects the state of the entangled one.
 \end{example}
 
@@ -423,7 +424,7 @@ So far we have discussed how to represent qubits and quantum registers and what 
 
 The physical implementation of quantum gates is as complicated as that of qubits, but we can represent what these gates do by using mathematical objects that operate on state vectors and keep the output normalized so that the sum of the square norms of the coefficients of the output vector is always $1$. These objects are unitary matrices.
 
-There are infinite possible quantum gates. Here we describe the set of universal ones $\{H, CNOT, R(\theta)\}$, which contains three gates that can be combined together to simulate an arbitrary gate.\\
+There are infinite possible quantum gates. Here we describe the set of universal ones $\{H, CNOT, R(\theta)\}$, which contains three gates that can be combined together to simulate an arbitrary gate.
 
 
 
@@ -468,7 +469,7 @@ By applying Hadamard gate to the qubits $\ket{0}$ and $\ket{1}$ we get:
         -\frac{1}{\sqrt{2}}
     \end{bmatrix}=\frac{\ket{0}-\ket{1}}{\sqrt{2}}=\ket{-}
 \end{equation*}
-It is easy to verify that applying Hadamard on $\ket{+}$ and $\ket{-}$ we go back respectively to $\ket{0}$ and $\ket{1}$.\\
+It is easy to verify that applying Hadamard on $\ket{+}$ and $\ket{-}$ we go back respectively to $\ket{0}$ and $\ket{1}$.
 We will represent the Hadamard gate as a box labelled with `H'.
 \begin{center}
 \begin{quantikz}
@@ -537,7 +538,8 @@ The Deutch algorithm solves the following problem:
 \begin{problem}[Deutsch]
 Suppose we have a function $f: \{0,1\} \longrightarrow \{0,1\}$ which we can evaluate, but we do not know its exact definition. Determine whether $f$ is balanced or constant.
 \end{problem}
-If we wanted to use the classical approach, we would need to evaluate $f$ twice and compare the results. With the Deutsch algorithm, we will see that only one evaluation is sufficient.\\
+If we wanted to use the classical approach, we would need to evaluate $f$ twice and compare the results. With the Deutsch algorithm, we will see that only one evaluation is sufficient.
+
 Suppose we have a unitary matrix $U_f$ that encodes $f$:
 \begin{center}
 \begin{quantikz}
@@ -573,11 +575,11 @@ Which simplifies to
 \begin{equation*}
     U_f\ket{x,-}=\ket{x}\left[\frac{\ket{f(x)}-\ket{\overline{f(x)}}}{\sqrt{2}}\right]
 \end{equation*}
-Where we denoted the opposite of $f(x)$ with $\overline{f(x)}$. So we have
+where we denote the opposite of $f(x)$ with $\overline{f(x)}$. So we have
 \begin{equation*}
     U_f\ket{x,-}=\begin{cases}
-        \ket{x}\left[\frac{\ket{0}-\ket{1}}{\sqrt{2}}\right] & if\ f(x) = 0\\
-        \ket{x}\left[\frac{\ket{1}-\ket{0}}{\sqrt{2}}\right] & if\ f(x) = 1\\
+        \ket{x}\left[\frac{\ket{0}-\ket{1}}{\sqrt{2}}\right] & \mathit{if}\ f(x) = 0\\
+        \ket{x}\left[\frac{\ket{1}-\ket{0}}{\sqrt{2}}\right] & \mathit{if}\ f(x) = 1\\
     \end{cases}
 \end{equation*}
 We can write the last expression as
@@ -594,24 +596,25 @@ If $f$ is balanced $f(0)\neq f(1)$, then the top qubit becomes either $\frac{\ke
 \begin{equation*}
     \ket{\psi_2}=(\pm 1)\frac{\ket{0}-\ket{1}}{\sqrt{2}}\ket{-}=(\pm 1)\ket{-,-}
 \end{equation*}
-Since the coefficient $(\pm 1)$ is global, it can be ignored due to the normalization constraint, so we can say $\ket{\psi_2}=\ket{-,-}$ if $f$ is balanced.\\
+Since the coefficient $(\pm 1)$ is global, it can be ignored due to the normalization constraint, so we can say $\ket{\psi_2}=\ket{-,-}$ if $f$ is balanced.
+
 On the other hand, if $f$ is constant $f(0)=f(1)$, then the top qubit becomes either $\frac{\ket{0}+\ket{1}}{\sqrt{2}}$ or $\frac{-\ket{0}-\ket{1}}{\sqrt{2}}$, but in either case we can write
 \begin{equation*}
     \ket{\psi_2}=(\pm 1)\frac{\ket{0}+\ket{1}}{\sqrt{2}}\ket{-}=(\pm 1)\ket{+,-}
 \end{equation*}
-Here the argument for $(\pm 1)$ still holds, so we can say $\ket{\psi_2}=\ket{+,-}$ if f is constant.\\
+Here the argument for $(\pm 1)$ still holds, so we can say $\ket{\psi_2}=\ket{+,-}$ if f is constant.
 Summing up, we have
 \begin{equation*}
     \ket{\psi_2}=\begin{cases}
-        \ket{+,-}\ if\ f\ is\ constant\\
-        \ket{-,-}\ if\ f\ is\ balanced
+        \ket{+,-}\ \mathit{if}\ f\ \mathit{is\ constant}\\
+        \ket{-,-}\ \mathit{if}\ f\ \mathit{is\ balanced}
     \end{cases}
 \end{equation*}
 Finally, the last Hadamard gate brings our state back to the canonical basis, and so
 \begin{equation*}
     \ket{\psi_3} = \begin{cases}
-        \ket{0,-}\ if\ f\ is\ constant\\
-        \ket{1,-}\ if\ f\ is\ balanced
+        \ket{0,-}\ \mathit{if}\ f\ \mathit{is\ constant}\\
+        \ket{1,-}\ \mathit{if}\ f\ \mathit{is\ balanced}
     \end{cases}
 \end{equation*}
 Now we can measure the top qubit, and we can be sure about the function being balanced or constant by just looking at the result.
@@ -627,7 +630,7 @@ Notice that the Deutsch algorithm only evaluated the function once on the superp
 Although we are not going to illustrate all the analysis of the Deutsch-Jozsa algorithm, we will still define the problem, show the circuit that solves it and state some facts about its computational complexity compared to the classical case.
 Let us generalize the definition of balanced and constant functions.
 \begin{definition}[Balanced and constant functions]
-    A function $f: \{0,1\}^n \longrightarrow \{0,1\}$ is \textit{balanced} if exactly half of the inputs go to $0$ (and the other half go to $1$). Otherwise,it is \textit{constant} if all of the inputs go to the same output (either $0$ or $1$).
+    A function $f: \{0,1\}^n \longrightarrow \{0,1\}$ is \textit{balanced} if exactly half of the possible input values go to $0$ (and the other half go to $1$). Otherwise,it is \textit{constant} if all of the inputs go to the same output (either $0$ or $1$).
 \end{definition}
 The Deutsch-Jozsa problem is the same as the previous one, only with the assumptions that $f:\{0,1\}^n\longrightarrow \{0,1\}$ and $f$ is guaranteed to be either constant or balanced.
 
@@ -701,6 +704,7 @@ c[0 : n-1] = measure x[0 : n-1];
 // Otherwise it is balanced
 \end{lstlisting}
 \end{example}
+
 The formal grammar of the language is presented using the ANTLRv4 syntax \cite{antlr}, and starts with:
 \begin{lstlisting}
 program
@@ -726,7 +730,7 @@ include
     : 'include' StringLiteral SEMICOLON
     ;
 \end{lstlisting}
-The header consists in an optional version string followed by zero or more `include' statements, that are used to import gates and functions from other files at compile time.\\
+The header consists in an optional version string followed by zero or more `include' statements, that are used to import gates and functions from other files at compile time.
 A typical example of what the header looks like is:
 \begin{lstlisting}
 // Header
@@ -899,7 +903,7 @@ statement
     ;
 \end{lstlisting}
 
-In our simplified version of \texttt{OpenQASM} we consider six types of statements: expressions, assignments, classical declarations, branching if-then-elses, for and while loops and quantum statements. We now go over these statement types one by one, and we will be commenting only those that require further clarification, since most of them have similar syntax and semantic to other well-known programming languages.\\
+In our simplified version of \texttt{OpenQASM} we consider six types of statements: expressions, assignments, classical declarations, branching if-then-elses, for and while loops and quantum statements. We now go over these statement types one by one, and we will be commenting only those that require further clarification, since most of them have similar syntax and semantic to other well-known programming languages.
 
 
 \subsection{Expression Statements}
@@ -971,7 +975,8 @@ incrementor
     ;
 \end{lstlisting}
 
-The grammar for expressions is defnined hierarchically to implement the conventional evaluation order of operators.\\
+The grammar for expressions is defnined hierarchically to implement the conventional evaluation order of operators.
+
 Expression statements do not affect the memory unless incrementors are present, in which case the respective variables are updated accordingly to the incrementor sign.
 
 Even if they are not included in the \texttt{expressionStatement} rule, we show the grammar for boolean expressions here, because they will be used in other statement types from now on.
@@ -1035,7 +1040,7 @@ quantumMeasurementAssignment
     | indexIdentifierList EQUALS quantumMeasurement
     ;
 \end{lstlisting}
-Assignments are defined in the usual way, with the addition of quantum measurements, that simply tell the hardware to perform a measurement on certain qubits and store the result in classical variables. As we explained in the previous chapter, we remark that after being measured, qubits collapse to the observed state, so measurements are usually done at the end of the circuit.\\
+Assignments are defined in the usual way, with the addition of quantum measurements, that simply tell the hardware to perform a measurement on certain qubits and store the result in classical variables. As we explained in the previous chapter, we remark that after being measured, qubits collapse to the observed state, so measurements are usually done at the end of the circuit.
 
 
 \subsection{Classical Declarations}
@@ -1119,7 +1124,7 @@ quantumGateName
     ;
 \end{lstlisting}
 
-Here it is worth mentioning that quantum gates can be called on multiple qubits, and this is the only possible cause of entanglement.\\
+Here it is worth mentioning that quantum gates can be called on multiple qubits, and this is the only possible cause of entanglement.
 
 
 
@@ -1214,8 +1219,8 @@ Having clear how the language is defined, we can now discuss the tool that perfo
 
 
 \chapter{Symbolic Execution}
-This chapter focuses on the actual symbolic execution of subroutines \cite{SurveySymExec-CSUR18}, how the various types of statement are simulated, and shows some concrete examples.\\
-We are now going to discuss the implementation of the \texttt{SymbolicExecutionEngine}'s \texttt{analyzeSubroutine} method. The specification of all the other classes and methods is deferred to the next chapter.\\
+This chapter focuses on the actual symbolic execution of subroutines \cite{SurveySymExec-CSUR18}, how the various types of statement are simulated, and shows some concrete examples.
+We are now going to discuss the implementation of the \texttt{SymbolicExecutionEngine}'s \texttt{analyzeSubroutine} method. The specification of all the other classes and methods is deferred to the next chapter.
 \section{Initial State and Execution Stack}
 Suppose we have the following (classical) subroutine and we want to build its symbolic execution tree:
 \begin{lstlisting}
@@ -1236,11 +1241,11 @@ The \texttt{analyzeSubroutine} method takes the subroutine as an argument, analy
     \item \texttt{constraints}: \textit{True}
     \item \texttt{store}: $\{x: \$_0, y: \$_1\}$
 \end{itemize}
-As we see, the two arguments of the subroutine have been assigned a fresh symbol each, and since there is no assumption on the state yet, we could set the constraints to \textit{True}, meaning that the state is valid for each possible domain value of the symbols.\\
+As we see, the two arguments of the subroutine have been assigned a fresh symbol each, and since there is no assumption on the state yet, we could set the constraints to \textit{True}, meaning that the state is valid for each possible domain value of the symbols.
 After defining the initial state, the \texttt{ExecutionStack} must be built, so we take the `subroutineBlock' node, unravel its children (which are all statements) and push them on a brand new \texttt{executionStack}.
 
 \section{Simulation of Statements}
-The next step is to call the \texttt{simulateExecution} private method, which takes a \texttt{SymbolicState} (representing the \texttt{currentState}), and an \texttt{ExecutionStack}. That is, this method performs the simulation of all the statements that are in the \texttt{executionStack} starting from the \texttt{currentState} parameter and generates a symbolic execution tree like the following one:\\
+The next step is to call the \texttt{simulateExecution} private method, which takes a \texttt{SymbolicState} (representing the \texttt{currentState}), and an \texttt{ExecutionStack}. That is, this method performs the simulation of all the statements that are in the \texttt{executionStack} starting from the \texttt{currentState} parameter and generates a symbolic execution tree like the following one:
 
 \begin{tikzpicture}[
     grow=down,
@@ -1323,13 +1328,13 @@ node[punkt] [rectangle split, rectangle split parts=2] {
     }
 }
 };
-\end{tikzpicture}\\
+\end{tikzpicture}
 
 In order to generate such a tree, the \texttt{simulateExecution} method pops the statement on top of the stack, and it checks whether it is a concrete statement or a meta-instruction. In the first case we need to detect the statement type and simulate its behavior. One or more child states are created (based on the type of statement), and after setting them up (as well as the execution stack, if it needs to be modified) there is a recursive call for each of the child states. The base case occurs when the execution stack is empty, then the qubit upper bound is checked against the information that the \texttt{QRegManager} holds.
 Now we describe the operations of the symbolic execution engine for each statement type.
 
 \subsection{Expression Statements}
-The simulation of expression statements, just like the majority of the others, starts with the clonation of the current state. The expression statement can only modify the state if incrementors are present (i.e. \texttt{++} or \texttt{--}). The expression node is passed to the \texttt{Expression} constructor, and an evaluation is performed on the store of the new state. Since the evaluation procedure automatically updates the values of variables in the store if incrementors are found, the simulation is over after the evaluation. The final value of the expression is discarded, and the engine can proceed with the execution of the next statement.
+The simulation of expression statements, just like the majority of the others, starts with the cloning of the current state. The expression statement can only modify the state if incrementors are present (i.e. \texttt{++} or \texttt{--}). The expression node is passed to the \texttt{Expression} constructor, and an evaluation is performed on the store of the new state. Since the evaluation procedure automatically updates the values of variables in the store if incrementors are found, the simulation is over after the evaluation. The final value of the expression is discarded, and the engine can proceed with the execution of the next statement.
 \subsection{Assignment Statements}
 There are two types of assignment statements: classical ones and quantum measurements.
 \subsubsection{Classical Assignments}
@@ -1341,7 +1346,8 @@ Quantum measurements return a fresh symbol and set it in the store, since we ign
 \subsection{Classical Declarations}
 The main difference between declarations and assignments is that the first have to take the type and domain of the variable into account. This is accomplished by calling the \texttt{ClassicalType} class constructor with the arguments obtained by inspecting the statement subtree.
 
-Since declaration can have an immediate assignment, that case is handled like the previous case, after having initialized the store item with the correct type.\\
+Since declarations can have an immediate assignment, that case is handled like the previous case, after having initialized the store item with the correct type.
+
 Constant declarations are allowed too, but the type does not need to be specified. Thus, the store item will only contain the `value' field, and this is fine because the type is only needed when treating symbols with the SMT solver.
 
 \subsection{Branching Statements}
@@ -1479,12 +1485,13 @@ In this chapter we provide details about each of them and explain how symbolic e
 % ANTLRv4 parses the file and provides a tree walker, we build our custom tree from there
 % Node
 % Parser class
-The module we start with is the parser, since it provides the data structure that will be used throughout all the other modules: the parse tree.\\
+The module we start with is the parser, since it provides the data structure that will be used throughout all the other modules: the parse tree.
+
 Having defined the grammar of the language in the \texttt{qasm3sub.g4} file, we can invoke the ANTLRv4 tool \cite{antlr} to generate the actual parser:
 \begin{lstlisting}
 $ antlr4 -Dlanguage=Python3 qasm3sub.g4
 \end{lstlisting}
-This command generates a series of files which are stored in the \texttt{qasm3sub} folder. One of these files contains the \texttt{Listener} class, that allows us to navigate the raw parse tree built by ANTLRv4 and pick only the information that we need to build a simplified version of the parse tree, which we will be using in the other modules of the analyzer.\\
+This command generates a series of files which are stored in the \texttt{qasm3sub} folder. One of these files contains the \texttt{Listener} class, that allows us to navigate the raw parse tree built by ANTLRv4 and pick only the information that we need to build a simplified version of the parse tree, which we will be using in the other modules of the analyzer.
 Our parse tree is composed by interconnected instances of the \texttt{Node} class.
 
 \subsection{Node}
@@ -1541,7 +1548,7 @@ This class represents a classical type as defined in the QASM grammar, with zero
 \end{itemize}
 
 \subsection{Symbol}
-Symbolic expressions (which are different from our parse expression trees) are managed by the \texttt{sympy} library, which allows us to define symbols and automatically performs simplifications on expressions.\\
+Symbolic expressions (which are different from our parse expression trees) are managed by the \texttt{sympy} library, which allows us to define symbols and automatically performs simplifications on expressions.
 This class acts as a static symbol provider, and has both static attributes and static methods.
 \subsubsection{Attributes}
 \begin{itemize}
@@ -1799,7 +1806,8 @@ This class is defined in the `Expression Manipulator' module due to dependency i
 % Types, values, variables, registers, operators, ASTs, expressions
 The aim of this module is to setup a tool which can evaluate expressions (coming from the parse tree) symbolically. This is done by taking an `expression' node from the parse tree, building the respective Abstract Syntax Tree (AST) and translating it in a symbolic \texttt{sympy} expression.
 
-An AST is composed of \texttt{UnaryOperator}s and \texttt{BinaryOperator}s as internal nodes, and \texttt{Variable}s and \texttt{Value}s as leaves.\\
+An AST is composed of \texttt{UnaryOperator}s and \texttt{BinaryOperator}s as internal nodes, and \texttt{Variable}s and \texttt{Value}s as leaves.
+
 Operators are simple data structures that hold a string literal for what operation they represent, and one or two arguments (depending on the operator being unary or binary), which are AST nodes in turn. Furthermore, they have the \texttt{applyTo} method, which takes symbolic operands as arguments and returns the symbolic expression of them combined with the operator.
 \subsection{UnaryOperator}
 This class constitutes a possible internal node for an expression AST.
@@ -1973,7 +1981,8 @@ An instance of this class is a stack that holds the next program statements to b
 
 
 \subsection{Meta-Instructions}
-Meta-instructions are instances of the \texttt{MetaInstruction} superclass, and they represent instructions for the symbolic execution engine. For example, at the end of a `for' loop iteration, the engine must increment the value of the loop iterator, so the engine must know the exact moment when this operation needs to be done. This is achieved by pushing a meta-instruction on the stack underlying the loop body statements that reminds the engine to update the value of the iterator before going on with the other program statements.\\
+Meta-instructions are instances of the \texttt{MetaInstruction} superclass, and they represent instructions for the symbolic execution engine. For example, at the end of a `for' loop iteration, the engine must increment the value of the loop iterator, so the engine must know the exact moment when this operation needs to be done. This is achieved by pushing a meta-instruction on the stack underlying the loop body statements that reminds the engine to update the value of the iterator before going on with the other program statements.
+
 The classes that represent meta-instructions are the following:
 \begin{itemize}
     \itemsep 0em
@@ -1996,7 +2005,7 @@ This is a static class that has a single public method, but it wraps all the log
 
 
 \chapter{Conclusion}
-In conclusion, we could say that this is the first version of a static analyzer for QASM, and the main concern is to estimate the number of qubits that are measured and/or entangled to measured ones. This could help quantum programmers to care about the resources that they use, and this is fundamental in quantum computing since qubits are really expensive, and the actual speedup provided by quantum superpositions, that allow multiple states to be computed at the same time, is exponential with respect to the number of qubits.\\
+In conclusion, we could say that this is the first version of a static analyzer for QASM, and the main concern is to estimate the number of qubits that are measured and/or entangled to measured ones. This could help quantum programmers to care about the resources that they use, and this is fundamental in quantum computing since qubits are really expensive, and the actual speedup provided by quantum superpositions, that allow multiple states to be computed at the same time, is exponential with respect to the number of qubits.
 
 
 \section{Limitations and Future Development}

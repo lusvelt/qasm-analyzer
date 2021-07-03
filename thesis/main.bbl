@@ -19,6 +19,120 @@
 
 \refsection{0}
   \datalist[entry]{ynt/global//global/global}
+    \entry{qccs}{book}{}
+      \name{author}{1}{}{%
+        {{hash=2005ebd0e369b9d76d3a38016c003ae3}{%
+           family={Noson\bibnamedelimb S.\bibnamedelimi Yanofsky},
+           familyi={N\bibinitperiod\bibinitdelim S\bibinitperiod\bibinitdelim Y\bibinitperiod},
+           given={Mirco\bibnamedelimb A.\bibnamedelimi Mannucci},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{2005ebd0e369b9d76d3a38016c003ae3}
+      \strng{fullhash}{2005ebd0e369b9d76d3a38016c003ae3}
+      \strng{bibnamehash}{2005ebd0e369b9d76d3a38016c003ae3}
+      \strng{authorbibnamehash}{2005ebd0e369b9d76d3a38016c003ae3}
+      \strng{authornamehash}{2005ebd0e369b9d76d3a38016c003ae3}
+      \strng{authorfullhash}{2005ebd0e369b9d76d3a38016c003ae3}
+      \field{labelalpha}{Nos08}
+      \field{sortinit}{2}
+      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{9780521879965}
+      \field{title}{Quantum Computing for Computer Scientists}
+      \field{year}{2008}
+      \keyw{quantum,computing}
+    \endentry
+    \entry{nielsen2010quantum}{book}{}
+      \name{author}{1}{}{%
+        {{hash=3b32fb3a134f406f7b5107358d27befe}{%
+           family={Nielsen},
+           familyi={N\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cambridge New York}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{3b32fb3a134f406f7b5107358d27befe}
+      \strng{fullhash}{3b32fb3a134f406f7b5107358d27befe}
+      \strng{bibnamehash}{3b32fb3a134f406f7b5107358d27befe}
+      \strng{authorbibnamehash}{3b32fb3a134f406f7b5107358d27befe}
+      \strng{authornamehash}{3b32fb3a134f406f7b5107358d27befe}
+      \strng{authorfullhash}{3b32fb3a134f406f7b5107358d27befe}
+      \field{labelalpha}{Nie10}
+      \field{sortinit}{2}
+      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-1107002173}
+      \field{title}{Quantum computation and quantum information}
+      \field{year}{2010}
+    \endentry
+    \entry{perry2012quantum}{book}{}
+      \name{author}{1}{}{%
+        {{hash=5da9dff36c039b69011437df8bab8e67}{%
+           family={Perry},
+           familyi={P\bibinitperiod},
+           given={Riley},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Singapore}%
+      }
+      \list{publisher}{1}{%
+        {World Scientific}%
+      }
+      \strng{namehash}{5da9dff36c039b69011437df8bab8e67}
+      \strng{fullhash}{5da9dff36c039b69011437df8bab8e67}
+      \strng{bibnamehash}{5da9dff36c039b69011437df8bab8e67}
+      \strng{authorbibnamehash}{5da9dff36c039b69011437df8bab8e67}
+      \strng{authornamehash}{5da9dff36c039b69011437df8bab8e67}
+      \strng{authorfullhash}{5da9dff36c039b69011437df8bab8e67}
+      \field{labelalpha}{Per12}
+      \field{sortinit}{2}
+      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-9814412117}
+      \field{title}{Quantum computing from the ground up}
+      \field{year}{2012}
+    \endentry
+    \entry{gribbin2014computing}{book}{}
+      \name{author}{1}{}{%
+        {{hash=e702d56733bfa800b03ff698e36f6fd0}{%
+           family={Gribbin},
+           familyi={G\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Amherst, New York}%
+      }
+      \list{publisher}{1}{%
+        {Prometheus Books}%
+      }
+      \strng{namehash}{e702d56733bfa800b03ff698e36f6fd0}
+      \strng{fullhash}{e702d56733bfa800b03ff698e36f6fd0}
+      \strng{bibnamehash}{e702d56733bfa800b03ff698e36f6fd0}
+      \strng{authorbibnamehash}{e702d56733bfa800b03ff698e36f6fd0}
+      \strng{authornamehash}{e702d56733bfa800b03ff698e36f6fd0}
+      \strng{authorfullhash}{e702d56733bfa800b03ff698e36f6fd0}
+      \field{labelalpha}{Gri14}
+      \field{sortinit}{2}
+      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-1616149215}
+      \field{title}{Computing with quantum cats : from Colossus to Qubits}
+      \field{year}{2014}
+    \endentry
     \entry{antlr}{online}{}
       \name{author}{1}{}{%
         {{hash=c47f872d41a4441186be0d66723a9e57}{%
@@ -98,6 +212,36 @@
       \field{title}{A Survey of Symbolic Execution Techniques}
       \field{volume}{51}
       \field{year}{2018}
+    \endentry
+    \entry{denning2019quantum}{article}{}
+      \name{author}{1}{}{%
+        {{hash=521182e8c3ca834e0e65357a54ac240c}{%
+           family={Denning},
+           familyi={D\bibinitperiod},
+           given={Dorothy\bibnamedelima E},
+           giveni={D\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Sigma XI-The Scientific Research Society}%
+      }
+      \strng{namehash}{521182e8c3ca834e0e65357a54ac240c}
+      \strng{fullhash}{521182e8c3ca834e0e65357a54ac240c}
+      \strng{bibnamehash}{521182e8c3ca834e0e65357a54ac240c}
+      \strng{authorbibnamehash}{521182e8c3ca834e0e65357a54ac240c}
+      \strng{authornamehash}{521182e8c3ca834e0e65357a54ac240c}
+      \strng{authorfullhash}{521182e8c3ca834e0e65357a54ac240c}
+      \field{labelalpha}{Den19}
+      \field{sortinit}{2}
+      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{American Scientist}
+      \field{number}{2}
+      \field{title}{Is quantum computing a cybersecurity threat?}
+      \field{volume}{107}
+      \field{year}{2019}
+      \field{pages}{83\bibrangedash 85}
+      \range{pages}{3}
     \endentry
     \entry{zuw}{online}{}
       \name{author}{1}{}{%
