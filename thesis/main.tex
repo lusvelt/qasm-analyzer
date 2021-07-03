@@ -666,7 +666,7 @@ In order to design and execute quantum algorithms, we need a language that allow
 
 
 \chapter{OpenQASM}
-\texttt{OpenQASM} is an imperative programming language designed for quantum algorithms and applications. It has a dual nature as an assembly language and as a hardware description language \cite{qasm}. There are multiple versions of \texttt{OpenQASM}, but we will describe a simplified version of \texttt{OpenQASM 3.0}.\par
+\texttt{OpenQASM} is an imperative programming language designed for quantum algorithms and applications. It has a dual nature as an assembly language and as a hardware description language \cite{qasm}. There are multiple versions of \texttt{OpenQASM}, but we consider a simplified version of \texttt{OpenQASM 3.0}.\par
 \begin{example}[Deutsch-Jozsa Algorithm] Here is an example of a program written in \texttt{OpenQASM}, namely the Deutsch-Jozsa algorithm:
 \begin{lstlisting}
 OpenQASM 3.0;
@@ -705,13 +705,17 @@ c[0 : n-1] = measure x[0 : n-1];
 \end{lstlisting}
 \end{example}
 
-The formal grammar of the language is presented using the ANTLRv4 syntax \cite{antlr}, and starts with:
+As we can notice, the language syntax appears quite intuitive to those who have a background in programming and know the basics of quantum computing. In the rest of this chapter, the aim is to fully describe our simplified version of \texttt{OpenQASM 3.0}. We will present the formal grammar using the ANTLRv4 syntax \cite{antlr} and comment it providing informal semantic and context.
+
+The first non-terminal rule defines the structure of \texttt{OpenQASM} programs:
+
 \begin{lstlisting}
 program
     : header (globalStatement | statement)*
     ;
 \end{lstlisting}
-So we first describe the header and then we proceed to discuss the other aspects of the language, which also include statements. In each section we will present the formal grammar and comment it providing informal semantic and context.
+
+So we first describe the header and then we proceed to discuss all the other aspects of the language that are used in statements.
 
 
 
@@ -941,6 +945,7 @@ bitShiftExpression
     | bitShiftExpression ('<<' | '>>') additiveExpression
     ;
 
+    
 additiveExpression
     : multiplicativeExpression
     | additiveExpression (PLUS | MINUS) multiplicativeExpression
