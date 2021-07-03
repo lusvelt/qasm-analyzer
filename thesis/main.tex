@@ -731,19 +731,21 @@ include
     ;
 \end{lstlisting}
 The header consists in an optional version string followed by zero or more `include' statements, that are used to import gates and functions from other files at compile time.
+\pagebreak
+
 A typical example of what the header looks like is:
 \begin{lstlisting}
 // Header
 OPENQASM 3.0;
+include "stdgates.inc";
 /*
 comment
 */
-include "stdgates.inc";
 \end{lstlisting}
 We can see here that comments are C-like, and string literals are wrapped by double quotes.
 
 From now on we will proceed in a bottom-up fashion, describing all the features of the language that are used in more complex rules, starting from lexicon, types and index identifiers up to global and non-global statements.
-
+\\
 
 \section{Lexer Rules}
 \begin{lstlisting}
@@ -770,6 +772,7 @@ MINUS: '-';
 MUL: '*';
 DIV: '/';
 MOD: '%';
+
 
 
 Constant: ( 'pi' | 'tau' | 'euler' );
@@ -813,6 +816,8 @@ quantumType
     ;
 \end{lstlisting}
 We will describe how to make a quantum declaration in the `Global Statements' section.
+
+\pagebreak
 
 \subsection{Classical Types}
 \begin{lstlisting}
@@ -889,8 +894,6 @@ These rules are used to refer to specific bits or qubits in both classical and q
     \item \texttt{y[-4:-1]}: the last three bits of \texttt{y}
 \end{itemize}
 
-
-
 \section{Generical Statements}
 \begin{lstlisting}
 statement
@@ -903,7 +906,7 @@ statement
     ;
 \end{lstlisting}
 
-In our simplified version of \texttt{OpenQASM} we consider six types of statements: expressions, assignments, classical declarations, branching if-then-elses, for and while loops and quantum statements. We now go over these statement types one by one, and we will be commenting only those that require further clarification, since most of them have similar syntax and semantic to other well-known programming languages.
+In our simplified version of \texttt{OpenQASM} we consider six types of statements: expressions, assignments, classical declarations, branching if-then-elses, for and while loops and quantum statements. We now go over these statement types one by one, and we will be commenting only those that require further clarification, since most of them have similar syntax and semantic to other well-known programming languages.\\
 
 
 \subsection{Expression Statements}
@@ -979,6 +982,8 @@ The grammar for expressions is defnined hierarchically to implement the conventi
 
 Expression statements do not affect the memory unless incrementors are present, in which case the respective variables are updated accordingly to the incrementor sign.
 
+\pagebreak
+
 Even if they are not included in the \texttt{expressionStatement} rule, we show the grammar for boolean expressions here, because they will be used in other statement types from now on.
 
 \begin{lstlisting}
@@ -1018,6 +1023,8 @@ setDeclaration
     ;
 \end{lstlisting}
 
+\pagebreak
+
 \subsection{Assignment Statements}
 \begin{lstlisting}
 assignmentStatement: (classicalAssignment | quantumMeasurementAssignment) SEMICOLON;
@@ -1040,7 +1047,7 @@ quantumMeasurementAssignment
     | indexIdentifierList EQUALS quantumMeasurement
     ;
 \end{lstlisting}
-Assignments are defined in the usual way, with the addition of quantum measurements, that simply tell the hardware to perform a measurement on certain qubits and store the result in classical variables. As we explained in the previous chapter, we remark that after being measured, qubits collapse to the observed state, so measurements are usually done at the end of the circuit.
+Assignments are defined in the usual way, with the addition of quantum measurements, that simply tell the hardware to perform a measurement on certain qubits and store the result in classical variables. As we explained in the previous chapter, we remark that after being measured, qubits collapse to the observed state, so measurements are usually done at the end of the circuit.\\
 
 
 \subsection{Classical Declarations}
@@ -1124,7 +1131,7 @@ quantumGateName
     ;
 \end{lstlisting}
 
-Here it is worth mentioning that quantum gates can be called on multiple qubits, and this is the only possible cause of entanglement.
+Here it is worth mentioning that quantum gates can be called on multiple qubits, and this is the only possible cause of entanglement.\\
 
 
 
@@ -1139,7 +1146,7 @@ globalStatement
     ;
 \end{lstlisting}
 
-
+\pagebreak
 
 \subsection{Subroutine Definition}
 \begin{lstlisting}
@@ -1180,6 +1187,9 @@ subroutineBlock
 
 Subroutines have two sets of arguments: classical arguments and quantum arguments. They also have an optional return signature, which is used to specify the return type of the function.
 Before the \texttt{def} keyword, the programmer can annotate the expression of the upper bound on the number of qubit that she wishes to assert, so that the analyzer can compare it to the estimated number of actually used qubits.
+
+\pagebreak
+
 Here is an example of a subroutine definition:
 \begin{lstlisting}
 #qubits 4
@@ -1196,7 +1206,7 @@ def f2 (int[5]:x) qreg[5]:q, qreg[5]:u -> int[8] {
 }
 \end{lstlisting}
 
-Notice that the above example obviously passes the qubit check, since the branch where \texttt{x * x < 0} is never taken.
+Notice that the above example obviously passes the qubit check, since the branch where \texttt{x * x < 0} is never taken.\\
 
 \subsection{Quantum Gate Definition}
 We will not delve into the actual grammar of quantum gate definitions, since the analysis that we are going to discuss in the next chapters does not take them into account. In fact, our analyzer treats them as black-boxes that can potentially entangle all the input qubits together.
@@ -1249,7 +1259,7 @@ The next step is to call the \texttt{simulateExecution} private method, which ta
 
 \begin{tikzpicture}[
     grow=down,
-    level 1/.style={sibling distance=8cm,level distance=2.15cm},
+    level 1/.style={sibling distance=8cm,level distance=2.3cm},
     edge from parent/.style={thick,draw=black, shorten >=5pt, shorten <=5pt},
     edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
     kant/.style={text width=2cm, text centered, sloped},
@@ -1340,6 +1350,9 @@ There are two types of assignment statements: classical ones and quantum measure
 \subsubsection{Classical Assignments}
 Classical assignments involve LHS (Left-Hand Side) and RHS (Right-Hand Side) expressions. The RHS can be either an expression or an index identifier. In the first case it is evaluated to a symbolic expression, while in the second case it becomes a \texttt{CReg}. The assignment operator can include a binary operator (e.g. \texttt{+=}, \texttt{-=}, etc.), in which case the LHS is also evaluated and the operator is applied to the couple (LHS, RHS).
 The final step is setting the value in the store, which is done by calling its \texttt{assign} method. If the old value in the store is a simple symbolic expression, it is just overwritten, but if it is a \texttt{CReg}, its \texttt{content} array is updated according to the new value.
+
+\pagebreak
+
 \subsubsection{Quantum Measurements}
 Quantum measurements return a fresh symbol and set it in the store, since we ignore what happens at quantum level. Furthermore, when a quantum measurement is performed, the measured qubits and all the ones entangled to them are transfered by the \texttt{QRegManager} from the \texttt{potentialEntanglements} array to the \texttt{actualQubits} set by invoking the \texttt{markAsMeasured} method.
 
@@ -1563,6 +1576,8 @@ This class acts as a static symbol provider, and has both static attributes and 
     \item \texttt{getSymbolType(label)}: returns the classical type associated to the symbol matching \texttt{label}.
 \end{itemize}
 
+\pagebreak
+
 \subsection{Variable}
 This class represents a classical variable in an expression AST (which will be described in the next section).
 \subsubsection{Attributes}
@@ -1592,7 +1607,7 @@ This class represents a hard-coded value in an expression AST.
     \item \texttt{\_\_init\_\_(value, typeLiteral)}: instantiates an element having the specified \texttt{value} and \texttt{typeLiteral}. If the latter is \textit{None}, it is automatically detected.
 \end{itemize}
 
-
+\pagebreak
 
 \section{Subroutine Classifier}
 % Subroutine params, how the classification is performed, classical arguments and quantum arguments
@@ -1628,6 +1643,7 @@ This class holds all the information about a subroutine. By calling its construc
     \item \texttt{qubitUpperBound}: the symbolic expression annotated by the programmer to check against the number of qubits in each branch of the execution tree.
     \item \texttt{qubitChecks}: an array of symbolic expressions and \textit{True} values. The former represent violations of the upper bound on the number of qubits, while the latter represent successful checks. It is filled during the last stages of the symbolic execution.
 \end{itemize}
+
 Other than these, there are a bunch more of attributes wich are actually \textit{properties} of the subroutine:
 \begin{itemize}
     \itemsep 0em
@@ -1825,6 +1841,8 @@ This class constitutes a possible internal node for an expression AST.
     \item \texttt{applyTo(operand)}: takes a symbolic \texttt{sympy} expression as argument and returns the symbolic expression with the current operator applied to the operand (e.g. \texttt{UnaryOperator(`-').applyTo(x+y)} returns \texttt{-(x+y)}, which is simplified to \texttt{-x-y} automatically by \texttt{sympy}).
 \end{itemize}
 
+\pagebreak
+
 \subsection{BinaryOperator}
 This class constitutes another possible internal node for an expression AST.
 \subsubsection{Attributes}
@@ -1852,6 +1870,9 @@ This is the core class of this module, and it is used for both arithmetical and 
     \item \texttt{tree}: the root of the expression AST.
     \item \texttt{isBoolean}: whether or not it is a boolean expression.
 \end{itemize}
+
+\pagebreak
+
 \subsubsection{Methods}
 \begin{itemize}
     \itemsep 0em
@@ -1868,6 +1889,9 @@ SMT stands for `Satisfiability Modulo Theory', which means that an SMT solver is
 
 Building an SMT solver is a long and complex task, so we use the \texttt{PySMT} library. However, since our symbolic expressions are stored in \texttt{sympy} format, we need to convert them to allow \texttt{PySMT} to check for satisfiability.
 This module simply converts a \texttt{sympy} expression to \texttt{PySMT} format and checks for satisfiability or unsatisfiability modulo non-linear arithmetic theory.
+
+\pagebreak
+
 \subsection{Solver}
 \subsubsection{Static Methods}
 All of the following methods take a \texttt{sympy} symbolic expression as argument.

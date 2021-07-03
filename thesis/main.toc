@@ -47,15 +47,15 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.3.1}Quantum Types}{23}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.2}Classical Types}{23}%
+\contentsline {subsection}{\numberline {3.3.2}Classical Types}{24}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.4}Index Identifiers}{24}%
+\contentsline {section}{\numberline {3.4}Index Identifiers}{25}%
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3.5}Generical Statements}{25}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.1}Expression Statements}{25}%
+\contentsline {subsection}{\numberline {3.5.1}Expression Statements}{26}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.2}Assignment Statements}{28}%
+\contentsline {subsection}{\numberline {3.5.2}Assignment Statements}{29}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.5.3}Classical Declarations}{29}%
 \defcounter {refsection}{0}\relax 
@@ -63,15 +63,15 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.5.5}Loop Statements}{30}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.5.6}Quantum Statements}{30}%
+\contentsline {subsection}{\numberline {3.5.6}Quantum Statements}{31}%
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3.6}Global Statements}{31}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.6.1}Subroutine Definition}{31}%
+\contentsline {subsection}{\numberline {3.6.1}Subroutine Definition}{32}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.6.2}Quantum Gate Definition}{32}%
+\contentsline {subsection}{\numberline {3.6.2}Quantum Gate Definition}{33}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.6.3}Quantum Declaration Statements}{32}%
+\contentsline {subsection}{\numberline {3.6.3}Quantum Declaration Statements}{33}%
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {4}Symbolic Execution}{34}%
 \defcounter {refsection}{0}\relax 
@@ -85,7 +85,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Classical Assignments}{36}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Quantum Measurements}{36}%
+\contentsline {subsubsection}{Quantum Measurements}{37}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.2.3}Classical Declarations}{37}%
 \defcounter {refsection}{0}\relax 
@@ -119,7 +119,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{44}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.2.3}Variable}{44}%
+\contentsline {subsection}{\numberline {5.2.3}Variable}{45}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{45}%
 \defcounter {refsection}{0}\relax 
@@ -131,9 +131,9 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{45}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.3}Subroutine Classifier}{45}%
+\contentsline {section}{\numberline {5.3}Subroutine Classifier}{46}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.3.1}ClassicalArgument}{45}%
+\contentsline {subsection}{\numberline {5.3.1}ClassicalArgument}{46}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{46}%
 \defcounter {refsection}{0}\relax 
@@ -147,7 +147,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{47}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.3.4}SubroutineClassifier}{47}%
+\contentsline {subsection}{\numberline {5.3.4}SubroutineClassifier}{48}%
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {5.4}Registers and Ranges}{48}%
 \defcounter {refsection}{0}\relax 
@@ -157,11 +157,11 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{48}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.4.2}Bit}{48}%
+\contentsline {subsection}{\numberline {5.4.2}Bit}{49}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{48}%
+\contentsline {subsubsection}{Methods}{49}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.4.3}CReg}{48}%
+\contentsline {subsection}{\numberline {5.4.3}CReg}{49}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{49}%
 \defcounter {refsection}{0}\relax 
@@ -175,11 +175,11 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{50}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.4.5}Qubit}{50}%
+\contentsline {subsection}{\numberline {5.4.5}Qubit}{51}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{50}%
+\contentsline {subsubsection}{Methods}{51}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.4.6}QReg}{50}%
+\contentsline {subsection}{\numberline {5.4.6}QReg}{51}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{51}%
 \defcounter {refsection}{0}\relax 
@@ -187,7 +187,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {5.4.7}Range}{51}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Attributes}{51}%
+\contentsline {subsubsection}{Attributes}{52}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{52}%
 \defcounter {refsection}{0}\relax 
@@ -197,7 +197,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{52}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.5}Expression Manipulator}{52}%
+\contentsline {section}{\numberline {5.5}Expression Manipulator}{53}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {5.5.1}UnaryOperator}{53}%
 \defcounter {refsection}{0}\relax 
@@ -205,57 +205,57 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{53}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.5.2}BinaryOperator}{53}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Attributes}{53}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{53}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.5.3}Expression}{54}%
+\contentsline {subsection}{\numberline {5.5.2}BinaryOperator}{54}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{54}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{54}%
 \defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.5.3}Expression}{54}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Attributes}{54}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Methods}{55}%
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {5.6}SMT Solver}{55}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.6.1}Solver}{55}%
+\contentsline {subsection}{\numberline {5.6.1}Solver}{56}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Static Methods}{55}%
+\contentsline {subsubsection}{Static Methods}{56}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.7}Symbolic Execution Engine}{55}%
+\contentsline {section}{\numberline {5.7}Symbolic Execution Engine}{56}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.7.1}SymbolicState}{55}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Attributes}{56}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Methods}{56}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.7.2}Store}{56}%
+\contentsline {subsection}{\numberline {5.7.1}SymbolicState}{56}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{56}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{57}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.7.3}QRegManager}{57}%
+\contentsline {subsection}{\numberline {5.7.2}Store}{57}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{57}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Methods}{57}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.7.3}QRegManager}{58}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Attributes}{58}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Static Methods}{58}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Instance Methods}{58}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.7.4}ExecutionStack}{58}%
+\contentsline {subsection}{\numberline {5.7.4}ExecutionStack}{59}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Attributes}{59}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Methods}{59}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.7.5}Meta-Instructions}{59}%
+\contentsline {subsection}{\numberline {5.7.5}Meta-Instructions}{60}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.7.6}SymbolicExecutionEngine}{59}%
+\contentsline {subsection}{\numberline {5.7.6}SymbolicExecutionEngine}{60}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Static Methods}{59}%
+\contentsline {subsubsection}{Static Methods}{60}%
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {6}Conclusion}{61}%
 \defcounter {refsection}{0}\relax 
