@@ -1,0 +1,143 @@
+\documentclass{beamer}
+\usepackage{indentfirst}
+\usepackage[italian]{babel}
+\usepackage{newlfont}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{xspace}
+\usepackage[
+backend=biber,
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+
+\definecolor{MSUgreen}{RGB}{0,102,51} 
+\addbibresource{bibliography.bib}
+
+\makeatletter
+\newcommand\listofframes{\@starttoc{lbf}}
+\makeatother
+
+\addtobeamertemplate{frametitle}{}{%
+  \addcontentsline{lbf}{section}{\protect\makebox[2em][l]{
+    \protect\usebeamercolor[fg]{structure}}
+  \insertframetitle\par}
+}
+
+\usetheme{Boadilla}
+\usecolortheme{spruce}
+\setbeamercolor{block title}{bg=MSUgreen!10, fg=MSUgreen!60!black}
+\setbeamercolor{navigation symbols dimmed}{fg=MSUgreen!40!white}
+\setbeamercolor{navigation symbols}{fg=MSUgreen!40!white}
+\setbeamertemplate{itemize item}{\color{MSUgreen}\textbullet}
+
+\title{Analisi Statica delle Risorse in QASM}
+\subtitle{Stima del Numero di Qubit}
+\author{Damiano Scevola}
+\institute{Alma Mater Studiorum - Università di Bologna}
+\date{14 luglio 2021}
+
+\begin{document}
+\abovedisplayskip=0pt
+\abovedisplayshortskip=0pt
+\belowdisplayskip=0pt
+\belowdisplayshortskip=0pt
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{Sommario}
+    \listofframes
+\end{frame}
+
+\begin{frame}
+    \frametitle{Computazione Quantistica}
+    Data una macchina (classica o quantistica), sia $n \in \mathbb{N}$ la dimensione della sua memoria (in bit o qubit).
+    \begin{itemize}
+        \item \textbf{Computazione classica}: la macchina in un dato momento assume un singolo stato tra i $2^n$ possibili. Le istruzioni modificano la memoria facendo evolvere tale stato in modo sequenziale.
+        \item \textbf{Computazione quantistica}: uno stato quantistico è dato dalla \textit{sovrapposizione} di più stati classici detti ``di base'' (potenzialmente anche tutti i $2^n$). Una singola istruzione tiene conto di tutte le possibili interazioni fra di essi e determina lo stato successivo.
+    \end{itemize}
+    Passando dal classico al quantistico, si ha uno \textit{speedup} esponenziale del tempo di esecuzione: problemi prima inaffrontabili diventano così risolvibili in un tempo ragionevole dai dispositivi quantistici.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Qubit e Registri Quantistici}
+    Prendendo come stati di base i valori $0$ e $1$ di un bit classico si possono definire i seguenti vettori (usando la \textit{ket notation})
+    \begin{equation*}
+        \ket{0} = \begin{bmatrix} 1 \\ 0 \end{bmatrix},\ 
+        \ket{1} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}
+    \end{equation*}
+    \begin{block}{Qubit}
+        Un \emph{qubit} $\ket{\psi}$ è una combinazione lineare di $\ket{0}$ e $\ket{1}$ nel campo dei numeri complessi, ovvero (dati $c_0, c_1 \in \mathbb{C}$):
+        \begin{equation*}
+            \ket{\psi} = c_0\ket{0}+c_1\ket{1} = c_0\begin{bmatrix} 1 \\ 0 \end{bmatrix}+ c_1\begin{bmatrix} 0 \\ 1 \end{bmatrix} = \begin{bmatrix} c_0 \\ c_1 \end{bmatrix},\ \mathit{con}\ |c_0|^2+|c_1|^2=1
+        \end{equation*}
+    \end{block}
+    \begin{block}{Registri Quantistici}
+        Un registro quantistico di dimensione $n$ è dato dal \textit{prodotto tensoriale} di $n$ qubit, ad esempio $\ket{\psi}=c_{00}\ket{00}+c_{01}\ket{01}+c_{10}\ket{10}+c_{11}\ket{11}$
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Misurazioni e Entanglement}
+    \begin{block}{Misurazione}
+        Dato un qubit $\ket{\psi}=\begin{bmatrix}c_0\\c_1\end{bmatrix}$, il risultato di una sua misurazione può essere $\ket{0}$ con probabilità $|c_0|^2$, oppure $\ket{1}$ con probabilità $|c_1|^2$. Una volta misurato il qubit, il suo stato collassa sul valore osservato, e si perde l'informazione relativa allo stato precedente.
+    \end{block}
+    \begin{block}{Entanglement}
+        Dato un registro quantistico di dimensione almeno 2, si ha un entanglement quando la misurazione di un qubit determina il valore di altri qubit senza misurarli direttamente. Esempio:
+        \begin{equation*}
+            \ket{\psi}=\frac{\ket{00}+\ket{11}}{\sqrt{2}}
+        \end{equation*}
+    \end{block}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Circuiti Quantistici}
+    \begin{block}{Porte Logiche Quantistiche}
+        Lo stato dei qubit può essere modificato applicandogli le porte logiche quantistiche, rappresentabili matematicamente attraverso matrici unitarie. Esempi:
+        \begin{equation*}
+            H=\begin{bmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}\\
+                \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}}\end{bmatrix},\ ^CX=\begin{bmatrix}1&0&0&0\\0&1&0&0\\0&0&0&1\\0&0&1&0\end{bmatrix}
+        \end{equation*}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Esecuzione Simbolica}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Stima del Numero di Qubit}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Implementazione dell'Analizzatore}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusioni}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bibliografia}
+    \printbibliography
+\end{frame}
+\end{document}
+
+% Sommario
+% 1) Computazione quantistica: stati quantici, qubit e speedup
+% 2) Computazione quantistica: gates, entanglement e measurement
+% 3) Problema di Deutsch-Jozsa e Circuito (anche in QASM)
+% 4) OpenQASM: particolarità del linguaggio
+% 5) Esecuzione simbolica di una subroutine: esempio
+% 6) Stima del numero di qubit: esempio con entanglement e measurement
+% 7) Implementazione dell'analizzatore: moduli e diagramma di flusso
+% Conclusioni

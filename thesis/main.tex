@@ -110,7 +110,7 @@ La computazione quantistica è la nuova frontiera del calcolo: la sua particolar
 
 Un semplice esempio in cui si nota facilmente la differenza tra la computazione classica e quella quantistica è riscontrabile nell'algoritmo di Deutsch-Jozsa, che è in grado di determinare se una funzione black-box $f: \{0,1\}^n \longrightarrow \{0,1\}$ è \emph{bilanciata} o \emph{costante}. Con un modello di calcolo classico, la complessità di tale problema sarebbe dell'ordine di $2^n$, mentre grazie all'algoritmo suddetto, essa si riduce ad un numero costante di istruzioni quantistiche seguito da una scansione lineare dell'output.
 
-I computer quantistici attualmente esistenti sono pochi e hanno risorse limitate poichè l'implementazione fisica dei qubit è molto costosa, e dunque la rivoluzione tecnologica che ci si aspetta è percepibile solo dagli addetti ai lavori. Un obiettivo importante della ricerca è, dunque, quello di studiare modi per limitare lo spreco di qubit nella progettazione degli algoritmi quantistici, e la presente tesi si propone di mostrare uno strumento di analisi statica del linguaggio \texttt{OpenQASM} per la stima del numero di qubit \emph{effettivamente} utilizzati dei programmi.
+I computer quantistici attualmente esistenti sono pochi e hanno risorse limitate poichè l'implementazione fisica dei qubit è molto costosa, e dunque la rivoluzione tecnologica che ci si aspetta è percepibile solo dagli addetti ai lavori. Un obiettivo importante della ricerca è, dunque, quello di studiare modi per limitare lo spreco di qubit nella progettazione degli algoritmi quantistici, e la presente tesi si propone di mostrare uno strumento di analisi statica del linguaggio \texttt{OpenQASM} per la stima del numero di qubit \emph{effettivamente} utilizzati dai programmi.
 
 \texttt{OpenQASM} è un linguaggio sviluppato per descrivere circuiti quantistici e operare su di essi attraverso controller classici, che ricevono ed elaborano l'output delle misurazioni effettuate sui qubit. In \texttt{OpenQASM} sono disponibili molti elementi e costrutti di un linguaggio di programmazione ordinario (dichiarazioni, tipi di dato, assegnamenti, espressioni, funzioni, if-then-else, cicli for e while) oltre ad istruzioni e parole chiave specifiche per lavorare con la parte quantistica dei programmi (dichiarazioni e misurazioni di qubit, porte logiche quantistiche).
 
@@ -945,7 +945,7 @@ bitShiftExpression
     | bitShiftExpression ('<<' | '>>') additiveExpression
     ;
 
-    
+
 additiveExpression
     : multiplicativeExpression
     | additiveExpression (PLUS | MINUS) multiplicativeExpression
