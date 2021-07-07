@@ -1,3 +1,11 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
 \babel@toc {italian}{}
 \babel@toc {italian}{}
+\defcounter {refsection}{0}\relax 
+\beamer@sectionintoc {1}{Nozioni di base sulla Computazione Quantistica}{3}{0}{1}
+\defcounter {refsection}{0}\relax 
+\beamer@sectionintoc {2}{Circuiti Quantistici e \texttt {OpenQASM}}{5}{0}{2}
+\defcounter {refsection}{0}\relax 
+\beamer@sectionintoc {3}{Analizzatore Statico}{7}{0}{3}
+\defcounter {refsection}{0}\relax 
+\beamer@sectionintoc {4}{Conclusioni}{10}{0}{4}

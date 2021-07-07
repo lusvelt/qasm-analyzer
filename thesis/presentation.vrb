@@ -1,0 +1,21 @@
+\frametitle{Algoritmo di Deutsch-Jozsa in \texttt{OpenQASM}}
+\begin{lstlisting}
+OpenQASM 3.0;
+include "stdgates.inc"; // Porte X e H
+include "oracle.qasm"; // Oracolo U_f della funzione f
+const n = 4; // Dimensione dell`input della funzione f
+qreg[n] x; // Input della funzione f
+qubit y; // Qubit ausiliario
+reset x[0:n-1]; // |x> = |0>
+creg[n] c; // Output della misurazione
+reset y; // |y> = |0>
+X y; // |y> = |1>
+for i in [0 : n-1] {
+    H x[i]; // x[i]
+} // Tutti i qubit di x sono in sovrapposizione
+U_f(n) x[0:n-1], y; // Applicazione di f
+for i in [0 : n-1] {
+    H x[i];
+} // Si riporta x alla base canonica
+c[0 : n-1] = measure x[0 : n-1];
+\end{lstlisting}

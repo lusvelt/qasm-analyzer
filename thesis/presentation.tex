@@ -10,12 +10,29 @@
 \usepackage{listings}
 \usepackage{tikz}
 \usepackage{xspace}
+
+
+\usetikzlibrary{quantikz}
+\usetikzlibrary{shapes}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{shapes.geometric, arrows}
+
+\tikzstyle{module} = [rectangle, minimum width=2cm, minimum height=1cm,text centered, draw=black, fill=white]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
 \usepackage[
 backend=biber,
 style=alphabetic,
 sorting=ynt
 ]{biblatex}
 \setbeamertemplate{bibliography item}{\insertbiblabel}
+
+\lstset{% This applies to ALL lstlisting
+  basicstyle=\small\ttfamily\color{black},%
+  breaklines=true,%
+  numbers=none,
+  moredelim=[s][\color{green!50!black}\ttfamily]{'}{'},% single quotes in green
+}%
 
 \definecolor{MSUgreen}{RGB}{0,102,51} 
 \addbibresource{bibliography.bib}
@@ -36,6 +53,8 @@ sorting=ynt
 \setbeamercolor{navigation symbols dimmed}{fg=MSUgreen!40!white}
 \setbeamercolor{navigation symbols}{fg=MSUgreen!40!white}
 \setbeamertemplate{itemize item}{\color{MSUgreen}\textbullet}
+\setbeamercolor{section in toc}{fg=MSUgreen}
+\setbeamercolor{section number projected}{bg=MSUgreen,fg=white}
 
 \title{Analisi Statica delle Risorse in QASM}
 \subtitle{Stima del Numero di Qubit}
@@ -54,9 +73,11 @@ sorting=ynt
 
 \begin{frame}
     \frametitle{Sommario}
-    \listofframes
+    \tableofcontents
 \end{frame}
+\section{Nozioni di base sulla Computazione Quantistica}
 
+\iffalse
 \begin{frame}
     \frametitle{Computazione Quantistica}
     Data una macchina (classica o quantistica), sia $n \in \mathbb{N}$ la dimensione della sua memoria (in bit o qubit).
@@ -66,29 +87,31 @@ sorting=ynt
     \end{itemize}
     Passando dal classico al quantistico, si ha uno \textit{speedup} esponenziale del tempo di esecuzione: problemi prima inaffrontabili diventano così risolvibili in un tempo ragionevole dai dispositivi quantistici.
 \end{frame}
-
+\fi
 \begin{frame}
-    \frametitle{Qubit e Registri Quantistici}
-    Prendendo come stati di base i valori $0$ e $1$ di un bit classico si possono definire i seguenti vettori (usando la \textit{ket notation})
+    \frametitle{Qubit}
+    Considerando i valori $0$ e $1$ di un bit classico si possono definire i seguenti vettori di base (usando la \textit{ket notation})
     \begin{equation*}
         \ket{0} = \begin{bmatrix} 1 \\ 0 \end{bmatrix},\ 
         \ket{1} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}
     \end{equation*}
     \begin{block}{Qubit}
-        Un \emph{qubit} $\ket{\psi}$ è una combinazione lineare di $\ket{0}$ e $\ket{1}$ nel campo dei numeri complessi, ovvero (dati $c_0, c_1 \in \mathbb{C}$):
+        Un \emph{qubit} $\ket{\psi}$ è una combinazione lineare di $\ket{0}$ e $\ket{1}$ nel campo dei numeri complessi, ovvero, dati $c_0, c_1 \in \mathbb{C}$:
         \begin{equation*}
             \ket{\psi} = c_0\ket{0}+c_1\ket{1} = c_0\begin{bmatrix} 1 \\ 0 \end{bmatrix}+ c_1\begin{bmatrix} 0 \\ 1 \end{bmatrix} = \begin{bmatrix} c_0 \\ c_1 \end{bmatrix},\ \mathit{con}\ |c_0|^2+|c_1|^2=1
         \end{equation*}
     \end{block}
-    \begin{block}{Registri Quantistici}
-        Un registro quantistico di dimensione $n$ è dato dal \textit{prodotto tensoriale} di $n$ qubit, ad esempio $\ket{\psi}=c_{00}\ket{00}+c_{01}\ket{01}+c_{10}\ket{10}+c_{11}\ket{11}$
+    \begin{block}{Misurazione}
+        Misurando $\ket{\psi}$, la probabilità di ottenere $\ket{0}$ è $|c_0|^2$, mentre la probabilità di ottenere $\ket{1}$ è $|c_1|^2$. Una volta misurato il qubit, il suo stato collassa sul valore osservato, e si perde l'informazione relativa ai valori $c_0$ e $c_1$.
     \end{block}
+    
 \end{frame}
 
 \begin{frame}
-    \frametitle{Misurazioni e Entanglement}
-    \begin{block}{Misurazione}
-        Dato un qubit $\ket{\psi}=\begin{bmatrix}c_0\\c_1\end{bmatrix}$, il risultato di una sua misurazione può essere $\ket{0}$ con probabilità $|c_0|^2$, oppure $\ket{1}$ con probabilità $|c_1|^2$. Una volta misurato il qubit, il suo stato collassa sul valore osservato, e si perde l'informazione relativa allo stato precedente.
+    \frametitle{Registri e Entanglement}
+    \begin{block}{Registri Quantistici}
+        Un registro quantistico di dimensione $n$ è dato dal \textit{prodotto tensoriale} di $n$ qubit, ad esempio $\ket{\psi}=c_{00}\ket{00}+c_{01}\ket{01}+c_{10}\ket{10}+c_{11}\ket{11}$.
+        Il numero massimo di stati classici sovrapponibili in un registro quantistico è $2^n$ (\textit{speedup esponenziale} rispetto alla computazione classica).
     \end{block}
     \begin{block}{Entanglement}
         Dato un registro quantistico di dimensione almeno 2, si ha un entanglement quando la misurazione di un qubit determina il valore di altri qubit senza misurarli direttamente. Esempio:
@@ -99,37 +122,110 @@ sorting=ynt
 
 \end{frame}
 
+\section{Circuiti Quantistici e \texttt{OpenQASM}}
+
 \begin{frame}
     \frametitle{Circuiti Quantistici}
     \begin{block}{Porte Logiche Quantistiche}
-        Lo stato dei qubit può essere modificato applicandogli le porte logiche quantistiche, rappresentabili matematicamente attraverso matrici unitarie. Esempi:
-        \begin{equation*}
-            H=\begin{bmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}\\
-                \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}}\end{bmatrix},\ ^CX=\begin{bmatrix}1&0&0&0\\0&1&0&0\\0&0&0&1\\0&0&1&0\end{bmatrix}
-        \end{equation*}
+        Lo stato dei qubit può essere modificato applicando le porte logiche quantistiche, rappresentabili attraverso matrici unitarie.
+        Porte logiche a più qubit possono introdurre entanglement.
+    \end{block}
+    \begin{block}{Circuiti Quantistici}
+        Un circuito quantistico è una sequenza ordinata di porte logiche quantistiche, misurazioni e reset di qubit, che possono interagire con dati relativi ad una computazione classica parallela. Esempio (circuito di Deutsch-Jozsa per funzioni booleane costanti o bilanciate):
+            \begin{quantikz}
+            & \lstick{$\ket{\mathbf{0}}$} & \qw & \qwbundle{n}\qw & \gate{H^{\otimes n}} & \qw & \qwbundle{n}\qw & \gate[wires=2][2cm]{U_f}\gateinput{$x$}\gateoutput{$x$}& \qw & \qwbundle{n}\qw & \gate{H^{\otimes n}} & \qw & \qwbundle{n}\qw & \meter{}\\
+            & \lstick{$\ket{1}$} & \qw & \qw & \gate{H} & \qw & \qw & \gateinput{$y$}\gateoutput{$y\oplus f(x)$} & \qw & \qw & \qw & \qw & \qw & \qw &
+        \end{quantikz}
     \end{block}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Algoritmo di Deutsch-Jozsa in \texttt{OpenQASM}}
+\begin{lstlisting}
+OpenQASM 3.0;
+include "stdgates.inc"; // Porte X e H
+include "oracle.qasm"; // Oracolo U_f della funzione f
+const n = 4; // Dimensione dell`input della funzione f
+qreg[n] x; // Input della funzione f
+qubit y; // Qubit ausiliario
+reset x[0:n-1]; // |x> = |0>
+creg[n] c; // Output della misurazione
+reset y; // |y> = |0>
+X y; // |y> = |1>
+for i in [0 : n-1] {
+    H x[i]; // x[i]
+} // Tutti i qubit di x sono in sovrapposizione
+U_f(n) x[0:n-1], y; // Applicazione di f
+for i in [0 : n-1] {
+    H x[i];
+} // Si riporta x alla base canonica
+c[0 : n-1] = measure x[0 : n-1];
+\end{lstlisting}
+\end{frame}
+
+\section{Analizzatore Statico}
+
 \begin{frame}
-    \frametitle{Esecuzione Simbolica}
+    \frametitle{Esecuzione Simbolica di una Subroutine}
+    \begin{itemize}
+        \itemsep 0em
+        \item Si \textbf{inizializza} lo \emph{store} assegnando ai parametri formali valori simbolici.
+        \item I valori simbolici compaiono nelle \textbf{espressioni} come letterali, ad esempio \texttt{1+2*(\$0-\$1)}, dove \texttt{\$0} e \texttt{\$1} sono simboli.
+        \item Per le \textbf{dichiarazioni} di variabili classiche si prepara un \emph{item} nello \emph{store} contenente metadati sul tipo e sulla dimensione della variabile.
+        \item Per gli \textbf{assegnamenti} si valuta l'espressione \emph{simbolica} di destra e la si inserisce nell'\emph{item} dello \emph{store} corrispondente alla variabile di sinistra.
+        \item Per le \textbf{misurazioni} di qubit si segue la procedura dell'assegnamento classico, dove però il valore assegnato è un simbolo fresco.
+        \item Per le istruzioni di \textbf{selezione} (\texttt{if-then-else}), si invoca l'SMT solver per verificare se la condizione è soddisfacibile, poi si crea un ramo di esecuzione per ogni porzione di codice da simulare, tenendo traccia delle condizioni sui simboli che valgono in ognuna.
+        \item Per i \textbf{cicli definiti} (\texttt{for}), si aggiungono sullo \emph{stack di esecuzione} $n$ blocchi, ognuno contenente le istruzioni del corpo del ciclo, separati da meta-istruzioni per modificare il valore dell'iteratore nello store.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Stima del Numero di Qubit}
+    \frametitle{Stima del Numero di Qubit durante l'Esecuzione Simbolica}
+    \begin{itemize}
+        \item Si utilizzano un array \emph{potentialEntanglements} e un insieme \emph{actualQubits}, entrambi \textbf{inizialmente vuoti}.
+        \item Quando si simula l'applicazione di una \textbf{porta logica quantistica} $G$ a più qubit, si crea un insieme $X$ che contiene tutti i qubit coinvolti in $G$. $X$ viene inserito in \emph{potentialEntanglements} e fuso con tutti gli altri insiemi in cui compare almeno un qubit già presente in $X$.
+        \item Gli insiemi presenti in \emph{potentialEntanglements} sono \textbf{disgiunti}.
+        \item Quando un qubit $q$ viene \textbf{misurato}, si individua, se presente, l'insieme $\bar{X}$ contenente $q$ in \emph{potentialEntanglements}. $\bar{X}$ viene rimosso dall'array e tutti i qubit in esso presenti vengono inseriti nell'insieme \emph{actualQubits}.
+        \item Il \textbf{numero di qubit} massimo stimato è pari alla cardinalità di \emph{actualQubits}.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Implementazione dell'Analizzatore}
+    \frametitle{Architettura dell'Analizzatore}
+    \begin{tikzpicture}[node distance=3cm]
+        \node (parser) [module] {Parser};
+        \node (subcl) [module, below of=parser, text width=2cm] {Subroutine Classifier};
+        \node (see) [module, right=4cm of parser, text width=2cm] {Symbolic Execution Engine};
+        \node (smt) [module, above of=see] {SMT Solver};
+        \node (expr) [module, below of=see, text width=2cm] {Expression Manipulator};
+
+        \path[<-] (parser.north) edge[text width=2cm] node[right]{Programma \texttt{OpenQASM}} ++(0em,4em);
+        \path[->] (parser.south) edge[text width=2cm] node[right]{Albero di Parsing} (subcl.north);
+        \draw[->] (subcl.east) -- ++(3em, 0em) |- ++(0em, 7.8em) -- node[below]{Subroutine} (see.west);
+        \path[->] (see.east) edge[text width=3cm] node[xshift=1em]{Symbolic Execution Tree} ++(8em, 0em);
+        \path[->] (see.north) edge[text width=2cm, xshift=-1em] node[xshift=-2.2em]{Espressione Simbolica} (smt.233);
+        \path[<-] (see.north) edge[text width=2cm, xshift=1em] node[xshift=3em]{Soddisfacibile?} (smt.307);
+        \path[->] (see.south) edge[text width=2cm, xshift=-1em] node[xshift=-1.4em]{Nodo di Parsing, Contesto} (expr.125);
+        \path[<-] (see.south) edge[text width=2cm, xshift=1em] node[xshift=3em]{Espressione Simbolica} (expr.55);
+    \end{tikzpicture}
 \end{frame}
 
+\section{Conclusioni}
 \begin{frame}
     \frametitle{Conclusioni}
+    \begin{itemize}
+        \item Implementare fisicamente i qubit è altamente costoso, quindi i dispositivi quantistici attualmente esistenti ne hanno un numero limitato: l'analizzatore presentato si propone come strumento per ottimizzare le risorse disponibili.
+        \item La stima del numero di qubit \textit{effettivamente} utilizzati viene effettuata contando i qubit che sono (potenzialmente) \emph{entangled} con qubit misurati, o sono misurati essi stessi.
+        \item Quella presentata è una prima versione dell'analizzatore: le limitazioni e le potenzialità di sviluppo sono numerose.
+    \end{itemize}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Bibliografia}
-    \printbibliography
-\end{frame}
+
+%\begin{frame}
+%    \frametitle{Bibliografia}
+%    \printbibliography
+%\end{frame}
+
 \end{document}
 
 % Sommario
